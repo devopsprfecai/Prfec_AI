@@ -489,7 +489,7 @@ const handleRegenerateWithCategoryAndKeyword = async () => {
                   </div>
                 </div>
               </div>
-              {/* <div className="ai-dashboard-description">
+              <div className="ai-dashboard-description">
                 <label htmlFor="ai-description" className='dashboard-label'>Meta description</label>
                 <div className='ai-dashboard-title-input'>
                   <input type="text" id="ai-description"
@@ -512,7 +512,7 @@ const handleRegenerateWithCategoryAndKeyword = async () => {
                     <Image src={refresh2} height={12} />
                   </div>
                 </div>
-              </div> */}
+              </div>
               <div className="ai-dashboard-category">
                 <label htmlFor="category" className='dashboard-label'>Category</label>
                 <div className='ai-dashboard-title-input'>

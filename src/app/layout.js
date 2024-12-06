@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
         <AuthContextProvider>
           <ConditionalNavbar/>
           {children}
-          <ConditionalFooter/>
+          {/* <ConditionalFooter/> */}
         </AuthContextProvider>
       </body>
     </html>
