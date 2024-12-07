@@ -31,17 +31,6 @@ export default function PuterChat() {
   const messagesEndRef = useRef(null);
   const chatContainerRef = useRef(null);
 
- 
-  // useEffect(() => {
-  //   const lastAiMessage = messages.find((msg) => msg.sender === 'AI');
-  //   if (lastAiMessage) {
-  //     const { formattedTitle, paragraph, formattedContent } = formatBlogContent(lastAiMessage.text);
-  //     setFormattedTitle(formattedTitle);
-  //     setMetaDescription(paragraph);
-  //     setFormattedContent(formattedContent); // Set the formatted content state
-  //   }
-  // }, [messages]);
-
   useEffect(() => {
     const lastAiMessage = messages.find((msg) => msg.sender === 'AI');
     if (lastAiMessage) {
@@ -130,19 +119,31 @@ export default function PuterChat() {
     }
   };
 
+  // const handleCopyChat = () => {
+  //   const chatContent = chatContainerRef.current?.innerText;
+  //   if (chatContent) {
+  //     navigator.clipboard
+  //       .writeText(chatContent)
+  //       .then(() => alert('Chat copied to clipboard!'))
+  //       .catch((err) => console.error('Failed to copy: ', err));
+  //   }
+  //   setIsCopied(true);
+  //   setCopyHover(false);
+
+  //   setTimeout(() => setIsCopied(false), 2000);
+  // };
   const handleCopyChat = () => {
     const chatContent = chatContainerRef.current?.innerText;
-    // if (chatContent) {
-    //   navigator.clipboard
-    //     .writeText(chatContent)
-    //     .then(() => alert('Chat copied to clipboard!'))
-    //     .catch((err) => console.error('Failed to copy: ', err));
-    // }
-    setIsCopied(true);
+    if (chatContent) {
+      navigator.clipboard
+        .writeText(chatContent)
+        .then(() => setIsCopied(true))
+        .catch((err) => console.error('Failed to copy: ', err));
+    }
+  
     setCopyHover(false);
-
     setTimeout(() => setIsCopied(false), 2000);
-  };
+  }
 
   const handleDownloadChat = () => {
     const chatContents = document.querySelector('.chat-contents');
