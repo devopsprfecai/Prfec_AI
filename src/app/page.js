@@ -503,7 +503,7 @@ const handleRegenerateWithCategoryAndKeyword = async () => {
                     readOnly
                   />
                   <div className="refresh-description-button" onClick={() => handleRestructureClick('description')}>
-                    <Image src={refresh2} height={12} />
+                    <Image src={refresh2} height={12} alt='refresh'/>
                   </div>
                 </div>
               </div>
@@ -513,7 +513,7 @@ const handleRegenerateWithCategoryAndKeyword = async () => {
                 <div className='ai-dashboard-title-input'>
                   <input type="text" id="ai-content" value={stripHtmlTags(formattedContent)} readOnly  />
                   <div className="refresh-body-button" onClick={() => handleRestructureClick('content')}>
-                    <Image src={refresh2} height={12} />
+                    <Image src={refresh2} height={12} alt='refresh'/>
                   </div>
                 </div>
               </div>
