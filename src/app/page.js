@@ -66,6 +66,10 @@ export default function PuterChat() {
   const handleSendMessage = async () => {
     if (!input.trim()) return;
 
+    const prefixedInput = input.trim().startsWith("blog about")
+    ? input.trim()
+    : `blog about ${input.trim()}`;
+
     setButtonHl(true); // Highlight button when message is being sent
     setFormattedTitle(''); // Reset the previous title
     setMetaDescription(''); // Reset the previous meta description
@@ -74,7 +78,7 @@ export default function PuterChat() {
     const userMessage = {
       id: Date.now(),
       sender: 'You',
-      text: input.trim(),
+      text: prefixedInput,
     };
 
     // Clear previous AI messages before adding the new one
