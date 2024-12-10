@@ -32,7 +32,6 @@ export default function PuterChat() {
 
   useEffect(() => {
     const latestAIMessage = messages.find((msg) => msg.sender === 'AI');
- console.log("Eff",me)
     if (latestAIMessage) {
       const { formattedTitle, formattedParagraph, formattedContent } = formatBlogContent(latestAIMessage.text);
       setFormattedTitle(formattedTitle);
@@ -258,13 +257,15 @@ export default function PuterChat() {
   
       if (response.ok) {
         if (type === 'title') {
-          setFormattedTitle(data.formattedTitle); // Update formattedTitle based on response
+          // updatedText = updatedText.replace(/^##\s*(.*?)\s*$/m, `## ${newSentence}`);
+
+          setFormattedTitle(data.regeneratedSentence); // Update formattedTitle based on response
         } else if (type === 'description') {
-          setMetaDescription(data.metaDescription); // Update metaDescription based on response
+          setMetaDescription(data.regeneratedSentence); // Update metaDescription based on response
         }
         setMessages((prevMessages) => [
           ...prevMessages.filter((msg) => msg.sender !== 'AI'),
-          { id: Date.now() + 1, sender: 'AI', text: data.response }, // Make sure to update messages if necessary
+          { id: Date.now() + 1, sender: 'AI', text: data.regeneratedSentence }, // Make sure to update messages if necessary
         ]);
         console.log("MESSs",messages)
       } else {
