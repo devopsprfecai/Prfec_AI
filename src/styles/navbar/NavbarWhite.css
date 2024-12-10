@@ -178,12 +178,10 @@
       justify-content: center;
     }
   }
-  @media only screen and (max-width:600px){
+  @media only screen and (max-width:700px){
     .navbar{
-      height: 54px;
+      height: 48px;
+      padding: 8px 14px;
     }
-  .navbar-container{
-    width: 90%;
-  }
   
   }

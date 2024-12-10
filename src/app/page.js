@@ -9,6 +9,7 @@ import refresh from '@public/Images/ai/refresh.svg';
 import refresh2 from '@public/Images/ai/refresh-dash.svg';
 import download from '@public/Images/ai/download.svg';
 import prfecBtn from '@public/Images/ai/prfec button.svg';
+import filter from '@public/Images/ai/filter.svg';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -28,6 +29,8 @@ export default function PuterChat() {
   const [keyword, setKeyword] = useState('');
   const [categoryBadges, setCategoryBadges] = useState([]); // State for category badges
   const [keywordBadges, setKeywordBadges] = useState([]);
+  const [isDashboardActive, setIsDashboardActive] = useState(false);
+  const dashboardRef = useRef(null); // Create a ref for the dashboard
   const messagesEndRef = useRef(null);
   const chatContainerRef = useRef(null);
 
@@ -45,6 +48,17 @@ export default function PuterChat() {
   }, [messages]);
 
 
+  useEffect(() => {
+    if (isDashboardActive) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDashboardActive]);
 
   const handleInputChange = (event) => {
     const newInput = event.target.value;
@@ -119,19 +133,6 @@ export default function PuterChat() {
     }
   };
 
-  // const handleCopyChat = () => {
-  //   const chatContent = chatContainerRef.current?.innerText;
-  //   if (chatContent) {
-  //     navigator.clipboard
-  //       .writeText(chatContent)
-  //       .then(() => alert('Chat copied to clipboard!'))
-  //       .catch((err) => console.error('Failed to copy: ', err));
-  //   }
-  //   setIsCopied(true);
-  //   setCopyHover(false);
-
-  //   setTimeout(() => setIsCopied(false), 2000);
-  // };
   const handleCopyChat = () => {
     const chatContent = chatContainerRef.current?.innerText;
     if (chatContent) {
@@ -249,22 +250,23 @@ export default function PuterChat() {
   };
 
   const handleRestructureClick = async (type) => {
-    const sentence = type === 'title' 
-      ? stripHtmlTags(formattedTitle) 
-      : type === 'description' 
-      ? stripHtmlTags(metaDescription) 
-      : stripHtmlTags(formattedContent);
+    const sentence =
+      type === "title"
+        ? stripHtmlTags(formattedTitle)
+        : type === "description"
+        ? stripHtmlTags(metaDescription)
+        : stripHtmlTags(formattedContent);
   
     if (!sentence.trim()) {
-      alert("No content available to regenerate.");
+      console.warn(""); 
       return;
     }
   
     try {
-      const response = await fetch('/api/refresh', {
-        method: 'POST',
+      const response = await fetch("/api/refresh", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ sentence, category, keyword }),
       });
@@ -276,26 +278,26 @@ export default function PuterChat() {
   
         setMessages((prevMessages) => {
           const updatedMessages = [...prevMessages];
-          const lastAiIndex = updatedMessages.findLastIndex((msg) => msg.sender === 'AI');
+          const lastAiIndex = updatedMessages.findLastIndex((msg) => msg.sender === "AI");
   
           if (lastAiIndex !== -1) {
             const lastMessage = updatedMessages[lastAiIndex];
             let updatedText = lastMessage.text;
   
-            if (type === 'title') {
+            if (type === "title") {
               updatedText = updatedText.replace(/^##\s*(.*?)\s*$/m, `## ${newSentence}`);
-              setFormattedTitle(newSentence); 
-            } else if (type === 'description') {
+              setFormattedTitle(newSentence);
+            } else if (type === "description") {
               updatedText = updatedText.replace(
                 /\*\*Introduction:\*\*\s*([\s\S]*?)(?=\*\*|$)/,
                 `**Introduction:** ${newSentence}`
               );
               setMetaDescription(newSentence);
-            } else if (type === 'content') {
+            } else if (type === "content") {
               updatedText += `\n\n${newSentence}`;
-              console.log("NEw sentence",newSentence);
-              setFormattedContent('');
-              console.log("Formatted",formattedContent)
+              console.log("New sentence:", newSentence);
+              setFormattedContent("");
+              console.log("Formatted:", formattedContent);
               setFormattedContent(newSentence);
             }
   
@@ -305,13 +307,13 @@ export default function PuterChat() {
           return updatedMessages;
         });
       } else {
-        alert(data.error || "Failed to regenerate the sentence.");
+        console.error(data.error || "Failed to regenerate the sentence."); 
       }
     } catch (error) {
-      console.error("Error regenerating sentence:", error);
-      alert("An error occurred while regenerating.");
+      console.error("Error regenerating sentence:", error); 
     }
   };
+  
   
  
 const formatBlogContent = (content) => {
@@ -476,11 +478,24 @@ const handleRegenerateWithCategoryAndKeyword = async () => {
     }
   };
 
+
+  const handleFilterButtonClick = () => {
+    setIsDashboardActive((prevState) => !prevState);
+  };
+  const handleClickOutside = (event) => {
+    if (dashboardRef.current && !dashboardRef.current.contains(event.target)) {
+
+      setIsDashboardActive(false);
+    }
+  };
+
+
+
   return (
      <div className="prfec-ai">
       <div className="prfec-ai-container">
         {/* AI Dashboard Section */}
-        <div className="ai-dashboard">
+        <div className={`ai-dashboard ${isDashboardActive ? "active" : ""}`} ref={dashboardRef}>
           <div className="ai-dashboard-container">
             <h1 className='ai-chat-heading'>AI Content Generation</h1>
 
@@ -591,19 +606,26 @@ const handleRegenerateWithCategoryAndKeyword = async () => {
               </div>
             </div>
             <div className="chat-action-buttons">
-              <div className="copy-chat-button">
-                <Image src={copy}  height={14} onClick={handleCopyChat} alt='copy'/>
-                <div className="chat-button-label">
-                  {isCopied && (
-                    <div className="chat-button-label-copied">Copied</div>
-                  )}
-                </div>
+              <div className='chat-action-buttons-left'>
+              <div className="filter-chat-button" onClick={handleFilterButtonClick}>
+                    <Image src={filter} height={19} alt='download'/>
+                  </div>
               </div>
-              <div className="download-chat-button">
-                <Image src={download} height={14}    onClick={() => formattedTitle && handleDownloadChat()} alt='download'/>
-              </div>
-              <div className="refresh-chat-button">
-                <Image src={refresh} height={13} onClick={handleRefreshChat} alt='refresh'/>
+              <div className='chat-action-buttons-right'>
+                  <div className="copy-chat-button">
+                    <Image src={copy}  height={14} onClick={handleCopyChat} alt='copy'/>
+                    <div className="chat-button-label">
+                      {isCopied && (
+                        <div className="chat-button-label-copied">Copied</div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="download-chat-button">
+                    <Image src={download} height={14}    onClick={() => formattedTitle && handleDownloadChat()} alt='download'/>
+                  </div>
+                  <div className="refresh-chat-button">
+                    <Image src={refresh} height={13} onClick={handleRefreshChat} alt='refresh'/>
+                  </div>
               </div>
             </div>
           </div>
@@ -624,9 +646,9 @@ const handleRegenerateWithCategoryAndKeyword = async () => {
               <p>Generate</p>
               <Image src={prfecBtn} alt='prfec'/>
             </div>
-            {/* <div style={{ display: 'flex', alignItems: 'center',marginTop:"2px" }} >
+            <div className='chat-input-mobile-button' >
               <Image  width={24} height={24} src={buttonHl ? Hover : NoHover}  alt="Button Icon" onClick={handleSendMessage}/>
-            </div> */}
+            </div>
           </div>
           </div>
     </div>
