@@ -260,7 +260,7 @@
 @media only screen and (max-width:700px){
   .content-gen-space{
     padding: 12px;
-    padding-bottom: 120px;
+    padding-bottom: 73px;
   }
   .chat-space{
     border-radius: 24px;
@@ -417,8 +417,10 @@
     }
   }
   @media only screen and (max-width:700px){
+
     .chat-input{
       padding-left: 12px;
+      bottom: -50px;
     }
     .chat-input-generate-button{
       display: none;

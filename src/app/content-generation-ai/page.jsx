@@ -32,7 +32,7 @@ export default function PuterChat() {
 
   useEffect(() => {
     const latestAIMessage = messages.find((msg) => msg.sender === 'AI');
- 
+ console.log("Eff",me)
     if (latestAIMessage) {
       const { formattedTitle, formattedParagraph, formattedContent } = formatBlogContent(latestAIMessage.text);
       setFormattedTitle(formattedTitle);
