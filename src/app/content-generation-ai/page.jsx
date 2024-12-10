@@ -131,7 +131,9 @@ export default function PuterChat() {
 
   const formatBlogContent = (content) => {
     const cleanedContent = content;
-  
+    if (!cleanedContent) {
+      console.log("cleanedContent is empty or undefined");
+    }
  //-------------------------------------------------------------------------------------------------- Title
  const titleMatch = cleanedContent.match(/^##\s*(.*?)\s*$/m);
 
@@ -272,72 +274,7 @@ export default function PuterChat() {
       console.error('Error refreshing:', error);
     }
   };
-  // const handleRestructureClick = async (type) => {
-  //   const sentence =
-  //     type === "title"
-  //       ? stripHtmlTags(formattedTitle)
-  //       : type === "description"
-  //       ? stripHtmlTags(metaDescription)
-  //       : stripHtmlTags(formattedContent);
-  
-  //   if (!sentence.trim()) {
-  //     console.warn(""); 
-  //     return;
-  //   }
-  
-  //   try {
-  //     const response = await fetch("/api/refresh", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ sentence, category, keyword }),
-  //     });
-  
-  //     const data = await response.json();
-  
-  //     if (response.ok) {
-  //       const newSentence = data.regeneratedSentence;
-  
-  //       setMessages((prevMessages) => {
-  //         const updatedMessages = [...prevMessages];
-  //         const lastAiIndex = updatedMessages.findLastIndex((msg) => msg.sender === "AI");
-  
-  //         if (lastAiIndex !== -1) {
-  //           const lastMessage = updatedMessages[lastAiIndex];
-  //           let updatedText = lastMessage.text;
-  
-  //           if (type === "title") {
-  //             updatedText = updatedText.replace(/^##\s*(.*?)\s*$/m, `## ${newSentence}`);
-  //             setFormattedTitle(newSentence);
-  //           } else if (type === "description") {
-  //             updatedText = updatedText.replace(
-  //               /\*\*Introduction:\*\*\s*([\s\S]*?)(?=\*\*|$)/,
-  //               `**Introduction:** ${newSentence}`
-  //             );
-  //             setMetaDescription('');
-  //             setMetaDescription(newSentence);
-  //           } else if (type === "content") {
-  //             updatedText += `\n\n${newSentence}`;
-  //             console.log("New sentence:", newSentence);
-  //             setFormattedContent("");
-  //             console.log("Formatted:", formattedContent);
-  //             setFormattedContent(newSentence);
-  //           }
-  
-  //           updatedMessages[lastAiIndex] = { ...lastMessage, text: updatedText };
-  //         }
-  
-  //         return updatedMessages;
-  //       });
-  //     } else {
-  //       console.error(data.error || "Failed to regenerate the sentence."); 
-  //     }
-  //   } catch (error) {
-  //     console.error("Error regenerating sentence:", error); 
-  //   }
-  // };
-  
+
 
   function stripHtmlTags(html) {
     const div = document.createElement('div');
