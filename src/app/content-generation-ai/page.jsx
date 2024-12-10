@@ -32,7 +32,7 @@ export default function PuterChat() {
 
   useEffect(() => {
     const latestAIMessage = messages.find((msg) => msg.sender === 'AI');
-  
+ 
     if (latestAIMessage) {
       const { formattedTitle, formattedParagraph, formattedContent } = formatBlogContent(latestAIMessage.text);
       setFormattedTitle(formattedTitle);
@@ -131,9 +131,7 @@ export default function PuterChat() {
 
   const formatBlogContent = (content) => {
     const cleanedContent = content;
-    if (!cleanedContent) {
-      console.log("cleanedContent is empty or undefined");
-    }
+
  //-------------------------------------------------------------------------------------------------- Title
  const titleMatch = cleanedContent.match(/^##\s*(.*?)\s*$/m);
 
@@ -242,6 +240,7 @@ export default function PuterChat() {
 
 
   const handleRestructureClick = async (type) => {
+    console.log("TITLE",formattedTitle);
     const sentence = type === 'title' ? formattedTitle : metaDescription;
     const category = Array.isArray(categoryBadges) ? categoryBadges.join(', ') : '';
     const keyword = Array.isArray(keywordBadges) ? keywordBadges.join(', ') : '';
@@ -267,6 +266,7 @@ export default function PuterChat() {
           ...prevMessages.filter((msg) => msg.sender !== 'AI'),
           { id: Date.now() + 1, sender: 'AI', text: data.response }, // Make sure to update messages if necessary
         ]);
+        console.log("MESSs",messages)
       } else {
         console.error('Error refreshing:', data.error);
       }
