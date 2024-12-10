@@ -1,496 +1,499 @@
-// 'use client';
-// import { useState, useEffect, useRef } from 'react';
-// import '@styles/ai/BetaAi.css'
-// import Image from 'next/image';
-// import Hover from '@public/Images/ai/hover.svg';
-// import NoHover from '@public/Images/ai/nohover.svg';
-// import copy from '@public/Images/ai/copy.svg';
-// import refresh from '@public/Images/ai/refresh.svg';
-// import refresh2 from '@public/Images/ai/refresh-dash.svg';
-// import download from '@public/Images/ai/download.svg';
-// import prfecBtn from '@public/Images/ai/prfec button.svg';
-// import jsPDF from 'jspdf';
-// import html2canvas from 'html2canvas';
+'use client';
+import { useState, useEffect, useRef } from 'react';
+import '@styles/ai/BetaAi.css'
+import Image from 'next/image';
+import Hover from '@public/Images/ai/hover.svg';
+import NoHover from '@public/Images/ai/nohover.svg';
+import copy from '@public/Images/ai/copy.svg';
+import refresh from '@public/Images/ai/refresh.svg';
+import refresh2 from '@public/Images/ai/refresh-dash.svg';
+import download from '@public/Images/ai/download.svg';
+import prfecBtn from '@public/Images/ai/prfec button.svg';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
-// import { metadata } from '@app/layout';
+import { metadata } from '@app/layout';
 
-// export default function PuterChat() {
-//   const [messages, setMessages] = useState([]);
-//   const [input, setInput] = useState('');
-//   const [lastInput, setLastInput] = useState('');
-//   const [isTyping, setIsTyping] = useState(false);
-//   const [buttonHl, setButtonHl] = useState(false);
-//   const [isCopied, setIsCopied] = useState(false);
-//   const [copyHover, setCopyHover] = useState(false);
-//   const [formattedTitle, setFormattedTitle] = useState('');
-//   const [metaDescription, setMetaDescription] = useState('');
-//   const [formattedContent, setFormattedContent] = useState('');
-//   const [category, setCategory] = useState('');
-//   const [keyword, setKeyword] = useState('');
-//   const [categoryBadges, setCategoryBadges] = useState([]); // State for category badges
-//   const [keywordBadges, setKeywordBadges] = useState([]);
+export default function PuterChat() {
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
+  const [lastInput, setLastInput] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [buttonHl, setButtonHl] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
+  const [copyHover, setCopyHover] = useState(false);
+  const [formattedTitle, setFormattedTitle] = useState('');
+  const [metaDescription, setMetaDescription] = useState('');
+  const [formattedContent, setFormattedContent] = useState('');
+  const [category, setCategory] = useState('');
+  const [keyword, setKeyword] = useState('');
+  const [categoryBadges, setCategoryBadges] = useState([]); // State for category badges
+  const [keywordBadges, setKeywordBadges] = useState([]);
 
-//   useEffect(() => {
-//     const latestAIMessage = messages.find((msg) => msg.sender === 'AI');
+  useEffect(() => {
+    const latestAIMessage = messages.find((msg) => msg.sender === 'AI');
   
-//     if (latestAIMessage) {
-//       const { formattedTitle, formattedParagraph, formattedContent } = formatBlogContent(latestAIMessage.text);
-//       setFormattedTitle(formattedTitle);
-//       setMetaDescription(formattedParagraph); // Assuming paragraph as meta description
-//       setFormattedContent(formattedContent);
-//     }
-//   }, [messages]);
+    if (latestAIMessage) {
+      const { formattedTitle, formattedParagraph, formattedContent } = formatBlogContent(latestAIMessage.text);
+      setFormattedTitle(formattedTitle);
+      setMetaDescription(formattedParagraph); // Assuming paragraph as meta description
+      setFormattedContent(formattedContent);
+    }
+  }, [messages]);
   
-//   const handleInputChange = (event) => {
-//     const newInput = event.target.value;
-//     setInput(newInput);
-//     setButtonHl(newInput.trim() !== ''); // Highlight button if input isn't empty
-//   };
+  const handleInputChange = (event) => {
+    const newInput = event.target.value;
+    setInput(newInput);
+    setButtonHl(newInput.trim() !== ''); // Highlight button if input isn't empty
+  };
 
-//   const handleSendMessage = async () => {
-//     if (!input.trim()) return;
+  const handleSendMessage = async () => {
+    if (!input.trim()) return;
  
 
-//     let prefixedInput = input.trim().startsWith("blog about")? input.trim(): `blog about ${input.trim()}`;
-//     setButtonHl(true); // Highlight button when message is being sent
-//     setFormattedTitle(''); // Reset the previous title
-//     setMetaDescription(''); // Reset the previous meta description
-//     setFormattedContent('');
-//     setCategory('');
-//     setKeyword('');
-//     setCategoryBadges('');
-//     setKeywordBadges('');
-//     setLastInput(prefixedInput); // Store the last input
+    let prefixedInput = input.trim().startsWith("blog about")? input.trim(): `blog about ${input.trim()}`;
+    setButtonHl(true); // Highlight button when message is being sent
+    setFormattedTitle(''); // Reset the previous title
+    setMetaDescription(''); // Reset the previous meta description
+    setFormattedContent('');
+    setCategory('');
+    setKeyword('');
+    setCategoryBadges('');
+    setKeywordBadges('');
+    setLastInput(prefixedInput); // Store the last input
 
-//     if (categoryBadges.length > 0) {// Append categories and keywords to the input
-//       const categoriesText = `Categories: ${categoryBadges.join(', ')}`;
-//       prefixedInput += `\n${categoriesText}`;
-//     }
+    if (categoryBadges.length > 0) {// Append categories and keywords to the input
+      const categoriesText = `Categories: ${categoryBadges.join(', ')}`;
+      prefixedInput += `\n${categoriesText}`;
+    }
 
-//     if (keywordBadges.length > 0) {
-//       const keywordsText = `Keywords: ${keywordBadges.join(', ')}`;
-//       prefixedInput += `\n${keywordsText}`;
-//     }
+    if (keywordBadges.length > 0) {
+      const keywordsText = `Keywords: ${keywordBadges.join(', ')}`;
+      prefixedInput += `\n${keywordsText}`;
+    }
 
    
 
-//     const userMessage = {
-//       id: Date.now(),
-//       sender: 'You',
-//       text: prefixedInput,
-//     };
+    const userMessage = {
+      id: Date.now(),
+      sender: 'You',
+      text: prefixedInput,
+    };
 
-//     // Clear previous AI messages before adding the new one
-//     setMessages((prev) => [
-//       ...prev.filter((msg) => msg.sender !== 'AI'),
-//       userMessage,
-//     ]);
+    // Clear previous AI messages before adding the new one
+    setMessages((prev) => [
+      ...prev.filter((msg) => msg.sender !== 'AI'),
+      userMessage,
+    ]);
 
-//     setInput('');
-//     setButtonHl(false); // Reset button highlight while waiting for AI response
-//     setIsTyping(true);
+    setInput('');
+    setButtonHl(false); // Reset button highlight while waiting for AI response
+    setIsTyping(true);
 
-//     try {
-//       const response = await fetch('/api/chat', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ message: userMessage.text }),
-//       });
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: userMessage.text }),
+      });
 
-//       const data = await response.json();
+      const data = await response.json();
 
-//       if (response.ok) {
-//         const botMessage = {
-//           id: Date.now() + 1,
-//           sender: 'AI',
-//           text: data.response,
-//         };
-//         setMessages((prev) => [...prev, botMessage]);
-//       } else {
-//         const errorMessage = {
-//           id: Date.now() + 1,
-//           sender: 'AI',
-//           text: data.error || 'Something went wrong.',
-//         };
-//         setMessages((prev) => [...prev, errorMessage]);
-//       }
-//     } catch (error) {
-//       console.error('Error fetching chat:', error);
-//       const errorMessage = {
-//         id: Date.now() + 1,
-//         sender: 'AI',
-//         text: 'An unexpected error occurred.',
-//       };
-//       setMessages((prev) => [...prev, errorMessage]);
-//     } finally {
-//       setIsTyping(false);
-//     }
-//   };
+      if (response.ok) {
+        const botMessage = {
+          id: Date.now() + 1,
+          sender: 'AI',
+          text: data.response,
+        };
+        setMessages((prev) => [...prev, botMessage]);
+      } else {
+        const errorMessage = {
+          id: Date.now() + 1,
+          sender: 'AI',
+          text: data.error || 'Something went wrong.',
+        };
+        setMessages((prev) => [...prev, errorMessage]);
+      }
+    } catch (error) {
+      console.error('Error fetching chat:', error);
+      const errorMessage = {
+        id: Date.now() + 1,
+        sender: 'AI',
+        text: 'An unexpected error occurred.',
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
+      setIsTyping(false);
+    }
+  };
 
-//   const formatBlogContent = (content) => {
-//     const cleanedContent = content;
+  const formatBlogContent = (content) => {
+    const cleanedContent = content;
   
-//  //-------------------------------------------------------------------------------------------------- Title
-//  const titleMatch = cleanedContent.match(/^##\s*(.*?)\s*$/m);
+ //-------------------------------------------------------------------------------------------------- Title
+ const titleMatch = cleanedContent.match(/^##\s*(.*?)\s*$/m);
 
-//  let title = titleMatch ? titleMatch[1].trim() : "";
+ let title = titleMatch ? titleMatch[1].trim() : "";
  
-//  const formattedTitle = title
-//    ? `<h1 class="heading1">${title.trim()}</h1>`
-//    : "";
-//  // ------------------------------------------------------------------------------------------------ Paragraph
-//  const introPara = cleanedContent.match(/^([\s\S]*?)(?=\s*\*\*|\n\*\*|$)/);
+ const formattedTitle = title
+   ? `<h1 class="heading1">${title.trim()}</h1>`
+   : "";
+ // ------------------------------------------------------------------------------------------------ Paragraph
+ const introPara = cleanedContent.match(/^([\s\S]*?)(?=\s*\*\*|\n\*\*|$)/);
  
-//  let BlogPara = introPara ? introPara[1].trim() : "";
-//   if (title) {
-//    BlogPara = BlogPara.replace(new RegExp(`##\\s*${title}`, "i"), "").trim(); //i stands for case-insensitive matching.
-//  }
+ let BlogPara = introPara ? introPara[1].trim() : "";
+  if (title) {
+   BlogPara = BlogPara.replace(new RegExp(`##\\s*${title}`, "i"), "").trim(); //i stands for case-insensitive matching.
+ }
  
-//  const formattedParagraph = BlogPara? `<p class="para-text">${BlogPara.replace(/##/g, "").trim()}</p>`: "";
-//   // // --------------------------------------------------------------------------------------------------------------------------
+ const formattedParagraph = BlogPara? `<p class="para-text">${BlogPara.replace(/##/g, "").trim()}</p>`: "";
+  // // --------------------------------------------------------------------------------------------------------------------------
 
-//   let contentWithoutTitleAndParagraph = cleanedContent;
+  let contentWithoutTitleAndParagraph = cleanedContent;
 
-//   if (title) {
-//     contentWithoutTitleAndParagraph = contentWithoutTitleAndParagraph.replace(new RegExp(`^##\\s*${title}\\s*`, "i"),"");
-//   }
-//   if (BlogPara) {
-//     contentWithoutTitleAndParagraph = contentWithoutTitleAndParagraph.replace(new RegExp(BlogPara.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"), "g"),"");
-//   }
+  if (title) {
+    contentWithoutTitleAndParagraph = contentWithoutTitleAndParagraph.replace(new RegExp(`^##\\s*${title}\\s*`, "i"),"");
+  }
+  if (BlogPara) {
+    contentWithoutTitleAndParagraph = contentWithoutTitleAndParagraph.replace(new RegExp(BlogPara.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"), "g"),"");
+  }
   
-//   contentWithoutTitleAndParagraph = contentWithoutTitleAndParagraph.trim();
+  contentWithoutTitleAndParagraph = contentWithoutTitleAndParagraph.trim();
  
-//     //------------------------------------------------------------------------------------------------------------------
-//     const formattedContent = contentWithoutTitleAndParagraph
-//     .replace(/-\s\*\*(.*?)\*\*/g, '<li class="list-item-heading">$1</li>')
-//     .replace(/\*\s\*\*(.*?)\*\*/g, '<li class="list-item-heading">$1</li>')
-//     .replace(/^(\d+\.)\s\*\*(.*?)\*\*/gm, '<h4 class="heading3">$2</h4>')
+    //------------------------------------------------------------------------------------------------------------------
+    const formattedContent = contentWithoutTitleAndParagraph
+    .replace(/-\s\*\*(.*?)\*\*/g, '<li class="list-item-heading">$1</li>')
+    .replace(/\*\s\*\*(.*?)\*\*/g, '<li class="list-item-heading">$1</li>')
+    .replace(/^(\d+\.)\s\*\*(.*?)\*\*/gm, '<h4 class="heading3">$2</h4>')
 
 
-//       .replace(/\*\*(.*?)\*\*/g, '<h2 class="heading2">$1</h2>') // for **.....
-//       .replace(/^\s*-\s(.*?)(?=\n|$)/gm, '<li class="list-item">$1</li>')
-//       .replace(/^- (.*?)(?=\n|$)/gm, '<li class="list-item">$1</li>')
-//       .replace(/^([*-])\s(.*?)(?=\n|$)/gm, '<li class="list-item">$2</li>') 
-//       .replace(/^(?!<h1|<h2)(.*?)(?=\n|$)/gm, '<p class="para-text">$1</p>') // Paragraph tag for other content
-//       .trim();
+      .replace(/\*\*(.*?)\*\*/g, '<h2 class="heading2">$1</h2>') // for **.....
+      .replace(/^\s*-\s(.*?)(?=\n|$)/gm, '<li class="list-item">$1</li>')
+      .replace(/^- (.*?)(?=\n|$)/gm, '<li class="list-item">$1</li>')
+      .replace(/^([*-])\s(.*?)(?=\n|$)/gm, '<li class="list-item">$2</li>') 
+      .replace(/^(?!<h1|<h2)(.*?)(?=\n|$)/gm, '<p class="para-text">$1</p>') // Paragraph tag for other content
+      .trim();
 
   
-//     return {formattedTitle,formattedParagraph,formattedContent};
-//   };
-//   const handleRefreshContent = async () => {
-//     if (!lastInput) return; 
+    return {formattedTitle,formattedParagraph,formattedContent};
+  };
+  const handleRefreshContent = async () => {
+    if (!lastInput) return; 
 
-//     let refreshedInput = lastInput;
-//     if (categoryBadges.length > 0) {
-//       const categoriesText = `Categories: ${categoryBadges.join(', ')}`;
-//       refreshedInput += `\n${categoriesText}`;
-//     }
+    let refreshedInput = lastInput;
+    if (categoryBadges.length > 0) {
+      const categoriesText = `Categories: ${categoryBadges.join(', ')}`;
+      refreshedInput += `\n${categoriesText}`;
+    }
   
-//     if (keywordBadges.length > 0) {
-//       const keywordsText = `Keywords: ${keywordBadges.join(', ')}`;
-//       refreshedInput += `\n${keywordsText}`;
-//     }
+    if (keywordBadges.length > 0) {
+      const keywordsText = `Keywords: ${keywordBadges.join(', ')}`;
+      refreshedInput += `\n${keywordsText}`;
+    }
 
-//     setMessages((prev) => prev.filter((msg) => msg.sender !== 'AI'));//remove chat-contents message
-//     setFormattedTitle('');//clear dashboard inputs
-//     setMetaDescription('');
-//     setFormattedContent('');
-//     setIsTyping(true);
+    setMessages((prev) => prev.filter((msg) => msg.sender !== 'AI'));//remove chat-contents message
+    setFormattedTitle('');//clear dashboard inputs
+    setMetaDescription('');
+    setFormattedContent('');
+    setIsTyping(true);
   
-//     try {
-//       const response = await fetch('/api/chat', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ message: refreshedInput }),
-//       });
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: refreshedInput }),
+      });
   
-//       const data = await response.json();
+      const data = await response.json();
   
-//       if (response.ok) {
-//         const botMessage = {
-//           id: Date.now() + 1,
-//           sender: 'AI',
-//           text: data.response,
-//         };
-//         setMessages((prev) => [...prev.filter((msg) => msg.sender !== 'AI'), botMessage]);
-//       } else {
-//         const errorMessage = {
-//           id: Date.now() + 1,
-//           sender: 'AI',
-//           text: data.error || 'Something went wrong.',
-//         };
-//         setMessages((prev) => [...prev.filter((msg) => msg.sender !== 'AI'), errorMessage]);
-//       }
-//     } catch (error) {
-//       console.error('Error refreshing content:', error);
-//       const errorMessage = {
-//         id: Date.now() + 1,
-//         sender: 'AI',
-//         text: 'An unexpected error occurred.',
-//       };
-//       setMessages((prev) => [...prev.filter((msg) => msg.sender !== 'AI'), errorMessage]);
-//     } finally {
-//       setIsTyping(false);
-//     }
-//   };
+      if (response.ok) {
+        const botMessage = {
+          id: Date.now() + 1,
+          sender: 'AI',
+          text: data.response,
+        };
+        setMessages((prev) => [...prev.filter((msg) => msg.sender !== 'AI'), botMessage]);
+      } else {
+        const errorMessage = {
+          id: Date.now() + 1,
+          sender: 'AI',
+          text: data.error || 'Something went wrong.',
+        };
+        setMessages((prev) => [...prev.filter((msg) => msg.sender !== 'AI'), errorMessage]);
+      }
+    } catch (error) {
+      console.error('Error refreshing content:', error);
+      const errorMessage = {
+        id: Date.now() + 1,
+        sender: 'AI',
+        text: 'An unexpected error occurred.',
+      };
+      setMessages((prev) => [...prev.filter((msg) => msg.sender !== 'AI'), errorMessage]);
+    } finally {
+      setIsTyping(false);
+    }
+  };
 
 
-//   // const handleRestructure = async (type) => {
-//   //   const sentence = type === 'title' ? formattedTitle : metaDescription;
-//   //   const category = Array.isArray(categoryBadges) ? categoryBadges.join(', ') : '';
-//   //   const keyword = Array.isArray(keywordBadges) ? keywordBadges.join(', ') : '';
+  const handleRestructureClick = async (type) => {
+    const sentence = type === 'title' ? formattedTitle : metaDescription;
+    const category = Array.isArray(categoryBadges) ? categoryBadges.join(', ') : '';
+    const keyword = Array.isArray(keywordBadges) ? keywordBadges.join(', ') : '';
   
-//   //   try {
-//   //     const response = await fetch('/api/refresh', {
-//   //       method: 'POST',
-//   //       headers: {
-//   //         'Content-Type': 'application/json',
-//   //       },
-//   //       body: JSON.stringify({ sentence}),
-//   //     });
+    try {
+      const response = await fetch('/api/refresh', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ sentence}),
+      });
   
-//   //     const data = await response.json();
+      const data = await response.json();
   
-//   //     if (response.ok) {
-//   //       if (type === 'title') {
-//   //         setFormattedTitle(data.formattedTitle); // Update formattedTitle based on response
-//   //       } else if (type === 'description') {
-//   //         setMetaDescription(data.metaDescription); // Update metaDescription based on response
-//   //       }
-//   //       setMessages((prevMessages) => [
-//   //         ...prevMessages.filter((msg) => msg.sender !== 'AI'),
-//   //         { id: Date.now() + 1, sender: 'AI', text: data.response }, // Make sure to update messages if necessary
-//   //       ]);
-//   //     } else {
-//   //       console.error('Error refreshing:', data.error);
-//   //     }
-//   //   } catch (error) {
-//   //     console.error('Error refreshing:', error);
-//   //   }
-//   // };
-//   const handleGenerateContentClick = async (type) => {
-//     const sentence =
-//       type === 'title'
-//         ? stripHtmlTags(formattedTitle)
-//         : type === 'description'
-//         ? stripHtmlTags(metaDescription)
-//         : stripHtmlTags(formattedContent);
+      if (response.ok) {
+        if (type === 'title') {
+          setFormattedTitle(data.formattedTitle); // Update formattedTitle based on response
+        } else if (type === 'description') {
+          setMetaDescription(data.metaDescription); // Update metaDescription based on response
+        }
+        setMessages((prevMessages) => [
+          ...prevMessages.filter((msg) => msg.sender !== 'AI'),
+          { id: Date.now() + 1, sender: 'AI', text: data.response }, // Make sure to update messages if necessary
+        ]);
+      } else {
+        console.error('Error refreshing:', data.error);
+      }
+    } catch (error) {
+      console.error('Error refreshing:', error);
+    }
+  };
+  // const handleRestructureClick = async (type) => {
+  //   const sentence =
+  //     type === "title"
+  //       ? stripHtmlTags(formattedTitle)
+  //       : type === "description"
+  //       ? stripHtmlTags(metaDescription)
+  //       : stripHtmlTags(formattedContent);
   
-//     if (!sentence.trim()) {
-//       alert('No content available to regenerate.');
-//       return;
-//     }
+  //   if (!sentence.trim()) {
+  //     console.warn(""); 
+  //     return;
+  //   }
   
-//     try {
-//       const response = await fetch('/api/generate', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ sentence, category, keyword }),
-//       });
+  //   try {
+  //     const response = await fetch("/api/refresh", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ sentence, category, keyword }),
+  //     });
   
-//       const data = await response.json();
+  //     const data = await response.json();
   
-//       if (response.ok) {
-//         const newSentence = data.generatedSentence;
+  //     if (response.ok) {
+  //       const newSentence = data.regeneratedSentence;
   
-//         setMessages((prevMessages) => {
-//           const updatedMessages = [...prevMessages];
-//           const lastAiIndex = updatedMessages.findLastIndex((msg) => msg.sender === 'AI');
+  //       setMessages((prevMessages) => {
+  //         const updatedMessages = [...prevMessages];
+  //         const lastAiIndex = updatedMessages.findLastIndex((msg) => msg.sender === "AI");
   
-//           if (lastAiIndex !== -1) {
-//             const lastMessage = updatedMessages[lastAiIndex];
-//             let updatedText = lastMessage.text;
+  //         if (lastAiIndex !== -1) {
+  //           const lastMessage = updatedMessages[lastAiIndex];
+  //           let updatedText = lastMessage.text;
   
-//             if (type === 'title') {
-//               updatedText = updatedText.replace(/^##\s*(.*?)\s*$/m, `## ${newSentence}`);
-//               setFormattedTitle(newSentence);
-//             } else if (type === 'description') {
-//               updatedText = updatedText.replace(
-//                 /\*\*Introduction:\*\*\s*([\s\S]*?)(?=\*\*|$)/,
-//                 `**Introduction:** ${newSentence}`
-//               );
-//               setMetaDescription(newSentence);
-//             } else if (type === 'content') {
-//               updatedText += `\n\n${newSentence}`;
-//               setFormattedContent('');
-//               setFormattedContent(newSentence);
-//             }
+  //           if (type === "title") {
+  //             updatedText = updatedText.replace(/^##\s*(.*?)\s*$/m, `## ${newSentence}`);
+  //             setFormattedTitle(newSentence);
+  //           } else if (type === "description") {
+  //             updatedText = updatedText.replace(
+  //               /\*\*Introduction:\*\*\s*([\s\S]*?)(?=\*\*|$)/,
+  //               `**Introduction:** ${newSentence}`
+  //             );
+  //             setMetaDescription('');
+  //             setMetaDescription(newSentence);
+  //           } else if (type === "content") {
+  //             updatedText += `\n\n${newSentence}`;
+  //             console.log("New sentence:", newSentence);
+  //             setFormattedContent("");
+  //             console.log("Formatted:", formattedContent);
+  //             setFormattedContent(newSentence);
+  //           }
   
-//             updatedMessages[lastAiIndex] = { ...lastMessage, text: updatedText };
-//           }
+  //           updatedMessages[lastAiIndex] = { ...lastMessage, text: updatedText };
+  //         }
   
-//           return updatedMessages;
-//         });
-//       } else {
-//         alert(data.error || 'Failed to regenerate the sentence.');
-//       }
-//     } catch (error) {
-//       console.error('Error generating content:', error);
-//       alert('An error occurred while generating content.');
-//     }
-//   };
+  //         return updatedMessages;
+  //       });
+  //     } else {
+  //       console.error(data.error || "Failed to regenerate the sentence."); 
+  //     }
+  //   } catch (error) {
+  //     console.error("Error regenerating sentence:", error); 
+  //   }
+  // };
   
-//   function stripHtmlTags(html) {
-//     const div = document.createElement('div');
-//     div.innerHTML = html;
-//     return div.textContent || div.innerText || '';
-//   }
-//   const handleCategoryChange = (event) => {
-//     setCategory(event.target.value);
-//   };
 
-//   const handleKeywordChange = (event) => {
-//     setKeyword(event.target.value);
-//   };
+  function stripHtmlTags(html) {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return div.textContent || div.innerText || '';
+  }
+  const handleCategoryChange = (event) => {
+    setCategory(event.target.value);
+  };
 
-//   const handleCategoryKeyDown = (event) => {
-//     if (event.key === 'Enter' && category.trim()) {
-//       setCategoryBadges((prev) => [...prev, category]);
-//       setCategory('');
-//     }
-//   };
+  const handleKeywordChange = (event) => {
+    setKeyword(event.target.value);
+  };
 
-//   const handleKeywordKeyDown = (event) => {
-//     if (event.key === 'Enter' && keyword.trim()) {
-//       setKeywordBadges((prev) => [...prev, keyword]);
-//       setKeyword('');
-//     }
-//   };
-//   return (
-//      <div className="prfec-ai">
-//       <div className="prfec-ai-container">
-//         {/* AI Dashboard Section */}
-//         <div className="ai-dashboard">
-//           <div className="ai-dashboard-container">
-//             <h1 className='ai-chat-heading'>AI Content Generation</h1>
-//             <div className="ai-dashboard-contents">
-//             <div className="ai-dashboard-title">
-//                 <label htmlFor="ai-title" className='dashboard-label'>Title</label>  
-//                 <div className='ai-dashboard-title-input'>
-//                   <input type="text" id="ai-title" value={stripHtmlTags(formattedTitle)} readOnly />
-//                   <div className="refresh-title-button" onClick={() => handleGenerateContentClick('title')}>
-//                     <Image src={refresh2} height={12} alt='refresh'/>
-//                   </div>
-//                 </div>
-//               </div>
-//               <div className="ai-dashboard-description">
-//                 <label htmlFor="ai-description" className='dashboard-label'>Meta description</label>
-//                 <div className='ai-dashboard-title-input'>
-//                   <input type="text" id="ai-description"  value={stripHtmlTags(metaDescription)} readOnly/>
-//                   <div className="refresh-description-button" onClick={() => handleGenerateContentClick('description')}>
-//                     <Image src={refresh2} height={12} alt='refresh'/>
-//                   </div>
-//                 </div>
-//               </div>
+  const handleCategoryKeyDown = (event) => {
+    if (event.key === 'Enter' && category.trim()) {
+      setCategoryBadges((prev) => [...prev, category]);
+      setCategory('');
+    }
+  };
 
-//               <div className="ai-dashboard-body">
-//                 <label htmlFor="" className='dashboard-label'>Body</label>
-//                 <div className='ai-dashboard-title-input'>
-//                   <input type="text" id="ai-content" value={stripHtmlTags(formattedContent)} readOnly  />
-//                   <div className="refresh-body-button">
-//                     <Image src={refresh2} height={12} alt='refresh'/>
-//                   </div>
-//                 </div>
-//               </div>
-//               <div className="ai-dashboard-category">
-//                 <label htmlFor="category" className='dashboard-label'>Category</label>
-//                 <div className='ai-dashboard-title-input'>
-//                   <input type="text" id="category" value={category} onChange={handleCategoryChange} onKeyDown={handleCategoryKeyDown}/>
-//                 </div>
-//                 {categoryBadges &&
-//                 <div className="badges-container">
-//                   {categoryBadges.map((badge, index) => (
-//                     <span key={index} className="badge"> {badge} </span>
-//                   ))}
-//                 </div>}
-//               </div>
-//               <div className="ai-dashboard-category">
-//                 <label htmlFor="keyword" className='dashboard-label'>Keyword</label>
-//                 <div className='ai-dashboard-title-input'>
-//                   <input type="text" id="keyword" value={keyword} onChange={handleKeywordChange} onKeyDown={handleKeywordKeyDown}/>
-//                 </div>
-//                 {keywordBadges && <div className="badges-container">
-//                   {keywordBadges.map((badge, index) => (
-//                     <span key={index} className="badge"> {badge} </span>
-//                   ))}
-//                 </div>}
-//               </div>
-//             </div>
-//           </div>
-//         </div>
+  const handleKeywordKeyDown = (event) => {
+    if (event.key === 'Enter' && keyword.trim()) {
+      setKeywordBadges((prev) => [...prev, keyword]);
+      setKeyword('');
+    }
+  };
+  return (
+     <div className="prfec-ai">
+      <div className="prfec-ai-container">
+        {/* AI Dashboard Section */}
+        <div className="ai-dashboard">
+          <div className="ai-dashboard-container">
+            <h1 className='ai-chat-heading'>AI Content Generation</h1>
+            <div className="ai-dashboard-contents">
+            <div className="ai-dashboard-title">
+                <label htmlFor="ai-title" className='dashboard-label'>Title</label>  
+                <div className='ai-dashboard-title-input'>
+                  <input type="text" id="ai-title" value={stripHtmlTags(formattedTitle)} readOnly />
+                  <div className="refresh-title-button" onClick={() => handleRestructureClick('title')}>
+                    <Image src={refresh2} height={12} alt='refresh'/>
+                  </div>
+                </div>
+              </div>
+              <div className="ai-dashboard-description">
+                <label htmlFor="ai-description" className='dashboard-label'>Meta description</label>
+                <div className='ai-dashboard-title-input'>
+                  <input type="text" id="ai-description"  value={stripHtmlTags(metaDescription)} readOnly/>
+                  <div className="refresh-description-button" onClick={() => handleRestructureClick('description')}>
+                    <Image src={refresh2} height={12} alt='refresh'/>
+                  </div>
+                </div>
+              </div>
 
-//         <div className='content-gen-space'>
+              <div className="ai-dashboard-body">
+                <label htmlFor="" className='dashboard-label'>Body</label>
+                <div className='ai-dashboard-title-input'>
+                  <input type="text" id="ai-content" value={stripHtmlTags(formattedContent)} readOnly  />
+                  <div className="refresh-body-button">
+                    <Image src={refresh2} height={12} alt='refresh'/>
+                  </div>
+                </div>
+              </div>
+              <div className="ai-dashboard-category">
+                <label htmlFor="category" className='dashboard-label'>Category</label>
+                <div className='ai-dashboard-title-input'>
+                  <input type="text" id="category" value={category} onChange={handleCategoryChange} onKeyDown={handleCategoryKeyDown}/>
+                </div>
+                {categoryBadges &&
+                <div className="badges-container">
+                  {categoryBadges.map((badge, index) => (
+                    <span key={index} className="badge"> {badge} </span>
+                  ))}
+                </div>}
+              </div>
+              <div className="ai-dashboard-category">
+                <label htmlFor="keyword" className='dashboard-label'>Keyword</label>
+                <div className='ai-dashboard-title-input'>
+                  <input type="text" id="keyword" value={keyword} onChange={handleKeywordChange} onKeyDown={handleKeywordKeyDown}/>
+                </div>
+                {keywordBadges && <div className="badges-container">
+                  {keywordBadges.map((badge, index) => (
+                    <span key={index} className="badge"> {badge} </span>
+                  ))}
+                </div>}
+              </div>
+            </div>
+          </div>
+        </div>
 
-//           <div className="chat-space">
-//             <div className="chat-container">
-//               <div className='chat-contents'>
-//                   {messages
-//                     .filter((msg) => msg.sender === 'AI')
-//                     .map((msg, index) => {
-//                       const { formattedTitle, formattedParagraph, formattedContent } = formatBlogContent(msg.text);
+        <div className='content-gen-space'>
+
+          <div className="chat-space">
+            <div className="chat-container">
+              <div className='chat-contents'>
+                  {messages
+                    .filter((msg) => msg.sender === 'AI')
+                    .map((msg, index) => {
+                      const { formattedTitle, formattedParagraph, formattedContent } = formatBlogContent(msg.text);
                       
-//                       return (
-//                         <div key={index}>
-//                           {formattedTitle && (
-//                             <h1 className="heading1" dangerouslySetInnerHTML={{ __html: formattedTitle }} />
-//                           )}
-//                           {formattedParagraph && (
-//                             <p className="para-text ai-message" dangerouslySetInnerHTML={{ __html: formattedParagraph }} />
-//                           )}
-//                           {formattedContent && (
-//                             <p className="para-text ai-message" dangerouslySetInnerHTML={{ __html: formattedContent }} />
-//                           )}
-//                         </div>
-//                       );
-//                     })}
+                      return (
+                        <div key={index}>
+                          {formattedTitle && (
+                            <h1 className="heading1" dangerouslySetInnerHTML={{ __html: formattedTitle }} />
+                          )}
+                          {formattedParagraph && (
+                            <p className="para-text ai-message" dangerouslySetInnerHTML={{ __html: formattedParagraph }} />
+                          )}
+                          {formattedContent && (
+                            <p className="para-text ai-message" dangerouslySetInnerHTML={{ __html: formattedContent }} />
+                          )}
+                        </div>
+                      );
+                    })}
 
-//                   {isTyping && (
-//                     <div className="loading-skeleton ai-message">
-//                       <div className="skeleton-line"></div>
-//                       <div className="skeleton-line"></div>
-//                       <div className="skeleton-line"></div>
-//                     </div>
-//                   )}
+                  {isTyping && (
+                    <div className="loading-skeleton ai-message">
+                      <div className="skeleton-line"></div>
+                      <div className="skeleton-line"></div>
+                      <div className="skeleton-line"></div>
+                    </div>
+                  )}
 
-//               </div>
-//             </div>
-//             <div className="chat-action-buttons">
-//               <div className="copy-chat-button">
-//                 <Image src={copy}  height={14} alt='copy'/>
-//                 <div className="chat-button-label">
-//                   {isCopied && (
-//                     <div className="chat-button-label-copied">Copied</div>
-//                   )}
-//                 </div>
-//               </div>
-//               <div className="download-chat-button">
-//                 <Image src={download} height={14} alt='download'/>
-//               </div>
-//               <div className="refresh-chat-button" onClick={handleRefreshContent}>
-//                 <Image src={refresh} height={13} alt='refresh'/>
-//               </div>
-//             </div>
-//           </div>
+              </div>
+            </div>
+            <div className="chat-action-buttons">
+              <div className="copy-chat-button">
+                <Image src={copy}  height={14} alt='copy'/>
+                <div className="chat-button-label">
+                  {isCopied && (
+                    <div className="chat-button-label-copied">Copied</div>
+                  )}
+                </div>
+              </div>
+              <div className="download-chat-button">
+                <Image src={download} height={14} alt='download'/>
+              </div>
+              <div className="refresh-chat-button" onClick={handleRefreshContent}>
+                <Image src={refresh} height={13} alt='refresh'/>
+              </div>
+            </div>
+          </div>
 
-//         </div>
-//       </div>
+        </div>
+      </div>
 
-//       <div className="chat-input">
-//           <div className="chat-input-container">
-//             <input type="text" value={input} placeholder="Type your message..." onChange={handleInputChange} onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}/>
-//             <div className='chat-input-generate-button' style={{ backgroundColor: buttonHl ?  '#414abb' : '#515bda'  }} onClick={handleSendMessage}>
-//               <p>Generate</p>
-//               <Image src={prfecBtn} alt='prfec'/>
-//             </div>
-//           </div>
-//           </div>
-//     </div>
-//   );
-// }
+      <div className="chat-input">
+          <div className="chat-input-container">
+            <input type="text" value={input} placeholder="Type your message..." onChange={handleInputChange} onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}/>
+            <div className='chat-input-generate-button' style={{ backgroundColor: buttonHl ?  '#414abb' : '#515bda'  }} onClick={handleSendMessage}>
+              <p>Generate</p>
+              <Image src={prfecBtn} alt='prfec'/>
+            </div>
+          </div>
+          </div>
+    </div>
+  );
+}
 
