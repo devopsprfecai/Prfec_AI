@@ -72,6 +72,7 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
+    position: relative;
 }
 .prfec-ai-container {
     width: 100%;
@@ -254,7 +255,7 @@
 @media only screen and (max-width:1024px){
   .content-gen-space{
     padding-right: 12px;
-  }
+  } 
 }
 
 @media only screen and (max-width:700px){
@@ -420,7 +421,7 @@
 
     .chat-input{
       padding-left: 12px;
-      bottom: -50px;
+      /* bottom: -50px; */
     }
     .chat-input-generate-button{
       display: none;
