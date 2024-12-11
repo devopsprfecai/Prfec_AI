@@ -87,7 +87,11 @@
     gap: 0;
   }
 }
-
+@media only screen and (max-width:700px){
+  .prfec-ai{
+    background-color: var(--prfec-white);
+  }
+}
 /* -----------------------------------------------------AI Dashboard------------------------------------- */
 .ai-dashboard {
     width: 240px;
@@ -260,11 +264,21 @@
 
 @media only screen and (max-width:700px){
   .content-gen-space{
-    padding: 12px 12px 100px 12px;
-    /* padding-bottom: 73px; */
+    padding: 12px 12px 70px 12px;
+    height: max-content;
+  }
+  .chat-container {
+    max-height:max-content;
+    overflow-y: inherit; /* Enables scrolling if the content exceeds the available space */
+    height: max-content;/* Adjust max-height to fit within the viewport if needed */
+  }
+  .chat-contents{
+    padding: 12px;
   }
   .chat-space{
     border-radius: 24px;
+    border: 0px;
+    background-color: inherit;
   }
 }
 /* --------------------------------------------------------------------------------------------------------- */
@@ -274,6 +288,9 @@
     display: flex;
     gap: 2rem;
     justify-content: flex-end;
+}
+.chat-action-buttons-mobile{
+  display: none;
 }
 .chat-action-buttons-left{
   display: none;
@@ -304,8 +321,11 @@
   bottom: 10px;
 }
 @media screen and (max-width:700px){
-  .chat-action-buttons {
-    padding: 10px 20px;
+  .chat-action-buttons{
+    display: none;
+  }
+  .chat-action-buttons-mobile {
+    padding: 10px;
     display: flex;
     gap: 2rem;
     justify-content: space-between;
@@ -420,8 +440,10 @@
   @media only screen and (max-width:700px){
 
     .chat-input{
+      position: fixed;
+      bottom: 0px;
       padding-left: 12px;
-      /* bottom: -50px; */
+      background-color: var(--prfec-white);
     }
     .chat-input-generate-button{
       display: none;

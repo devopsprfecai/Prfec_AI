@@ -628,6 +628,29 @@ const handleRegenerateWithCategoryAndKeyword = async () => {
                   </div>
               </div>
             </div>
+            {formattedContent && <div className="chat-action-buttons-mobile">
+              <div className='chat-action-buttons-left'>
+              <div className="filter-chat-button" onClick={handleFilterButtonClick}>
+                    <Image src={filter} height={19} alt='download'/>
+                  </div>
+              </div>
+              <div className='chat-action-buttons-right'>
+                  <div className="copy-chat-button">
+                    <Image src={copy}  height={14} onClick={handleCopyChat} alt='copy'/>
+                    <div className="chat-button-label">
+                      {isCopied && (
+                        <div className="chat-button-label-copied">Copied</div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="download-chat-button">
+                    <Image src={download} height={14}    onClick={() => formattedTitle && handleDownloadChat()} alt='download'/>
+                  </div>
+                  <div className="refresh-chat-button">
+                    <Image src={refresh} height={13} onClick={handleRefreshChat} alt='refresh'/>
+                  </div>
+              </div>
+            </div>}
           </div>
 
         </div>
@@ -651,7 +674,7 @@ const handleRegenerateWithCategoryAndKeyword = async () => {
             </div>
           </div>
           </div>
-          
+  
     </div>
   );
 }
