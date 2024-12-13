@@ -45,7 +45,6 @@ export default function PuterChat() {
     setInput(newInput);
     setButtonHl(newInput.trim() !== ''); // Highlight button if input isn't empty
   };
-
   const handleSendMessage = async () => {
     if (!input.trim()) return;
  
@@ -135,7 +134,6 @@ export default function PuterChat() {
  const titleMatch = cleanedContent.match(/^##\s*(.*?)\s*$/m);
 
  let title = titleMatch ? titleMatch[1].trim() : "";
- 
  const formattedTitle = title
    ? `<h1 class="heading1">${title.trim()}</h1>`
    : "";
@@ -237,9 +235,7 @@ export default function PuterChat() {
     }
   };
 
-
   const handleRestructureClick = async (type) => {
-    console.log("TITLE",formattedTitle);
     const sentence = type === 'title' ? formattedTitle : metaDescription;
     const category = Array.isArray(categoryBadges) ? categoryBadges.join(', ') : '';
     const keyword = Array.isArray(keywordBadges) ? keywordBadges.join(', ') : '';
@@ -256,18 +252,37 @@ export default function PuterChat() {
       const data = await response.json();
   
       if (response.ok) {
-        if (type === 'title') {
-          // updatedText = updatedText.replace(/^##\s*(.*?)\s*$/m, `## ${newSentence}`);
+        const newSentence = data.regeneratedSentence;
+  
+        setMessages((prevMessages) => {
+          const updatedMessages = [...prevMessages];
+          const lastAiIndex = updatedMessages.findLastIndex((msg) => msg.sender === "AI");
+  
+          if (lastAiIndex !== -1) {
+            const lastMessage = updatedMessages[lastAiIndex];
+            let updatedText = lastMessage.text;
+  
+            if (type === "title") {
+              updatedText = updatedText.replace(/^##\s*(.*?)\s*$/m, `## ${newSentence}`);
+              setFormattedTitle(newSentence);
+            } else if (type === "description") {
+              const match = formattedTitle.match(/<h1 class="heading1">(.*?)<\/h1>/);
+              let headingText='';
+              if (match) {
+                 headingText = `## ${match[1]}` // Captures the content between the tags
+              } 
+              updatedText = updatedText.replace(/^([\s\S]*?)(?=\s*\*\*|\n\*\*|$)/,`${headingText}\n${newSentence}`);
+  
+              setMetaDescription(newSentence);
+              console.log("UPDATEd",updatedText);
+              console.log("Not",formattedTitle);
 
-          setFormattedTitle(data.regeneratedSentence); // Update formattedTitle based on response
-        } else if (type === 'description') {
-          setMetaDescription(data.regeneratedSentence); // Update metaDescription based on response
-        }
-        setMessages((prevMessages) => [
-          ...prevMessages.filter((msg) => msg.sender !== 'AI'),
-          { id: Date.now() + 1, sender: 'AI', text: data.regeneratedSentence }, // Make sure to update messages if necessary
-        ]);
-        console.log("MESSs",messages)
+            }
+            updatedMessages[lastAiIndex] = { ...lastMessage, text: updatedText };
+          }
+  
+          return updatedMessages;
+        });
       } else {
         console.error('Error refreshing:', data.error);
       }
@@ -275,7 +290,6 @@ export default function PuterChat() {
       console.error('Error refreshing:', error);
     }
   };
-
 
   function stripHtmlTags(html) {
     const div = document.createElement('div');
