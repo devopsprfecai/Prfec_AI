@@ -25,7 +25,7 @@ export default function ChatActionButtons({
     <>
     <div className="chat-action-buttons">
       <div className='chat-action-buttons-left'>
-      <div className="filter-chat-button" onClick={handleFilterButtonClick}>
+          <div className="filter-chat-button" onClick={handleFilterButtonClick}>
             <Image src={filter} height={19} alt='filter'/>
           </div>
       </div>

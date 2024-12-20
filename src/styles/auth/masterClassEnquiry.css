@@ -1,0 +1,361 @@
+.swal2-title-custom {
+    font-family: var(--p-font) !important;
+    font-weight: 600 !important;
+    font-size: 20px !important;
+    margin: 0 !important;
+}
+
+.swal2-content-custom {
+    font-family: var(--p-font) !important;
+    font-weight: 400 !important;
+    font-size: 18px !important;
+}
+
+.swal2-html-container {
+    font-family: var(--p-font) !important;
+    font-weight: 400 !important;
+    font-size: 16px !important;
+    margin-left: 0 !important;
+}
+
+.small-toast {
+    width: auto;
+    max-width: 400px;
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    padding: 1rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    background-color: #f8f8ff !important;
+}
+
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.course-enquiry-form-contents {
+    position: relative;
+    width: 450px;
+    background: var(--trafy-white);
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.close-popup-button {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--trafy-black);
+}
+
+
+/* Updated styles for the form */
+.enquiryform {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    border-radius: 12px;
+    background-color: var(--trafy-white);
+}
+.enquiryform-heading{
+
+}
+.enquiryform-heading h2 {
+    font-size: 28px;
+    font-family: var(--p-font);
+    font-weight: 600;
+    padding-bottom: 1rem;
+    color: var(--h-black);
+    text-align: center;
+}
+
+.enquiryform-heading h4 {
+    font-size: 18px;
+    font-family: var(--p-font);
+    font-weight: 400;
+    padding-bottom: 0.5rem;
+    color: var(--p-white);
+}
+
+.enquiryname {
+    display: flex;
+    gap: 1rem;
+}
+
+.enquiryform label {
+    font-size: 14px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    color: var(--p-black);
+    margin-bottom: 8px;
+}
+
+.enquiryfname, 
+.enquirylname, 
+.enquiryemail, 
+.enquiryphone, 
+.enquiry-course, 
+.enquirymessage, 
+.enquirycity, 
+.enquiry-category {
+    width: 100%;
+}
+
+.enquiry-fname, 
+.enquiry-lname, 
+.enquiry-email, 
+.enquiry-phone, 
+.enquiry-course, 
+.enquiry-message, 
+.enquiry-city, 
+.enquiry-category {
+    width: 100%;
+    height: 45px;
+    padding: 12px;
+    font-size: 16px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    border: 1px solid var(--box-border);
+    border-radius: 8px;
+    background-color: inherit;
+    margin-top: 8px;
+    color: var(--p-black);
+}
+
+.enquiry-fname::placeholder,
+.enquiry-lname::placeholder,
+.enquiry-email::placeholder,
+.enquiry-phone::placeholder,
+.enquiry-message::placeholder,
+.enquiry-city::placeholder {
+    color: #929292; /* Replace with your desired color */
+}
+
+.enquiry-fname:focus,
+.enquiry-lname:focus,
+.enquiry-email:focus,
+.enquiry-phone:focus,
+.enquiry-message:focus,
+.enquiry-course:focus,
+.enquiry-city:focus,
+.enquiry-category:focus { 
+    /* Border color when input is focused */
+    outline: none; /* Remove default outline */
+}
+
+.enquiry-message {
+    padding: 12px;
+    height: 80px;
+    resize: none;
+}
+
+.course-enquiry-button {
+    width: 100%;
+    padding: 12px 32px;
+    font-size: 16px;
+    font-family: var(--p-font);
+    font-weight: 400;
+    color: var(--trafy-white);
+    background-color: var(--trafy-black);
+    border: 1px solid var(--trafy-black);
+    border-radius: 8px;
+    margin-top: 8px;
+}
+
+.course-enquiry-button:hover {
+    background-color: inherit;
+    color: var(--trafy-black);
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 4px;
+    font-family: var(--p-font);
+}
+
+.enquirycourse-container {
+    position: relative;
+    width: 100%;
+}
+
+.enquiry-course,
+.enquiry-category {
+    appearance: none;
+    width: 100%;
+    height: 45px;
+    padding: 12px;
+    font-size: 16px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    border: 1px solid var(--box-border);
+    border-radius: 8px;
+    background-color: var(--trafy-white);
+    max-width: 100%;
+    margin-top: 8px;
+    color: var(--h-black);
+    background: url('data:image/svg+xml;utf8,<svg fill="%23929292" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
+    background-size: 24px;
+}
+
+.enquiry-course:focus, 
+.enquiry-category:focus {
+    border-color: var(--h-text-b-clr);
+    outline: none;
+}
+/* Style for the Country and Region dropdowns */
+.country-dropdown,
+.state-dropdown {
+    width: 100%;
+    height: 45px;
+    padding: 12px;
+    font-size: 16px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    border: 1px solid var(--box-border);
+    border-radius: 8px;
+    background-color: var(--trafy-white);
+    margin-top: 8px;
+    color: var(--p-black);
+    appearance: none; /* Removes the default arrow in the select input */
+    background: url('data:image/svg+xml;utf8,<svg fill="%23929292" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 12px center;
+    background-size: 24px;
+    cursor: pointer;
+}
+
+.country-dropdown:focus,
+.state-dropdown:focus {
+    border-color: var(--h-text-b-clr);
+    outline: none; /* Removes the default blue outline */
+}
+
+/* Placeholder color for the dropdown */
+.country-dropdown::placeholder,
+.state-dropdown::placeholder {
+    color: #929292; /* Lighter color for the placeholder text */
+}
+
+/* Hover effect for better interaction */
+.country-dropdown:hover,
+.state-dropdown:hover {
+    border-color: var(--h-text-b-clr);
+}
+
+/* Error message styling for dropdowns (if any validation) */
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 4px;
+    font-family: var(--p-font);
+}
+
+
+
+
+/* Media query adjustments for small screens */
+/* @media only screen and (max-width: 600px) {
+    .country-dropdown,
+    .state-dropdown {
+        font-size: 14px;
+        padding: 10px;
+    }
+} */
+
+/* @media only screen and (max-width: 400px) {
+    .country-dropdown,
+    .state-dropdown {
+        font-size: 12px;
+        padding: 8px;
+    }
+} */
+
+/* Media queries for responsiveness */
+@media only screen and (max-width: 600px) {
+    .course-enquiry-form-contents {
+        width: 90%;
+    }
+
+    .enquiryform-heading h2 {
+        font-size: 28px;
+    }
+
+    .popup {
+        width: 80%;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .course-enquiry-form-contents {
+        padding: 24px;
+    }
+
+    .enquiryform {
+        gap: 0.5rem;
+    }
+
+    .course-enquiry-form-contents {
+        width: 95%;
+    }
+
+    .enquiryname {
+        flex-direction: column;
+    }
+
+    .enquiryform-heading h2 {
+        font-size: 24px;
+    }
+
+    .enquiryform-heading h4 {
+        font-size: 16px;
+    }
+}
+
+.popup {
+    width: 350px;
+    position: fixed;
+    top: 65px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #353535;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1000;
+    display: flex;
+    gap: 1rem;
+}
+
+.popup span {
+    font-family: var(--p-font);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 150%;
+    color: white;
+}
+
+.close-popup {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}

@@ -35,6 +35,13 @@
 // //     }
 // // }
 
+
+
+// import { NextResponse } from "next/server";
+// import Groq from "groq-sdk";
+
+// const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
 // export async function POST(request) {
 //     try {
 //         const { message } = await request.json();
@@ -44,130 +51,45 @@
 //                 { status: 400 }
 //             );
 //         }
-//         // const systemPrompt = {
-//         //     role: "system",
-//         //     content:
-//         //         "You are a helpful assistant specialized in creating engaging blogs and social media content. Respond only in these formats, and ensure creativity and relevance to the given topics.",
-//         // };
 
-//         // const systemPrompt = {
-//         //     role: "system",
-//         //     content: `
-//         //         You are a helpful assistant specialized in creating engaging blogs and social media content. 
-//         //         Your responsibilities are as follows:
-                
-//         //         - If greeted by the user, respond with a polite and friendly greeting.
-//         //         - Only generate blogs or social media content if the user explicitly requests it.
-//         //         - If the user asks, "Can you generate me a blog?", always ask them to specify the topic or subject of the blog before proceeding. 
-//         //         - If the user doesn't specify a topic or subject, ask them to provide one so that you can generate relevant content.
-//         //         - If the user asks for social media content, ask for clarification on the platform (e.g., Twitter, Instagram) and the message or purpose of the post.
-//         //         - Always ensure that all content you generate is creative, relevant, and follows the requested format (either blog or social media post).
-//         //         - Do not generate content outside of blogs or social media formats.
-        
-//         //         Always follow these instructions and be sure to clarify any details before proceeding with content generation.
-        
-//         //         Example Interactions:
-        
-//         //         1. **User:** "Can you generate me a blog?"
-//         //            - **AI:** "Sure! What topic or subject would you like the blog to be about?"
-        
-//         //         2. **User:** "I want a blog about the benefits of meditation."
-//         //            - **AI:** "Great! Here's a blog on the benefits of meditation..."
-                
-//         //         3. **User:** "Can you create a social media post?"
-//         //            - **AI:** "Sure! What platform is this post for (e.g., Twitter, Instagram)? And what's the message or purpose of the post?"
-        
-//         //         4. **User:** "I need a post for Instagram about a new product launch."
-//         //            - **AI:** "Here’s an Instagram post about your product launch: [Instagram post content with emojis and hashtags]"
-        
-//         //         5. **User:** "Can you write a blog on productivity?"
-//         //            - **AI:** "Sure! Please provide a bit more context or a specific angle you want the blog to cover on productivity (e.g., tips for boosting productivity, productivity tools, etc.)"
-        
-//         //         These examples show how you should respond to different types of requests. Always ask for more details if the topic is not specified, and ensure the content is appropriate for the platform or format.
-//         //     `,
-//         // };
-        
+//         // Validate if the message contains a request to generate a blog
+//         if (!isBlogGenerationRequest(message)) {
+//             return NextResponse.json(
+//                 { error: "This AI-powered platform specializes in generating high-quality blog content. Please provide a blog title to initiate the content creation process." },
+//                 { status: 400 }
+//             );
+//         }
 
-//         const systemPrompt = {
-//             role: "system",
-//             content: `
-//                 You are a helpful assistant specialized in creating engaging blogs and social media content. 
-//                 Your responsibilities are as follows:
-                
-//                 - If greeted by the user, respond with a polite and friendly greeting.
-//                 - Only generate blogs or social media content if the user explicitly requests it.
-//                 - If the user asks, "Can you generate me a blog?", always ask them to specify the topic or subject of the blog before proceeding. 
-//                 - If the user doesn't specify a topic or subject, ask them to provide one so that you can generate relevant content.
-//                 - If the user asks for social media content, ask for clarification on the platform (e.g., Twitter, Instagram) and the message or purpose of the post.
-//                 - Always ensure that all content you generate is creative, relevant, and follows the requested format (either blog or social media post).
-//                 - Do not generate content outside of blogs or social media formats.
+//         // Prepare the prompt for the AI to generate content in the desired format
+//         const prompt = `Please generate a blog with the following structure:
+//         1. A title for the blog.
+//         2. A brief introduction to the blog (description of the topic).
+//         3. A list of subtopics, each with a detailed description.
 
-//                 Always follow these instructions and be sure to clarify any details before proceeding with content generation.
+//         DO NOT include labels like "Title:", "Description:", or "Subtopic:" in your response.
+//         The blog content should look like this:
         
-//                 Example Interactions:
+//         Example:
+//         "The Future of AI"
+//         AI is shaping the future of various industries. This blog explores the possibilities and challenges that lie ahead.
         
-//                 1. **User:** "Can you generate me a blog?"
-//                    - **AI:** "Sure! What topic or subject would you like the blog to be about?"
-        
-//                 2. **User:** "I want a blog about the benefits of meditation."
-//                    - **AI:** "Great! Here's a blog on the benefits of meditation..."
-                
-//                 3. **User:** "Can you create a social media post?"
-//                    - **AI:** "Sure! What platform is this post for (e.g., Twitter, Instagram)? And what's the message or purpose of the post?"
-        
-//                 4. **User:** "I need a post for Instagram about a new product launch."
-//                    - **AI:** "Here’s an Instagram post about your product launch: [Instagram post content with emojis and hashtags]"
-        
-//                 5. **User:** "Can you write a blog on productivity?"
-//                    - **AI:** "Sure! Please provide a bit more context or a specific angle you want the blog to cover on productivity (e.g., tips for boosting productivity, productivity tools, etc.)"
-        
-//                 6. **User:** "I want a blog about the benefits of meditation."
-//                    - **AI:** "Great! Here's your blog about the benefits of meditation..."
-        
-//                    **Title:** "The Incredible Benefits of Meditation for Your Mind and Body"  
-//                    **Description:** "Meditation is a powerful practice that has been proven to improve mental clarity, reduce stress, and enhance overall well-being. In this blog, we'll explore the various benefits of incorporating meditation into your daily routine."  
-//                    **Body Content:**
-//                    - **Subtopic: Reducing Stress**  
-//                      "Meditation has long been known to help reduce stress by promoting relaxation and mindfulness. Studies have shown that regular meditation can lower cortisol levels, the stress hormone."
-//                    - **Subtopic: Improving Focus and Mental Clarity**  
-//                      "By practicing meditation, you can improve your concentration and mental clarity. This is especially beneficial for people dealing with distractions or information overload."
-//                    - **Subtopic: Boosting Emotional Well-Being**  
-//                      "Meditation encourages a greater sense of inner peace and emotional balance, which can lead to a more positive outlook on life."
-//                    - **Subtopic: Enhancing Physical Health**  
-//                      "Not only does meditation benefit your mind, but it also helps improve physical health by lowering blood pressure, enhancing the immune system, and promoting better sleep."
-        
-//                 7. **User:** "I need a blog on productivity tips."
-//                    - **AI:** "Sure! Here's your blog on productivity tips..."
-        
-//                    **Title:** "Boost Your Productivity: Simple Tips for Achieving More"  
-//                    **Description:** "In today's fast-paced world, productivity is key to success. Here are some practical and effective productivity tips to help you accomplish more in less time."  
-//                    **Body Content:**
-//                    - **Subtopic: Prioritize Your Tasks**  
-//                      "One of the most important steps to boosting productivity is prioritizing tasks. Start by identifying your most important tasks and focus on them first."
-//                    - **Subtopic: Eliminate Distractions**  
-//                      "Distractions can derail your productivity. Find ways to minimize interruptions, such as turning off notifications or setting specific times for checking email."
-//                    - **Subtopic: Take Breaks and Rest**  
-//                      "Working nonstop can lead to burnout. Taking regular breaks helps to recharge your energy and maintain focus throughout the day."
-//                    - **Subtopic: Use Productivity Tools**  
-//                      "There are many productivity tools available, such as task management apps, time tracking software, and note-taking platforms, that can help you stay organized and on track."
-        
-//                 These examples show how you should respond to different types of requests. Always ask for more details if the topic is not specified, and ensure the content is appropriate for the platform or format.
-//             `,
-//         };
-        
+//         Introduction to AI: AI involves the simulation of human intelligence in machines, allowing them to perform tasks that typically require human cognition.
+//         Applications of AI: AI has various applications, including healthcare, finance, autonomous vehicles, and more.
 
-//         const userMessage = {
-//             role: "user",
-//             content: message,
-//         };
+//         User's input: ${message}`;
 
+//         // Send the request to the Groq API
 //         const chatCompletion = await groq.chat.completions.create({
-//             messages: [systemPrompt, userMessage],
-//             model: "gemma-7b-it",
+//             messages: [
+//                 {
+//                     role: "user",
+//                     content: prompt,
+//                 },
+//             ],
+//             model: "gemma2-9b-it",
 //         });
 
-//         const responseMessage =
-//             chatCompletion.choices[0]?.message?.content || "No response";
+//         const responseMessage = chatCompletion.choices[0]?.message?.content || "No response";
 
 //         return NextResponse.json({ response: responseMessage });
 //     } catch (error) {
@@ -177,6 +99,12 @@
 //             { status: 500 }
 //         );
 //     }
+// }
+
+// // Function to check if the user's message is a request for blog generation
+// function isBlogGenerationRequest(message) {
+//     const blogKeywords = ["generate a blog", "blog about", "create a blog", "write a blog", "blog with title", "title", "generate", "generate"];
+//     return blogKeywords.some(keyword => message.toLowerCase().includes(keyword));
 // }
 
 import { NextResponse } from "next/server";
@@ -197,7 +125,10 @@ export async function POST(request) {
         // Validate if the message contains a request to generate a blog
         if (!isBlogGenerationRequest(message)) {
             return NextResponse.json(
-                { error: "This AI-powered platform specializes in generating high-quality blog content. Please provide a blog title to initiate the content creation process." },
+                {
+                    error:
+                        "This AI-powered platform specializes in generating high-quality blog content. Please provide a blog title to initiate the content creation process.",
+                },
                 { status: 400 }
             );
         }
@@ -220,18 +151,14 @@ export async function POST(request) {
 
         User's input: ${message}`;
 
-        // Send the request to the Groq API
-        const chatCompletion = await groq.chat.completions.create({
-            messages: [
-                {
-                    role: "user",
-                    content: prompt,
-                },
-            ],
-            model: "gemma-7b-it",
-        });
-
-        const responseMessage = chatCompletion.choices[0]?.message?.content || "No response";
+        // Try the primary model first
+        let responseMessage;
+        try {
+            responseMessage = await generateBlog(prompt, "gemma2-9b-it");
+        } catch (error) {
+            console.warn("Primary model failed, switching to fallback model:", error);
+            responseMessage = await generateBlog(prompt, "llama-3.3-70b-versatile");
+        }
 
         return NextResponse.json({ response: responseMessage });
     } catch (error) {
@@ -243,8 +170,31 @@ export async function POST(request) {
     }
 }
 
+// Helper function to call the Groq API with a specified model
+async function generateBlog(prompt, model) {
+    const chatCompletion = await groq.chat.completions.create({
+        messages: [
+            {
+                role: "user",
+                content: prompt,
+            },
+        ],
+        model: model,
+    });
+
+    return chatCompletion.choices[0]?.message?.content || "No response";
+}
+
 // Function to check if the user's message is a request for blog generation
 function isBlogGenerationRequest(message) {
-    const blogKeywords = ["generate a blog", "blog about", "create a blog", "write a blog", "blog with title", "title", "generate", "generate"];
-    return blogKeywords.some(keyword => message.toLowerCase().includes(keyword));
+    const blogKeywords = [
+        "generate a blog",
+        "blog about",
+        "create a blog",
+        "write a blog",
+        "blog with title",
+        "title",
+        "generate",
+    ];
+    return blogKeywords.some((keyword) => message.toLowerCase().includes(keyword));
 }

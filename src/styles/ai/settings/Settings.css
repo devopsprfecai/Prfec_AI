@@ -1,0 +1,236 @@
+.ai-settings{
+    background-color: #F8F8F8;
+    border-radius: 16px;
+    padding-top: 120px;
+    display: flex;
+    justify-content: center;
+    /* height: 100vh; */
+    /* max-height: 100vh;
+    min-height: 100%; */
+    height: 100%;
+}
+.ai-settings-container{
+    width: 70%;
+    display: flex;
+    gap: 3.5rem;
+}
+.ai-settings-dashboard{
+    width: 160px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.ai-settings-dashboard div {
+    padding: 10px 12px;
+    cursor: pointer;
+    border-radius: 6px;
+    background-color: inherit;
+    font-size: 14px;
+    font-family: var(--p-font);
+    color: var(--h-black);
+  }
+  
+  .ai-settings-dashboard div.active {
+    color: var(--h-black);
+    background-color: var(--box-border); /* Example color */
+  }
+.ai-settings-contents{
+    flex-grow: 1;
+    height: max-content;
+    /* padding-top: 6px;
+    padding: 24px 32px;
+    border: 1px solid var(--box-border);
+    border-radius: 16px;
+    background-color: var(--prfec-white); */
+}
+
+
+@media only screen and (max-width:1024px){
+    .ai-settings{
+        padding-top: 80px;
+        padding-bottom: 60px;
+    }
+    .ai-settings-dashboard{
+        flex-direction: row;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    .ai-settings-container{
+        width: 90%;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+}
+
+@media only screen and (max-width:400px){
+    .ai-settings{
+        padding: 0px 14px;
+        padding-top: 80px;
+        padding-bottom: 60px;
+        /* height: 100%; */
+    }
+    .ai-settings-container{
+        width: 100%;
+    }
+    .ai-settings-contents{
+        /* padding: 20px; */
+    }
+    .ai-settings-dashboard div, .settings-general-theme p, .settings-general-language p, .settings-general-shared-links p, .settings-general-api p{
+        font-size: 13px;
+    }
+}
+
+
+/* -----------------------------------------------------------------General-------------------------------------------------------- */
+.settings-general-contents{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-top: 6px;
+    padding: 24px 32px;
+    border: 1px solid var(--box-border);
+    border-radius: 16px;
+    background-color: var(--prfec-white);
+}
+.settings-general-theme, .settings-general-language, .settings-general-shared-links, .settings-general-api{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 3rem;
+    padding: 12px 0px;
+    border-bottom: 1px solid var(--box-border);
+}
+.settings-general-theme{
+    padding-top: 0px;
+}
+.settings-general-api{
+    padding-bottom: 0px;
+    border-bottom: 0px;
+}
+.settings-general-theme p, .settings-general-language p, .settings-general-shared-links p, .settings-general-api p{
+    font-size: 14px;
+    font-family: var(--p-font);
+    color: var(--h-black);
+    font-weight: 400;
+}
+.settings-general-theme .theme-change{
+    padding:8px;
+    border: 1px solid var(--box-border);
+    background-color: #F8F8F8;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: var(--p-font);
+    color: #4a4a4a; 
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.3rem;
+}
+.theme-change .theme-change-contents{
+    position: absolute;
+    top: 36px;
+    right: -1px;
+    padding: 8px 6px;
+    border: 1px solid var(--box-border);
+    border-radius: 6px;
+    background-color: var(--prfec-white);
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+}
+.theme-change-contents .system, .theme-change-contents .light, .theme-change-contents .dark{
+    font-size: 12px;
+    font-family: var(--p-font);
+    color: #4a4a4a; 
+    font-weight: 400;
+    padding: 6px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem
+}
+.theme-change-contents .system:hover, .theme-change-contents .light:hover, .theme-change-contents .dark:hover{
+    background-color: #F8F8F8;
+}
+.settings-general-language .language-change{
+    padding:8px;
+    border: 1px solid var(--box-border);
+    background-color: #F8F8F8;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: var(--p-font);
+    color: #4a4a4a; 
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+.settings-general-shared-links .shared-links,.settings-general-api .api-access{
+    padding:8px;
+    border: 1px solid var(--box-border);
+    background-color: #F8F8F8;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: var(--p-font);
+    color: #4a4a4a; 
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+@media only screen and (max-width:400px){
+    .settings-general-contents{
+        padding: 20px;
+    }
+}
+
+/* --------------------------------------------------------------Data------------------------------------------------- */
+.settings-data{
+    display: flex;
+    flex-direction: column;
+    width: 100%; 
+    padding-top: 6px;
+    padding: 24px 32px;
+    border: 1px solid var(--box-border);
+    border-radius: 16px;
+    background-color: var(--prfec-white);
+}
+.settings-data-contents{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 3rem;
+    padding: 12px 0px;
+    border-bottom: 1px solid var(--box-border);
+}
+.settings-data-contents:last-child{
+    border-bottom: 0px;
+}
+.settings-data-contents p{
+    font-size: 14px;
+    font-family: var(--p-font);
+    color: var(--h-black);
+    font-weight: 400;
+}
+.export-data ,.delete-all-memory,.delete-account{
+    padding:8px;
+    border: 1px solid var(--box-border);
+    background-color: #F8F8F8;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: var(--p-font);
+    color: #4a4a4a; 
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+@media only screen and (max-width:400px){
+    .settings-data{
+        padding: 20px;
+    }
+}

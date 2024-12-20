@@ -173,7 +173,7 @@
  
 } */
 
-.navbar {
+/* .navbar {
   width: 100%;
   display: flex;
   justify-content: center;
@@ -312,7 +312,6 @@
   }
   .navbar-menu{
       display: flex;
-      /* width: 200px; */
       flex-direction: column;
       gap: 1rem;
       padding: 28px;
@@ -352,4 +351,4 @@
   width: 90%;
 }
 
-}
+} */
