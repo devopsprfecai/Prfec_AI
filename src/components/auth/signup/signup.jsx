@@ -101,7 +101,6 @@ const Signup = () => {
                 firstName: email.split('@')[0],
             });
 
-            console.log('User data saved successfully');
             router.push('/');
         } catch (error) {
             if (error.code === 'auth/email-already-in-use') {
@@ -126,7 +125,6 @@ const Signup = () => {
             if (snapshot.exists()) {
                 // User already exists, so fetch their data
                 const existingData = snapshot.val();
-                console.log('Existing user data:', existingData);
                 
                 // Load existing profile data (e.g., profile picture, phone number)
                 // You can set the data in your component state if needed
@@ -142,7 +140,6 @@ const Signup = () => {
                     profilePic: null,
                     phoneNumber: null,
                 });
-                console.log('New user created and data stored:', user);
             }
     
             // Redirect user after successful sign-in

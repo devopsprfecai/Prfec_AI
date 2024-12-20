@@ -47,7 +47,6 @@ export const NavbarWhite = () => {
   const handleThemeClick = () => setThemeClick(!themeClick);
   const handleLogOut = async () => {
     try {
-      console.log("Logout Working");
       await logOut();
       setHover(false);
       setMenuOpen(false); // Explicitly close menu on logout
