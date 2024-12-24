@@ -375,7 +375,7 @@
   width: 100%;
   position: absolute;
   top: -56px;
-  padding: 1px;
+  padding: 16px;
   border-radius: 12px;
   border: 1px solid var(--box-border);
   background-color: var(--prfec-white);

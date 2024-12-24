@@ -97,7 +97,7 @@ const Settings = () => {
         {/* Dashboard Navigation */}
         <div className="ai-settings-dashboard">
           {['general', 'profile', 'data', 
-          // 'billing',
+          'billing',
           //  'activity', 'updates'
           ].map((item) => (
             <div
@@ -117,7 +117,7 @@ const Settings = () => {
           {activeTab === 'general' && <General />}
           {activeTab === 'profile' && <Profile />}
           {activeTab === 'data' && <Data />}
-          {/* {activeTab === 'billing' && <Billing />} */}
+          {activeTab === 'billing' && <Billing />}
           {/* {activeTab === 'activity' && <Activity />}
           {activeTab === 'updates' && <Updates />} */}
 
