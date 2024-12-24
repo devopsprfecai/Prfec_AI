@@ -26,14 +26,18 @@
 // RootLayout.js (Server Component)
 import '@styles/globals.css';
 import { AuthContextProvider } from '@context/AuthContext';
+import { PromptProvider } from '@context/PromptContext';
 import ClientOnlyContent from './ClientOnlyContent';
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
+       
         <AuthContextProvider>
-          <ClientOnlyContent>{children}</ClientOnlyContent>
+          <PromptProvider>
+            <ClientOnlyContent>{children}</ClientOnlyContent>
+          </PromptProvider>
         </AuthContextProvider>
       </body>
     </html>

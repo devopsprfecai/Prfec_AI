@@ -166,7 +166,7 @@ const Signup = () => {
             <div className="signup-container">
                 <div className="signup-heading">
                     <h1>Sign Up</h1>
-                    {generalError && <p style={{ color: "red", paddingBottom: "6px", textAlign: "center", fontSize: "13px", fontFamily: "Lato" }}>{generalError}</p>}
+                    {generalError && <p style={{ color: "red", paddingBottom: "6px", textAlign: "center", fontSize: "12px", fontFamily: "var(--p-font)" }}>{generalError}</p>}
                 </div>
                 <form className="form" onSubmit={handleSubmit}>
                     <Box component="div" className="email" noValidate autoComplete="off">

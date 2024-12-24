@@ -83,21 +83,26 @@ const Profile = () => {
   };
 
   
-
   const saveToDatabase = async (data) => {
     if (user?.uid) {
       const userRef = ref(database, `usersData/${user.uid}`);
-      await set(userRef, data);
+      const dataWithUserInfo = {
+        ...data,
+        userId: user.uid,
+        email: user.email || '', // Include email if available
+      };
+      await set(userRef, dataWithUserInfo);
+      console.log('Data saved to Firebase:', dataWithUserInfo);
     }
   };
-
+  
   const handleSave = (field) => {
     const updatedData = { ...profileData, [field]: inputValue[field] };
     setProfileData(updatedData);
     saveToDatabase({ ...updatedData, ...links });
     setEditState((prevState) => ({ ...prevState, [field]: false }));
   };
-
+  
   const handleSaveLink = (field, ref) => {
     const updatedLinks = { ...links, [field]: ref.current.value };
     setLinks(updatedLinks);
@@ -105,6 +110,7 @@ const Profile = () => {
     setLinkOpen((prevState) => ({ ...prevState, [field]: false }));
     setEditingLinks((prevState) => ({ ...prevState, [field]: false }));
   };
+  
 
   return (
     <div className="settings-profile">

@@ -1,22 +1,18 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import { usePrompt } from '@context/PromptContext';
 import '@styles/ai/BetaAi.css'
 import AiDashboard from '@components/ai/Dashboard';
 import ChatInput from '@components/ai/ChatInput';
 import ChatActionButtons from '@components/ai/ChatActionButtons';
 import LoadingSkeleton from '@components/ai/LoadingSkeleton';
 import Image from 'next/image';
-import copy from '@public/Images/ai/copy.svg';
-import refresh from '@public/Images/ai/refresh.svg';
-import download from '@public/Images/ai/download.svg';
-import prfecBtn from '@public/Images/ai/prfec button.svg';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
-
-import { metadata } from '@app/layout';
-
 export default function PuterChat() {
+  const { promptCount, setPromptCount } = usePrompt();
+
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [lastInput, setLastInput] = useState('');
@@ -64,6 +60,15 @@ export default function PuterChat() {
   };
   const handleSendMessage = async () => {
     if (!input.trim()) return;
+
+    if (promptCount >= 3) {
+      alert('You have reached the daily prompt limit. Please try again tomorrow.');
+      return;
+    }
+
+    setPromptCount((prev) => prev + 1);
+
+
     let prefixedInput = input.trim().startsWith("blog about")? input.trim(): `blog about ${input.trim()}`;
     setButtonHl(true); // Highlight button when message is being sent
     setFormattedTitle(''); // Reset the previous title
@@ -410,7 +415,7 @@ export default function PuterChat() {
       </div>
 
       <ChatInput input={input} setInput={setInput} handleSendMessage={handleSendMessage} 
-      buttonHl={buttonHl} setButtonHl={setButtonHl} />
+      buttonHl={buttonHl} setButtonHl={setButtonHl} promptCount={promptCount}/>
 
     </div>
     </>

@@ -288,12 +288,17 @@
     display: flex;
     gap: 2rem;
     justify-content: flex-end;
+    /* justify-content: space-between; */
 }
 .chat-action-buttons-mobile{
   display: none;
 }
 .chat-action-buttons-left{
   display: none;
+  /* display: flex;
+  font-size: 11px;
+  font-family: var(--p-font); */
+
 }
 .chat-action-buttons-right{
   display: flex;
@@ -364,6 +369,25 @@
     border: 1px solid var(--box-border);
     border-radius: 16px;
     height: 48px;
+    position: relative;
+}
+.limit-reached-message{
+  width: 100%;
+  position: absolute;
+  top: -56px;
+  padding: 1px;
+  border-radius: 12px;
+  border: 1px solid var(--box-border);
+  background-color: var(--prfec-white);
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+}
+.limit-reached-message p{
+  font-size: 13px;
+  font-family: var(--p-font);
+  color: var(--prfec-black);
+  font-weight: 400px;
 }
 .chat-input-container input{
     width: 100%;
