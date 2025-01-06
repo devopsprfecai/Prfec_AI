@@ -99,8 +99,8 @@ const PromptContext = createContext();
 
 const getNextMinute = () => {
   const now = Date.now();
-  // return now + 60 * 1000; // Add 1 minute in milliseconds
-  return now + 24 * 60 * 60 * 1000;
+  return now + 60 * 1000; // Add 1 minute in milliseconds
+  // return now + 24 * 60 * 60 * 1000;
 };
 
 export const PromptProvider = ({ children }) => {
