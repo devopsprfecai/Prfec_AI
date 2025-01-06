@@ -1,3 +1,4 @@
+
 // 'use client';
 // import React, { createContext, useState, useEffect } from 'react';
 // import { ref, set, get } from 'firebase/database';
@@ -6,16 +7,15 @@
 
 // const PromptContext = createContext();
 
-// const getNext24Hours = () => {
+// const getNextMinute = () => {
 //   const now = Date.now();
+//   return now + 60 * 1000; // Add 1 minute in milliseconds
 //   // return now + 24 * 60 * 60 * 1000;
-//   return now + 60 * 1000; // 1 minute in milliseconds
-
 // };
 
 // export const PromptProvider = ({ children }) => {
 //   const [promptCount, setPromptCount] = useState(0);
-//   const [resetTime, setResetTime] = useState(null); // Initialize without default
+//   const [resetTime, setResetTime] = useState(null);
 //   const { user } = UserAuth();
 
 //   useEffect(() => {
@@ -26,9 +26,9 @@
 //         if (snapshot.exists()) {
 //           const data = snapshot.val();
 //           setPromptCount(data.promptCount || 0);
-//           setResetTime(data.resetTime || getNext24Hours());
+//           setResetTime(data.resetTime || getNextMinute());
 //         } else {
-//           const initialResetTime = getNext24Hours();
+//           const initialResetTime = getNextMinute();
 //           setResetTime(initialResetTime);
 //           await set(userRef, {
 //             promptCount: 0,
@@ -50,7 +50,7 @@
 
 //       if (delay > 0) {
 //         const timeout = setTimeout(() => {
-//           const nextReset = getNext24Hours();
+//           const nextReset = getNextMinute();
 //           setPromptCount(0);
 //           setResetTime(nextReset);
 //           if (user?.uid) {
@@ -74,11 +74,12 @@
 //       const userRef = ref(database, `prompts/${user.uid}`);
 //       set(userRef, {
 //         promptCount,
+//         resetTime, // Ensure resetTime is updated in Firebase on promptCount change
 //         userId: user.uid,
 //         email: user.email,
 //       });
 //     }
-//   }, [promptCount, user]);
+//   }, [promptCount, resetTime, user]);
 
 //   return (
 //     <PromptContext.Provider value={{ promptCount, setPromptCount }}>
@@ -100,7 +101,6 @@ const PromptContext = createContext();
 const getNextMinute = () => {
   const now = Date.now();
   return now + 60 * 1000; // Add 1 minute in milliseconds
-  // return now + 24 * 60 * 60 * 1000;
 };
 
 export const PromptProvider = ({ children }) => {
@@ -134,29 +134,27 @@ export const PromptProvider = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
-    if (resetTime) {
-      const now = Date.now();
-      const delay = resetTime - now;
-
-      if (delay > 0) {
-        const timeout = setTimeout(() => {
-          const nextReset = getNextMinute();
-          setPromptCount(0);
-          setResetTime(nextReset);
-          if (user?.uid) {
-            const userRef = ref(database, `prompts/${user.uid}`);
-            set(userRef, {
-              promptCount: 0,
-              resetTime: nextReset,
-              userId: user.uid,
-              email: user.email,
-            });
-          }
-        }, delay);
-
-        return () => clearTimeout(timeout);
+    const checkResetTime = () => {
+      if (resetTime && Date.now() >= resetTime) {
+        // Reset promptCount if current time >= resetTime
+        setPromptCount(0);
+        const nextReset = getNextMinute();
+        setResetTime(nextReset);
+        if (user?.uid) {
+          const userRef = ref(database, `prompts/${user.uid}`);
+          set(userRef, {
+            promptCount: 0,
+            resetTime: nextReset,
+            userId: user.uid,
+            email: user.email,
+          });
+        }
       }
-    }
+    };
+
+    const interval = setInterval(checkResetTime, 1000); // Check every second
+
+    return () => clearInterval(interval); // Clean up on component unmount
   }, [resetTime, user]);
 
   useEffect(() => {
@@ -164,7 +162,7 @@ export const PromptProvider = ({ children }) => {
       const userRef = ref(database, `prompts/${user.uid}`);
       set(userRef, {
         promptCount,
-        resetTime, // Ensure resetTime is updated in Firebase on promptCount change
+        resetTime,
         userId: user.uid,
         email: user.email,
       });
