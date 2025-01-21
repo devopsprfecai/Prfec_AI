@@ -27,6 +27,7 @@
 import '@styles/globals.css';
 import { AuthContextProvider } from '@context/AuthContext';
 import { PromptProvider } from '@context/PromptContext';
+import { KeywordPromptProvider } from '@context/KeywordPromptContext';
 import ClientOnlyContent from './ClientOnlyContent';
 
 export default function RootLayout({ children }) {
@@ -36,7 +37,9 @@ export default function RootLayout({ children }) {
        
         <AuthContextProvider>
           <PromptProvider>
-            <ClientOnlyContent>{children}</ClientOnlyContent>
+            <KeywordPromptProvider>
+                <ClientOnlyContent>{children}</ClientOnlyContent>
+            </KeywordPromptProvider>
           </PromptProvider>
         </AuthContextProvider>
       </body>
