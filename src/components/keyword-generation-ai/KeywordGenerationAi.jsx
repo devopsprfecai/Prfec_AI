@@ -9,6 +9,12 @@ import { useKeyPrompt } from "@context/KeywordPromptContext";
 import useCountryList from "react-select-country-list"; // Import the country list hook
 import arrow from '@public/Images/ai/drop.svg';
 import prfecBtn from '@public/Images/ai/prfec button.svg';
+import AiDashboard from "@components/ai/Dashboard";
+import DashboardRightUpdate from "@components/ai/DashboardRightUpdate";
+import LinearProgress from "@mui/material/LinearProgress";
+
+
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function KeywordGenerationAi() {
   const{keywordPromptCount, setKeywordPromptCount} = useKeyPrompt(); // Use the keyword prompt context
@@ -53,13 +59,10 @@ export default function KeywordGenerationAi() {
     try {
       const keywordRef = ref(database, `keywords/${keyword}/${country}`);
 
-      // Check if the keyword exists in Firebase
       const snapshot = await get(keywordRef);
       if (snapshot.exists()) {
-        // If keyword exists, fetch and display the data
         setResult(snapshot.val());
       } else {
-        // If keyword does not exist, make API call
         const response = await fetch("/api/keyword", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -72,13 +75,13 @@ export default function KeywordGenerationAi() {
         }
 
         const data = await response.json();
-        const jsonData = data.analysisResult.replace(/```json\n|\n```/g, "");
+        // const jsonData = data.analysisResult.replace(/```json\n|\n```/g, "");
+        const jsonData = data.analysisResult.replace(/```[\w]*\n?|\n```/g, "").trim();
+
         const parsedResult = JSON.parse(jsonData);
 
-        // Store the result in Firebase
         await set(keywordRef, parsedResult);
 
-        // Display the result
         setResult(parsedResult);
       }
     } catch (err) {
@@ -88,23 +91,23 @@ export default function KeywordGenerationAi() {
     }
   };
 
-  // Toggle dropdown visibility
   const toggleDropdown = () => {
     setIsDropdownOpen((prevState) => !prevState);
   };
 
-  // Handle country selection
   const handleCountrySelect = (value) => {
     setCountry(value);
     setIsDropdownOpen(false); // Close dropdown after selection
   };
-
-  return (
+const currentPath = '/keyword';
+return (
     <div className="keyword-generator">
+      <AiDashboard currentPath={currentPath}/>
       <div className="keyword-generator-container">
+        <h1 className="keyword-generator-container-heading">Keyword Analysis</h1>
         <div className="keyword-generator-search">
-          <h1>Keyword Generator AI</h1>
-          <div className="keyword-generator-search-input">
+        <h1>Improve your Organic Search Results</h1>
+        <div className="keyword-generator-search-input">
             <input type="text" id="keyword" value={keyword} onChange={(e) => setKeyword(e.target.value)} 
               onKeyDown={(e) => e.key === "Enter" && analyzeKeyword()} placeholder="Enter Keyword"/>
             
@@ -132,35 +135,99 @@ export default function KeywordGenerationAi() {
               <Image src={prfecBtn} alt="prfec" />
             </div>
           </div>
-
-        </div>
-
-        {error && <p className="error">Error: {error}</p>}
-        {result && (
-          <div className="result">
-            <h2>Analysis Results</h2>
-            <p><strong>Search Volume:</strong> {result["Search Volume"]}</p>
-            <p><strong>Global Volume % with Countries:</strong></p>
-            <ul>
-              {Object.entries(result["Global Volume % with Countries"]).map(([country, percent]) => (
-                <li key={country}>{country}: {percent}%</li>
-              ))}
-            </ul>
-            <p><strong>Organic CTR:</strong> {result["Organic CTR"]}%</p>
-            <p><strong>CPC:</strong> {result["Cost Per Click"]}%</p>
-            <p><strong>Keyword Difficulty:</strong> {result["Keyword Difficulty"]}</p>
-            <p><strong>Intent Categorization:</strong> {result["Intent Categorization"]}</p>
-            <p><strong>Top Similar Keywords:</strong></p>
-            <ul>
-              {result["Top Similar Keywords"].map((keyword, index) => (
-                <li key={index}>
-                  {keyword.Keyword} - Volume: {keyword.Volume}, KD: {keyword.KD}, Intent: {keyword.Intent}
-                </li>
-              ))}
-            </ul>
           </div>
-        )}
+
+  {result && <div className="keyword-result-canvas">
+          <div className="keyword-result-top-canvas">
+            <div className="keyword-result-volume">
+              <div  className="keyword-result-volume-container">
+                <div className="keyword-result-search-volume">
+                  <p>Search Volume:</p>
+                  <span>{result["Search Volume"]}</span>
+                </div>
+
+                <div className="keyword-result-global-volume">
+                  <p>Location Breakdown</p>
+                  {Object.entries(result["Global Volume % with Countries"]).map(([country, percent]) => (
+                  <div className="keyword-result-global-volume-contents" key={country}>
+                    {/* <p>{country}</p> */}
+                    <div className="global-volume-bar">
+                    <LinearProgress
+                    variant="determinate"
+                    value={parseFloat(String(percent).replace("%", ""))} // Remove "%" and convert to number
+                    sx={{
+                      height: 16,
+                      backgroundColor: "#f1f1f1",
+                      "& .MuiLinearProgress-bar": { backgroundColor: "#515BD9" }, // Progress color
+                    }}
+                  />
+                    </div>
+                    <p>{country}({percent})</p>
+                </div>
+                ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="keyword-top-table">
+              <div className="keyword-top-table-scroll">
+                <table className="keyword-top-table-container">
+                  <thead className="keyword-top-head">
+                    <tr className="keyword-top-row">
+                      <th className="keyword-top-row-contents">Top Keywords</th>
+                      <th className="keyword-top-row-contents">Volume</th>
+                      <th className="keyword-top-row-contents">KD</th>
+                      <th className="keyword-top-row-contents">Intent</th>
+                    </tr>
+                  </thead>
+                  <tbody className="keyword-top-body">
+                    {result["Top Similar Keywords"].map((keyword, index) => (
+                      <tr className="keyword-top-body-row" key={index}>
+                        <td className="keyword-top-body-row-contents">{keyword.Keyword}</td>
+                        <td className="keyword-top-body-row-contents">{keyword.Volume}</td>
+                        <td className="keyword-top-body-row-contents">{keyword.KD}%</td>
+                        <td className="keyword-top-body-row-contents">{keyword.Intent}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+          <div className="keyword-result-bottom-canvas">
+            <div className="keyword-result-cpc">
+              <p className="keyword-result-cpc-heading">CPC</p>
+              <span className="keyword-result-cpc-result">{result["Cost Per Click"]}%</span>
+            </div>
+            <div className="keyword-result-seo">
+              <div className="keyword-result-seo-contents">
+                <p className="keyword-result-seo-heading">SEO difficulty</p>
+                <span className="keyword-result-seo-result">{result["Keyword Difficulty"]}</span>
+              </div>
+              <CircularProgress variant="determinate" value={parseFloat(String(result["Keyword Difficulty"]).replace("%", ""))} 
+              size={80} thickness={22} 
+              style={{ color: "#515BD9", backgroundColor: "#f1f1f1", borderRadius: "100%", width: "60px", height: "60px" }}/>
+          </div>
+            <div className="keyword-result-ctr">
+            <p className="keyword-result-ctr-heading">Organic CTR</p>
+            <span className="keyword-result-ctr-result">{result["Organic CTR"]}%</span>
+            </div>
+            <div className="keyword-result-intent">
+            <p className="keyword-result-intent-heading">Intent</p>
+            <span className="keyword-result-intent-result">{result["Intent Categorization"]}</span>
+
+            </div>
+          </div>
+
+        </div>}
+        {error && <p className="error">Error: {error}</p>}
+
+
+          
       </div>
+      <DashboardRightUpdate/>
     </div>
   );
 }

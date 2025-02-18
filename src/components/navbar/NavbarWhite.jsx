@@ -12,7 +12,7 @@ import drop from '@public/Images/ai/drop.svg';
 import Theme from './Theme';
 import { UserAuth } from '@context/AuthContext';
 import { useRouter, usePathname } from "next/navigation";
-
+import Link from 'next/link';
 export const NavbarWhite = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [hover, setHover] = useState(false);
@@ -82,9 +82,9 @@ export const NavbarWhite = () => {
           </div>
           {hover && (
             <div className="navbar-profile-dropdown" ref={menuRef}>
-              <div className="settings" onClick={() => handleNavigation("/settings/general")}>Settings</div>
-              <div className="appearance" onClick={handleThemeClick}>Appearance {themeClick && <Theme />}</div>
-              <div className="help">Help</div>
+              <div className="settings" onClick={() => handleNavigation("/settings/profile")}>Settings</div>
+              {/* <div className="appearance" onClick={handleThemeClick}>Appearance {themeClick && <Theme />}</div>
+              <div className="help">Help</div> */}
               <div onClick={handleLogOut}>Logout</div>
             </div>
           )}
@@ -96,10 +96,18 @@ export const NavbarWhite = () => {
         </div>
         {menuOpen && (
           <div ref={menuRef} className="navbar-menu">
-            <div className="settings" onClick={() => handleNavigation("/settings/general")}>Settings</div>
+            {/* <div className="settings" onClick={() => handleNavigation("/settings/general")}>Settings</div>
             <div className="appearance" onClick={handleThemeClick}>Appearance {themeClick && <Theme />}</div>
             <div className="help">Help</div>
-            <div onClick={handleLogOut}>Logout</div>
+            <div onClick={handleLogOut}>Logout</div> */}
+            <p>Tools</p>
+            <Link href='/'>Content Generation</Link>
+            <Link href='/keyword'>Keyword Research</Link>
+            <Link href='/competitor'>Competitor Analysis</Link>
+            <div className='navbar-menu-contents'>
+              <div className="settings" onClick={() => handleNavigation("/settings/profile")}>Settings</div>
+              <div className='' onClick={handleLogOut}>Logout</div>
+            </div>
           </div>
         )}
       </div>

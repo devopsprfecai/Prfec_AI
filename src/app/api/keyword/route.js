@@ -140,11 +140,11 @@ export async function POST(request) {
                         {
                           "Search Volume": "<number>",
                           "Global Volume % with Countries": {
-                            "<Country 1>": "<percentage>",
-                            "<Country 2>": "<percentage>",
-                            "<Country 3>": "<percentage>",
-                            "<Country 4>": "<percentage>",
-                            "<Country 5>": "<percentage>",
+                            "<Alpha-2 Country Code 1>": "<percentage>",
+                            "<Alpha-2 Country Code 2>": "<percentage>",
+                            "<Alpha-2 Country Code 3>": "<percentage>",
+                            "<Alpha-2 Country Code 4>": "<percentage>",
+                            "<Alpha-2 Country Code 5>": "<percentage>",
                             "Others": "<percentage>"
                           },
                           "Organic CTR": "<number>",

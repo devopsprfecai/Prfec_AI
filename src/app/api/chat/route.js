@@ -139,7 +139,7 @@ export async function POST(request) {
         2. A brief introduction to the blog (description of the topic).
         3. A list of subtopics, each with a detailed description.
 
-        DO NOT include labels like "Title:", "Description:", or "Subtopic:" in your response.
+        DO NOT include labels like "Title:", "Description:", or "Subtopic:" in your response. It should have 1000-2000 characters
         The blog content should look like this:
         
         Example:
@@ -154,8 +154,8 @@ export async function POST(request) {
         // Try the primary model first
         let responseMessage;
         try {
-            // responseMessage = await generateBlog(prompt, "gemma2-9b-it");
-            responseMessage = await generateBlog(prompt, "llama-3.3-70b-versatile");
+            responseMessage = await generateBlog(prompt, "gemma2-9b-it");
+            // responseMessage = await generateBlog(prompt, "llama-3.3-70b-versatile");
 
         } catch (error) {
             console.warn("Primary model failed, switching to fallback model:", error);

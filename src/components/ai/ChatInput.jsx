@@ -51,7 +51,7 @@ export default function ChatInput({ input, setInput, handleSendMessage, buttonHl
   };
 
   const handleClick = () => {
-    if (promptCount >= 3) {
+    if (promptCount >= 100) {
       setLimitReached(true);
     } else {
       setLimitReached(false);
