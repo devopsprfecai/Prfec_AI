@@ -139,7 +139,7 @@ console.log("Loading",loading)
 
             <div className={`competitor-analysis-search-input-button ${loading ? "loading" : ""}`}  onClick={analyzeDomain} disabled={!domain || loading}>
               Analyze
-              <Image src={analyzeBtn} alt="Analyze" />
+              {/* <Image src={analyzeBtn} alt="Analyze" /> */}
             </div>
           </div>
         </div>

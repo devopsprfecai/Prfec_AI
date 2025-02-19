@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '@styles/navbar/NavbarWhite.css';
 import Image from 'next/image';
-import Logo from '@public/Images/ai/nohover.svg';
+import Logo from '@public/Images/ai/luzu logo.svg';
 import Hamburger from '@public/Images/navbar/hamburger.png';
 import Close from '@public/Images/navbar/close.png';
 import DefaultProfile from '@public/Images/navbar/default.svg';

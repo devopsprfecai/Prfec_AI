@@ -136,7 +136,7 @@ return (
             </div> */}
             <div className={`keyword-generator-search-input-button ${loading ? "loading" : ""}`} onClick={analyzeKeyword} disabled={!keyword || loading}>
             Search
-            <Image src={prfecBtn} alt="prfec" />
+            {/* <Image src={prfecBtn} alt="prfec" /> */}
           </div>
 
           </div>

@@ -76,11 +76,11 @@ export default function ChatInput({ input, setInput, handleSendMessage, buttonHl
         <input type="text" value={input} onChange={handleInputChange} onKeyDown={(e) => e.key === 'Enter' && handleClick()} placeholder="Type your message..."/>
         <div className={`chat-input-generate-button ${isTyping ? "loading" : ""}`}onClick={handleClick} style={{ backgroundColor: buttonHl ? '#414abb' : '#515bda' }} >
           <p>Generate</p>
-          <Image src={prfecBtn} alt="prfec" />
+          {/* <Image src={prfecBtn} alt="prfec" /> */}
         </div>
-        <div className="chat-input-mobile-button">
+        {/* <div className="chat-input-mobile-button">
           <Image width={24} height={24} src={buttonHl ? Hover : NoHover} alt="Button Icon"  onClick={handleClick} />
-        </div>
+        </div> */}
       </div>
     </div>
   );

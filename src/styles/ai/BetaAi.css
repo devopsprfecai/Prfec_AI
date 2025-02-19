@@ -507,7 +507,7 @@ bottom: 10px;
       padding-right: 1rem;
       background-color: var(--prfec-white);
     }
-    .chat-input-generate-button{
+    /* .chat-input-generate-button{
       display: none;
     }
     .chat-input-mobile-button{
@@ -515,7 +515,7 @@ bottom: 10px;
       display: flex;
       align-items: center;
       padding-right: 20px;
-    }
+    } */
   }
   @media only screen and (max-width:400px){
     .chat-input{
