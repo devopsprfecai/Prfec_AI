@@ -42,7 +42,7 @@ import prfecBtn from '@public/Images/ai/prfec button.svg';
 import close from '@public/Images/navbar/close.png';
 import { useState } from 'react';
 
-export default function ChatInput({ input, setInput, handleSendMessage, buttonHl, setButtonHl, promptCount }) {
+export default function ChatInput({ input, setInput, handleSendMessage, buttonHl, setButtonHl, promptCount, isTyping }) {
   const [limitReached, setLimitReached] = useState(false); // State for limit message
   const handleInputChange = (event) => {
     const newInput = event.target.value;
@@ -74,7 +74,7 @@ export default function ChatInput({ input, setInput, handleSendMessage, buttonHl
           </div>
         )}
         <input type="text" value={input} onChange={handleInputChange} onKeyDown={(e) => e.key === 'Enter' && handleClick()} placeholder="Type your message..."/>
-        <div className="chat-input-generate-button" onClick={handleClick} style={{ backgroundColor: buttonHl ? '#414abb' : '#515bda' }} >
+        <div className={`chat-input-generate-button ${isTyping ? "loading" : ""}`}onClick={handleClick} style={{ backgroundColor: buttonHl ? '#414abb' : '#515bda' }} >
           <p>Generate</p>
           <Image src={prfecBtn} alt="prfec" />
         </div>

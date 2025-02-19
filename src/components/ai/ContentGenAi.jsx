@@ -464,6 +464,7 @@ export default function PuterChat({currentPath}) {
   const [categoryBadges, setCategoryBadges] = useState([]); // State for category badges
   const [keywordBadges, setKeywordBadges] = useState([]);
   const [isDashboardActive, setIsDashboardActive] = useState(false);
+  const [loading,setLoading] = useState(false);
   const dashboardRef = useRef(null); // Create a ref for the dashboard
 
   const chatContainerRef = useRef(null);
@@ -517,6 +518,7 @@ export default function PuterChat({currentPath}) {
 
     if (promptCount >= 3) {
       alert('You have reached the daily prompt limit. Please try again tomorrow.');
+      setLoading(false);
       return;
     }
     setPromptCount((prev) => prev + 1);
@@ -790,7 +792,7 @@ export default function PuterChat({currentPath}) {
           </div>
 
           <ChatInput input={input} setInput={setInput} handleSendMessage={handleSendMessage} 
-      buttonHl={buttonHl} setButtonHl={setButtonHl} promptCount={promptCount}/>
+      buttonHl={buttonHl} setButtonHl={setButtonHl} promptCount={promptCount} isTyping={isTyping}/>
 
 
         </div>

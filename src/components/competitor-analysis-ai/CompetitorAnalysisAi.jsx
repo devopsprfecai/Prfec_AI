@@ -123,7 +123,7 @@ const sanitizeKeys = (obj) => {
     }
   };  
 
-
+console.log("Loading",loading)
   const currentPath = '/competitor';
   return (
     <div className="competitor-analysis" >
@@ -137,7 +137,7 @@ const sanitizeKeys = (obj) => {
             <input type="text" id="domain" value={domain} onChange={(e) => setDomain(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && analyzeDomain()} placeholder="Enter Domain (e.g., example.com)"/>
 
-            <div className="button" onClick={analyzeDomain} disabled={!domain || loading}>
+            <div className={`competitor-analysis-search-input-button ${loading ? "loading" : ""}`}  onClick={analyzeDomain} disabled={!domain || loading}>
               Analyze
               <Image src={analyzeBtn} alt="Analyze" />
             </div>

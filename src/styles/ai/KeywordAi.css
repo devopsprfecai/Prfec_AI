@@ -126,7 +126,7 @@
     border-radius: 4px;
   }
   
-  .keyword-generator-search-input .button{
+  .keyword-generator-search-input-button{
     padding: 0px 20px;
     background-color: var(--prfec-clr);
     border-radius: 8px;
@@ -140,6 +140,18 @@
     justify-content: space-between;
     gap: 0.3rem;
   }
+  @keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.8; }
+    100% { opacity: 1; }
+  }
+  
+  .keyword-generator-search-input-button.loading {
+    animation: blink 1.5s infinite;
+    pointer-events: none; /* Prevent clicking while loading */
+    opacity: 0.7;
+  }
+  
   @media only screen and (max-width:1200px){
     .keyword-generator-container{
       padding: 2rem 1rem;
@@ -184,7 +196,7 @@
       width: 100%;
       justify-content: space-between;
     }
-    .keyword-generator-search-input .button{
+    .keyword-generator-search-input-button{
       height: 42px;
       align-items: center;
     justify-content: center;
