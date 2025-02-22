@@ -12,7 +12,7 @@ import { Marked } from 'marked';
 import html2pdf from "html2pdf.js";
 import DashboardRight from './DashboardRight';
 import { getDatabase, ref, get } from "firebase/database";
-import { getAuth } from 'firebase/auth';
+import { getAuth } from "firebase/auth";
 
 export default function PuterChat({currentPath}) {
   const { promptCount, setPromptCount } = usePrompt();
@@ -36,6 +36,7 @@ export default function PuterChat({currentPath}) {
   const dashboardRef = useRef(null); // Create a ref for the dashboard
 
   const chatContainerRef = useRef(null);
+  const auth = getAuth();
 
   useEffect(() => {
     if (isDashboardActive) {
@@ -81,89 +82,7 @@ export default function PuterChat({currentPath}) {
     };
   };
 
-  // const handleSendMessage = async () => {
-  //   if (!input.trim()) return;
 
-  //   if (promptCount >=100) {
-  //     alert('You have reached the daily prompt limit. Please try again tomorrow.');
-  //     setLoading(false);
-  //     return;
-  //   }
-  //   setPromptCount((prev) => prev + 1);
-  //   let prefixedInput = input.trim().startsWith("blog about")? input.trim(): `blog about ${input.trim()}`;
-  //   setButtonHl(true); // Highlight button when message is being sent
-  //   setFormattedTitle(''); // Reset the previous title
-  //   setMetaDescription(''); // Reset the previous meta description
-  //   setFormattedContent('');
-  //   setCategory('');
-  //   setKeyword('');
-  //   setCategoryBadges('');
-  //   setKeywordBadges('');
-  //   setLastInput(prefixedInput); // Store the last input
-
-  //   if (categoryBadges.length > 0) {// Append categories and keywords to the input
-  //     const categoriesText = `Categories: ${categoryBadges.join(', ')}`;
-  //     prefixedInput += `\n${categoriesText}`;
-  //   }
-
-  //   if (keywordBadges.length > 0) {
-  //     const keywordsText = `Keywords: ${keywordBadges.join(', ')}`;
-  //     prefixedInput += `\n${keywordsText}`;
-  //   }
-
-  //   const userMessage = {
-  //     id: Date.now(),
-  //     sender: 'You',
-  //     text: prefixedInput,
-  //   };
-
-  //   setMessages((prev) => [
-  //     ...prev.filter((msg) => msg.sender !== 'AI'),
-  //     userMessage,
-  //   ]);
-
-  //   setInput('');
-  //   setButtonHl(false); 
-  //   setIsTyping(true);
-
-  //   try {
-  //     const response = await fetch('/api/chat', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({ message: userMessage.text }),
-  //     });
-
-  //     const data = await response.json();
-
-  //     if (response.ok) {
-  //       const botMessage = {
-  //         id: Date.now() + 1,
-  //         sender: 'AI',
-  //         text: data.response,
-  //       };
-  //       setMessages((prev) => [...prev, botMessage]);
-  //     } else {
-  //       const errorMessage = {
-  //         id: Date.now() + 1,
-  //         sender: 'AI',
-  //         text: data.error || 'Something went wrong.',
-  //       };
-  //       setMessages((prev) => [...prev, errorMessage]);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching chat:', error);
-  //     const errorMessage = {
-  //       id: Date.now() + 1,
-  //       sender: 'AI',
-  //       text: 'An unexpected error occurred.',
-  //     };
-  //     setMessages((prev) => [...prev, errorMessage]);
-  //   } finally {
-  //     setIsTyping(false);
-  //   }
-  // };
   // const handleSendMessage = async () => {
   //   if (!input.trim()) return;
   
@@ -242,49 +161,21 @@ export default function PuterChat({currentPath}) {
   //     setIsTyping(false);
   //   }
   // };
-
   const handleSendMessage = async () => {
     if (!input.trim()) return;
   
     setLoading(true);
   
     try {
-      // Get the currently authenticated user
-      const auth = getAuth();
-      const user = auth.currentUser;
-      if (!user) {
-        alert("You must be logged in to send messages.");
-        setLoading(false);
-        return;
-      }
+      // Fetch planType from Firebase
+      const user= auth.currentUser;
+
+      const userId = user.uid;  
+         const db = getDatabase();
+      const planRef = ref(db, `subscriptions/${userId}/planType`);
+      const snapshot = await get(planRef);
   
-      const db = getDatabase();
-      const subscriptionsRef = ref(db, `subscriptions`);
-  
-      // Fetch all subscriptions and find the user's subscription ID
-      const subscriptionsSnapshot = await get(subscriptionsRef);
-      if (!subscriptionsSnapshot.exists()) {
-        console.warn("No subscriptions found.");
-        setLoading(false);
-        return;
-      }
-  
-      const subscriptions = subscriptionsSnapshot.val();
-      const userSubscriptionEntry = Object.entries(subscriptions).find(
-        ([, sub]) => sub.userId === user.uid
-      );
-  
-      if (!userSubscriptionEntry) {
-        console.warn("No subscription found for user:", user.uid);
-        setLoading(false);
-        return;
-      }
-  
-      const [subscriptionId, userSubscription] = userSubscriptionEntry;
-      console.log("User Subscription ID:", subscriptionId);
-  
-      // Now fetch the planType using subscription ID
-      const planType = userSubscription.planType || null;
+      let planType = snapshot.exists() ? snapshot.val() : null;
       let maxPrompts = 3; // Default limit
   
       if (planType === "starter") {
@@ -360,7 +251,7 @@ export default function PuterChat({currentPath}) {
         setMessages([userMessage, errorMessage]);
       }
     } catch (error) {
-      console.error('Error fetching subscription or sending chat:', error);
+      console.error('Error fetching planType or sending chat:', error);
       setMessages([
         { id: Date.now(), sender: 'You', text: input.trim() },
         { id: Date.now() + 1, sender: 'AI', text: 'An unexpected error occurred.' },
@@ -370,7 +261,6 @@ export default function PuterChat({currentPath}) {
       setLoading(false);
     }
   };
-
   function stripHtmlTags(html) {
     const div = document.createElement('div');
     div.innerHTML = html;
