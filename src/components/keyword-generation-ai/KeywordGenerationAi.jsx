@@ -243,7 +243,7 @@ import { useState, useEffect ,useRef} from "react";
 import '@styles/ai/KeywordAi.css';
 import Image from "next/image";
 import { database } from "@firebase";
-import { ref, set, get } from "firebase/database";
+import { getDatabase,ref, set, get } from "firebase/database";
 import { useKeyPrompt } from "@context/KeywordPromptContext";
 import useCountryList from "react-select-country-list"; // Import the country list hook
 import arrow from '@public/Images/ai/drop.svg';
@@ -251,7 +251,7 @@ import prfecBtn from '@public/Images/ai/prfec button.svg';
 import AiDashboard from "@components/ai/Dashboard";
 import DashboardRightUpdate from "@components/ai/DashboardRightUpdate";
 import LinearProgress from "@mui/material/LinearProgress";
-
+import { getAuth } from "firebase/auth";
 
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -267,6 +267,7 @@ export default function KeywordGenerationAi() {
   const [countrySearch, setCountrySearch] = useState("");
   const dropdownRef = useRef(null);
   const inputRef = useRef(null);// Ref for the dropdown container
+  const auth = getAuth();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -291,10 +292,31 @@ export default function KeywordGenerationAi() {
     setLoading(true);
     setError(null);
     setResult(null);
-    if (keywordPromptCount >= 3) {
-      alert('You have reached the daily prompt limit. Please try again tomorrow.');
+    const user= auth.currentUser;
+
+    const userId = user.uid;  
+       const db = getDatabase();
+    const planRef = ref(db, `subscriptions/${userId}/planType`);
+    const snapshot = await get(planRef);
+
+    let planType = snapshot.exists() ? snapshot.val() : null;
+    let maxPrompts = 3; // Default limit
+
+    if (planType === "starter") {
+      maxPrompts = 50;
+    } else if (planType === "pro") {
+      maxPrompts = 150;
+    }
+
+    if (keywordPromptCount >= maxPrompts) {
+      alert(`You have reached your daily prompt limit of ${maxPrompts}. Please try again tomorrow.`);
+      setLoading(false);
       return;
     }
+    // if (keywordPromptCount >= 3) {
+    //   alert('You have reached the daily prompt limit. Please try again tomorrow.');
+    //   return;
+    // }
 
     setKeywordPromptCount((prev) => prev + 1);
 
