@@ -1,6 +1,8 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import '@styles/ai/pricing/Pricing.css';
+import { getDatabase, ref, set } from 'firebase/database'; 
+import { getAuth } from 'firebase/auth';
 
 const Pricing = () => {
   const [activeTab, setActiveTab] = useState('personal');
@@ -28,65 +30,174 @@ const Pricing = () => {
     loadRazorpayScript().catch((error) => console.error('Error loading Razorpay script:', error));
   }, []);
 
-  // Handle Payment
-  const handlePayment = async (plan, amountUSD) => {
+  // Handle Subscription Payment
+  const handleSubscription = async (planType, amountUSD) => {
     try {
-        // Convert USD to INR (static conversion rate or API call)
-        const conversionResponse = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
-        const conversionData = await conversionResponse.json();
-        const conversionRate = conversionData.rates.INR;
-        
-        const amountINR = (amountUSD * conversionRate).toFixed(2);
+      const user = getAuth().currentUser;
+      if (!user) {
+        alert('Please log in to subscribe');
+        return;
+      }
 
-        console.log(`Converted Amount: $${amountUSD} -> ₹${amountINR}`);
+      // Create subscription
+      const subscriptionResponse = await fetch('http://localhost:5000/api/createSubscription', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          planType,
+          customerEmail: user.email,
+          customerId: user.uid
+        }),
+      });
 
+      const subscriptionData = await subscriptionResponse.json();
 
-        const response = await fetch('http://localhost:5000/api/createOrder', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                amount: Math.round(amountINR * 100), // INR in paise (₹1709.33 -> 170933)
-                name: plan,
-                description: `${plan} plan subscription`,
-                currency: 'INR', // Pass currency as INR
-            }),
+      if (!subscriptionData.success) {
+        throw new Error(subscriptionData.message || 'Failed to create subscription');
+      }
+
+      // Initialize Razorpay checkout
+      if (razorpayScriptLoaded) {
+        const options = {
+          key: subscriptionData.key_id,
+          subscription_id: subscriptionData.subscription.id,
+          name: 'PrfeciAI',
+          description: `${planType} Plan Subscription`,
+          handler: async function(response) {
+            try {
+              console.log('Payment Response:', response);
+
+              // Verify the payment
+              const verificationResponse = await fetch('http://localhost:5000/api/verifySubscription', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_subscription_id: response.razorpay_subscription_id,
+                  razorpay_signature: response.razorpay_signature
+                }),
+              });
+
+              if (!verificationResponse.ok) {
+                throw new Error(`Verification failed with status: ${verificationResponse.status}`);
+              }
+
+              const verificationData = await verificationResponse.json();
+
+              if (verificationData.success) {
+                // Store subscription data in Firebase
+                await storeSubscriptionDataInFirebase({
+                  subscriptionId: response.razorpay_subscription_id,
+                  paymentId: response.razorpay_payment_id,
+                  planType,
+                  userId: user.uid,
+                  email: user.email,
+                  status: 'active',
+                  startDate: new Date().toISOString(),
+                  amount: amountUSD.toFixed(2)
+                });
+
+                // Store payment data in Firebase
+                await storePaymentDataInFirebase({
+                  amount: amountUSD.toFixed(2),
+                  description: `${planType} plan subscription`,
+                  email: user.email,
+                  paymentStatus: 'success',
+                  phone: user.phoneNumber || '',
+                  planType,
+                  subscriptionId: response.razorpay_subscription_id
+                });
+
+                alert('Subscription activated successfully!');
+                window.location.href = '/';
+              } else {
+                throw new Error(verificationData.message || 'Payment verification failed');
+              }
+            } catch (error) {
+              console.error('Payment verification error:', error);
+              alert(`Payment verification failed: ${error.message}`);
+            }
+          },
+          prefill: {
+            email: user.email,
+            contact: user.phoneNumber || ''
+          },
+          theme: {
+            color: '#2300a3'
+          },method: {
+            card: true,
+            netbanking: true,
+            wallet: true,
+            upi: false // Disable UPI
+          },
+          modal: {
+            ondismiss: function() {
+              console.log('Checkout form closed');
+            }
+          }
+        };
+
+        const razorpayInstance = new window.Razorpay(options);
+
+        razorpayInstance.on('payment.failed', function(response) {
+          console.error('Payment failed:', response.error);
+          alert(`Payment failed: ${response.error.description}`);
         });
 
-        const data = await response.json();
-
-        if (data.success && razorpayScriptLoaded) {
-            const options = {
-                key: data.key_id,
-                amount: data.amount,
-                currency: 'INR', // Currency set to INR
-                name: 'PrfeciAI',
-                description: data.description,
-                order_id: data.order_id,
-                handler: async function (response) {
-                    alert('Payment Successful');
-                    window.location.href='https://app.prfec.ai';
-                },
-                prefill: {
-                  email:'',
-                  contact:''
-                },
-                theme: { color: '#2300a3' },
-            };
-
-            const razorpayInstance = new window.Razorpay(options);
-            razorpayInstance.on('payment.failed', function (response) {
-                alert('Payment Failed');
-            });
-
-            razorpayInstance.open();
-        } else {
-            throw new Error('Failed to create Razorpay order');
-        }
+        razorpayInstance.open();
+      }
     } catch (error) {
-        console.error('Payment Error:', error);
+      console.error('Subscription error:', error);
+      alert(`Failed to create subscription: ${error.message}`);
     }
-};
+  };
+  const fetchUsdToInrRate = async () => {
+    try {
+      const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+      const data = await response.json();
+      return data.rates.INR || 83; // Default to 83 if API fails
+    } catch (error) {
+      console.error('Error fetching exchange rate:', error);
+      return 83; // Fallback to 83 INR per USD
+    }
+  };
+  
+  // Function to convert USD to INR dynamically
+  const convertUsdToInr = async (usdAmount) => {
+    const conversionRate = await fetchUsdToInrRate();
+    return `₹${(usdAmount * conversionRate).toFixed(2)}`;
+  };
+  
+  // Store Payment Data in Firebase
+  const storePaymentDataInFirebase = async (paymentData) => {
+    try {
+      const db = getDatabase();
+      const paymentRef = ref(db, 'payments/' + Date.now());
+      const convertedAmount = await convertUsdToInr(paymentData.amount);
+      await set(paymentRef, {
+        ...paymentData,
+        amount: convertedAmount // Convert to INR before storing
+      });
+      console.log('Payment data stored successfully!');
+    } catch (error) {
+      console.error('Error storing payment data:', error);
+    }
+  };
+  
+  // Store Subscription Data in Firebase
+  const storeSubscriptionDataInFirebase = async (subscriptionData) => {
+    try {
+      const db = getDatabase();
+      const subscriptionRef = ref(db, 'subscriptions/' + subscriptionData.subscriptionId);
+      const convertedAmount = await convertUsdToInr(subscriptionData.amount);
 
+      await set(subscriptionRef, { ...subscriptionData, amount: convertedAmount });
+      console.log('Subscription data stored successfully!');
+    } catch (error) {
+      console.error('Error storing subscription data:', error);
+    }
+  };
+  
 
   return (
     <div className='pricing-page'>
@@ -117,14 +228,14 @@ const Pricing = () => {
               <div className='pricing-page-personal-container-heading'>Starter</div>
               <div className='pricing-page-personal-starter-pricing'>
                 <p>$20</p>
-                <button onClick={() => handlePayment('Starter', 20)}>Get Started</button>
+                <button onClick={() => handleSubscription('starter', 20)}>Get Started</button>
               </div>
             </div>
             <div className='pricing-page-personal-pro'>
               <div className='pricing-page-personal-container-heading'>Pro</div>
               <div className='pricing-page-personal-pro-pricing'>
                 <p>$45</p>
-                <button onClick={() => handlePayment('Pro', 45)}>Get Started</button>
+                <button onClick={() => handleSubscription('pro', 45)}>Get Started</button>
               </div>
             </div>
           </div>
