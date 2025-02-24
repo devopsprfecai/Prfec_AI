@@ -10,7 +10,8 @@ import refresh2 from '@public/Images/ai/refresh-dash.svg';
 import download from '@public/Images/ai/download.svg';
 import prfecBtn from '@public/Images/ai/prfec button.svg';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+// import html2canvas from 'html2canvas';
+import { Marked } from 'marked';
 
 import { metadata } from '@app/layout';
 
@@ -30,13 +31,21 @@ export default function PuterChat() {
   const [categoryBadges, setCategoryBadges] = useState([]); // State for category badges
   const [keywordBadges, setKeywordBadges] = useState([]);
 
+  // useEffect(() => {
+  //   const latestAIMessage = messages.find((msg) => msg.sender === 'AI');
+  //   if (latestAIMessage) {
+  //     const { formattedTitle, formattedParagraph, formattedContent } = formatBlogContent(latestAIMessage.text);
+  //     setFormattedTitle(formattedTitle);
+  //     setMetaDescription(formattedParagraph); // Assuming paragraph as meta description
+  //     setFormattedContent(formattedContent);
+  //   }
+  // }, [messages]);
+
   useEffect(() => {
     const latestAIMessage = messages.find((msg) => msg.sender === 'AI');
     if (latestAIMessage) {
-      const { formattedTitle, formattedParagraph, formattedContent } = formatBlogContent(latestAIMessage.text);
-      setFormattedTitle(formattedTitle);
-      setMetaDescription(formattedParagraph); // Assuming paragraph as meta description
-      setFormattedContent(formattedContent);
+      const formattedHtml = Marked(latestAIMessage.text);
+      setFormattedContent(formattedHtml);
     }
   }, [messages]);
   
@@ -127,55 +136,55 @@ export default function PuterChat() {
     }
   };
 
-  const formatBlogContent = (content) => {
-    const cleanedContent = content;
+//   const formatBlogContent = (content) => {
+//     const cleanedContent = content;
 
- //-------------------------------------------------------------------------------------------------- Title
- const titleMatch = cleanedContent.match(/^##\s*(.*?)\s*$/m);
+//  //-------------------------------------------------------------------------------------------------- Title
+//  const titleMatch = cleanedContent.match(/^##\s*(.*?)\s*$/m);
 
- let title = titleMatch ? titleMatch[1].trim() : "";
- const formattedTitle = title
-   ? `<h1 class="heading1">${title.trim()}</h1>`
-   : "";
- // ------------------------------------------------------------------------------------------------ Paragraph
- const introPara = cleanedContent.match(/^([\s\S]*?)(?=\s*\*\*|\n\*\*|$)/);
+//  let title = titleMatch ? titleMatch[1].trim() : "";
+//  const formattedTitle = title
+//    ? `<h1 class="heading1">${title.trim()}</h1>`
+//    : "";
+//  // ------------------------------------------------------------------------------------------------ Paragraph
+//  const introPara = cleanedContent.match(/^([\s\S]*?)(?=\s*\*\*|\n\*\*|$)/);
  
- let BlogPara = introPara ? introPara[1].trim() : "";
-  if (title) {
-   BlogPara = BlogPara.replace(new RegExp(`##\\s*${title}`, "i"), "").trim(); //i stands for case-insensitive matching.
- }
+//  let BlogPara = introPara ? introPara[1].trim() : "";
+//   if (title) {
+//    BlogPara = BlogPara.replace(new RegExp(`##\\s*${title}`, "i"), "").trim(); //i stands for case-insensitive matching.
+//  }
  
- const formattedParagraph = BlogPara? `<p class="para-text">${BlogPara.replace(/##/g, "").trim()}</p>`: "";
-  // // --------------------------------------------------------------------------------------------------------------------------
+//  const formattedParagraph = BlogPara? `<p class="para-text">${BlogPara.replace(/##/g, "").trim()}</p>`: "";
+//   // // --------------------------------------------------------------------------------------------------------------------------
 
-  let contentWithoutTitleAndParagraph = cleanedContent;
+//   let contentWithoutTitleAndParagraph = cleanedContent;
 
-  if (title) {
-    contentWithoutTitleAndParagraph = contentWithoutTitleAndParagraph.replace(new RegExp(`^##\\s*${title}\\s*`, "i"),"");
-  }
-  if (BlogPara) {
-    contentWithoutTitleAndParagraph = contentWithoutTitleAndParagraph.replace(new RegExp(BlogPara.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"), "g"),"");
-  }
+//   if (title) {
+//     contentWithoutTitleAndParagraph = contentWithoutTitleAndParagraph.replace(new RegExp(`^##\\s*${title}\\s*`, "i"),"");
+//   }
+//   if (BlogPara) {
+//     contentWithoutTitleAndParagraph = contentWithoutTitleAndParagraph.replace(new RegExp(BlogPara.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"), "g"),"");
+//   }
   
-  contentWithoutTitleAndParagraph = contentWithoutTitleAndParagraph.trim();
+//   contentWithoutTitleAndParagraph = contentWithoutTitleAndParagraph.trim();
  
-    //------------------------------------------------------------------------------------------------------------------
-    const formattedContent = contentWithoutTitleAndParagraph
-    .replace(/-\s\*\*(.*?)\*\*/g, '<li class="list-item-heading">$1</li>')
-    .replace(/\*\s\*\*(.*?)\*\*/g, '<li class="list-item-heading">$1</li>')
-    .replace(/^(\d+\.)\s\*\*(.*?)\*\*/gm, '<h4 class="heading3">$2</h4>')
+//     //------------------------------------------------------------------------------------------------------------------
+//     const formattedContent = contentWithoutTitleAndParagraph
+//     .replace(/-\s\*\*(.*?)\*\*/g, '<li class="list-item-heading">$1</li>')
+//     .replace(/\*\s\*\*(.*?)\*\*/g, '<li class="list-item-heading">$1</li>')
+//     .replace(/^(\d+\.)\s\*\*(.*?)\*\*/gm, '<h4 class="heading3">$2</h4>')
 
 
-      .replace(/\*\*(.*?)\*\*/g, '<h2 class="heading2">$1</h2>') // for **.....
-      .replace(/^\s*-\s(.*?)(?=\n|$)/gm, '<li class="list-item">$1</li>')
-      .replace(/^- (.*?)(?=\n|$)/gm, '<li class="list-item">$1</li>')
-      .replace(/^([*-])\s(.*?)(?=\n|$)/gm, '<li class="list-item">$2</li>') 
-      .replace(/^(?!<h1|<h2)(.*?)(?=\n|$)/gm, '<p class="para-text">$1</p>') // Paragraph tag for other content
-      .trim();
+//       .replace(/\*\*(.*?)\*\*/g, '<h2 class="heading2">$1</h2>') // for **.....
+//       .replace(/^\s*-\s(.*?)(?=\n|$)/gm, '<li class="list-item">$1</li>')
+//       .replace(/^- (.*?)(?=\n|$)/gm, '<li class="list-item">$1</li>')
+//       .replace(/^([*-])\s(.*?)(?=\n|$)/gm, '<li class="list-item">$2</li>') 
+//       .replace(/^(?!<h1|<h2)(.*?)(?=\n|$)/gm, '<p class="para-text">$1</p>') // Paragraph tag for other content
+//       .trim();
 
   
-    return {formattedTitle,formattedParagraph,formattedContent};
-  };
+//     return {formattedTitle,formattedParagraph,formattedContent};
+//   };
   const handleRefreshContent = async () => {
     if (!lastInput) return; 
 
@@ -388,7 +397,7 @@ export default function PuterChat() {
                   {messages
                     .filter((msg) => msg.sender === 'AI')
                     .map((msg, index) => {
-                      const { formattedTitle, formattedParagraph, formattedContent } = formatBlogContent(msg.text);
+                      const { formattedTitle, formattedParagraph, formattedContent } = Marked(msg.text);
                       
                       return (
                         <div key={index}>

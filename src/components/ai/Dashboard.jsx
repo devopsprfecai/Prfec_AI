@@ -1,94 +1,33 @@
 'use client';
-import '@styles/ai/BetaAi.css'
-import Image from 'next/image';
-import refresh2 from '@public/Images/ai/refresh-dash.svg';
+import '@styles/ai/BetaAi.css';
+import Link from 'next/link';
 
-const AiDashboard = ({
-    formattedTitle,
-    setFormattedTitle,
-    metaDescription,
-    setMetaDescription,
-    formattedContent,
-    setFormattedContent,
-    category,
-    setCategory,
-    categoryBadges,
-    keyword,
-    setKeyword,
-    keywordBadges,
-    handleRestructureClick,
-    handleCategoryChange,
-    handleCategoryKeyDown,
-    handleKeywordChange,
-    handleKeywordKeyDown,
-    isDashboardActive,
-    dashboardRef
-  }) => {
-    function stripHtmlTags(html) {
-        const div = document.createElement('div');
-        div.innerHTML = html;
-        return div.textContent || div.innerText || '';
-      }
+const AiDashboard = ({currentPath}) => {
   return (
-    <div className={`ai-dashboard ${isDashboardActive ? "active" : ""}`} ref={dashboardRef}>
-    <div className="ai-dashboard-container">
-      <h1 className='ai-chat-heading'>AI Content Generation</h1>
-      <div className="ai-dashboard-contents">
-      <div className="ai-dashboard-title">
-          <label htmlFor="ai-title" className='dashboard-label'>Title</label>  
-          <div className='ai-dashboard-title-input'>
-            <input type="text" id="ai-title" value={stripHtmlTags(formattedTitle)} readOnly />
-            <div className="refresh-title-button" onClick={() => handleRestructureClick('title')}>
-              <Image src={refresh2} height={12} alt='refresh'/>
-            </div>
-          </div>
-        </div>
-        <div className="ai-dashboard-description">
-          <label htmlFor="ai-description" className='dashboard-label'>Meta description</label>
-          <div className='ai-dashboard-title-input'>
-            <input type="text" id="ai-description"  value={stripHtmlTags(metaDescription)} readOnly/>
-            <div className="refresh-description-button" onClick={() => handleRestructureClick('description')}>
-              <Image src={refresh2} height={12} alt='refresh'/>
-            </div>
-          </div>
-        </div>
-
-        {/* <div className="ai-dashboard-body">
-          <label htmlFor="" className='dashboard-label'>Body</label>
-          <div className='ai-dashboard-title-input'>
-            <input type="text" id="ai-content" value={stripHtmlTags(formattedContent)} readOnly  />
-            <div className="refresh-body-button">
-              <Image src={refresh2} height={12} alt='refresh'/>
-            </div>
-          </div>
-        </div> */}
-        <div className="ai-dashboard-category">
-          <label htmlFor="category" className='dashboard-label'>Category</label>
-          <div className='ai-dashboard-title-input'>
-            <input type="text" id="category" value={category} onChange={handleCategoryChange} onKeyDown={handleCategoryKeyDown}/>
-          </div>
-          {categoryBadges &&
-          <div className="badges-container">
-            {categoryBadges.map((badge, index) => (
-              <span key={index} className="badge"> {badge} </span>
-            ))}
-          </div>}
-        </div>
-        <div className="ai-dashboard-category">
-          <label htmlFor="keyword" className='dashboard-label'>Keyword</label>
-          <div className='ai-dashboard-title-input'>
-            <input type="text" id="keyword" value={keyword} onChange={handleKeywordChange} onKeyDown={handleKeywordKeyDown}/>
-          </div>
-          {keywordBadges && <div className="badges-container">
-            {keywordBadges.map((badge, index) => (
-              <span key={index} className="badge"> {badge} </span>
-            ))}
-          </div>}
-        </div>
+    <div className='ai-left-dashboard'>
+      <div className='ai-left-dashboard-container'>
+        <h2>Tools</h2>
+        <Link 
+          href='/' 
+          className={`ai-left-dashboard-contents ${currentPath === '/' ? 'active' : ''}`}
+        >
+          Content Generation
+        </Link>
+        <Link 
+          href='/keyword' 
+          className={`ai-left-dashboard-contents ${currentPath === '/keyword' ? 'active' : ''}`}
+        >
+          Keyword Research
+        </Link>
+        <Link 
+          href='/competitor' 
+          className={`ai-left-dashboard-contents ${currentPath === '/competitor' ? 'active' : ''}`}
+        >
+          Competitor Analysis
+        </Link>
       </div>
     </div>
-  </div>
-  )
-}
+  );
+};
 
-export default AiDashboard
+export default AiDashboard;

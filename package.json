@@ -14,16 +14,31 @@
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
+<<<<<<< HEAD
     "@mui/material": "^6.2.1",
     "axios": "^1.7.9",
+=======
+    "@mui/material": "^6.4.5",
+    "countries-list": "^3.1.1",
+>>>>>>> dae246dd404d98622606fe570f8ef3871b82b036
     "email-validator": "^2.0.4",
-    "firebase": "^11.0.2",
+    "firebase": "^11.1.0",
     "font-awesome-icons": "^1.6.0",
     "groq-sdk": "^0.9.0",
+    "html2pdf.js": "^0.10.2",
     "jspdf": "^2.5.2",
-    "next": "^15.1.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "marked": "^15.0.7",
+    "next": "^15.1.4",
+    "react": "^18.3.1",
+    "react-circular-progressbar": "^2.1.0",
+    "react-dom": "^18.3.1",
+    "react-progressbar.js": "^0.2.0",
+    "react-select": "^5.9.0",
+    "react-select-country-list": "^2.2.3",
+    "slate": "^0.112.0",
+    "slate-editor": "^5.1.1",
+    "slate-history": "^0.110.3",
+    "slate-react": "^0.112.0"
   },
   "devDependencies": {
     "eslint": "^8",
