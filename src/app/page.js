@@ -12,8 +12,8 @@ const Signin = dynamic(() => import('@components/auth/signup/signup'), { ssr: fa
 
 const Page = () => {
   const { user } = UserAuth();
-
-  return user ? <PuterChat /> : <Signin />;
+  const currentPath ='/'
+  return user ? <PuterChat currentPath={currentPath} /> : <Signin />;
 
 }
 

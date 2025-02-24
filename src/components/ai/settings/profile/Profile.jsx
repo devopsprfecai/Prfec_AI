@@ -22,6 +22,22 @@ const Profile = () => {
   const xRef = useRef(null);
   const {user} = UserAuth()
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     if (user?.uid) {
+  //       const userRef = ref(database, `usersData/${user.uid}`);
+  //       const snapshot = await get(userRef);
+  //       if (snapshot.exists()) {
+  //         const data = snapshot.val();
+  //         setProfileData({ name: data.name || '', phone: data.phone || '' });
+  //         setLinks({ linkedin: data.linkedin || '', x: data.x || '' });
+  //       }
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [user]);
+
   useEffect(() => {
     const fetchData = async () => {
       if (user?.uid) {
@@ -29,14 +45,29 @@ const Profile = () => {
         const snapshot = await get(userRef);
         if (snapshot.exists()) {
           const data = snapshot.val();
-          setProfileData({ name: data.name || '', phone: data.phone || '' });
-          setLinks({ linkedin: data.linkedin || '', x: data.x || '' });
+          // Extract the name from the email if the name is not provided
+          const emailName = user.email?.split('@')[0] || '';
+          const name = data.name || emailName; // Use email name as default
+          setProfileData({
+            name,
+            phone: data.phone || '',
+          });
+          setLinks({
+            linkedin: data.linkedin || '',
+            x: data.x || '',
+          });
+  
+          // Save the default name to Firebase if it wasn't already set
+          if (!data.name && emailName) {
+            await set(userRef, { ...data, name: emailName });
+          }
         }
       }
     };
-
+  
     fetchData();
   }, [user]);
+  
   
 
  const handleEditToggle = (field) => {

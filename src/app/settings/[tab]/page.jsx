@@ -96,8 +96,11 @@ const Settings = () => {
       <div className="ai-settings-container">
         {/* Dashboard Navigation */}
         <div className="ai-settings-dashboard">
-          {['general', 'profile', 'data', 
-          'billing',
+          {[
+            // 'general', 
+          'profile', 
+          // 'data', 
+          // 'billing',
           //  'activity', 'updates'
           ].map((item) => (
             <div
@@ -114,10 +117,10 @@ const Settings = () => {
 
         {/* Display Content Based on Active Tab */}
         <div className="ai-settings-contents">
-          {activeTab === 'general' && <General />}
+          {/* {activeTab === 'general' && <General />} */}
           {activeTab === 'profile' && <Profile />}
-          {activeTab === 'data' && <Data />}
-          {activeTab === 'billing' && <Billing />}
+          {/* {activeTab === 'data' && <Data />}
+          {activeTab === 'billing' && <Billing />} */}
           {/* {activeTab === 'activity' && <Activity />}
           {activeTab === 'updates' && <Updates />} */}
 
