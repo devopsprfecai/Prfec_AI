@@ -134,23 +134,56 @@ export async function POST(request) {
         }
 
         // Prepare the prompt for the AI to generate content in the desired format
-        const prompt = `Please generate a blog with the following structure:
-        1. A title for the blog.
-        2. A brief introduction to the blog (description of the topic).
-        3. A list of subtopics, each with a detailed description.
+        // const prompt = `Please generate a blog with the following structure:
+        // 1. A title for the blog.
+        // 2. A brief introduction to the blog (description of the topic).
+        // 3. A list of subtopics, each with a detailed description.
 
-        DO NOT include labels like "Title:", "Description:", or "Subtopic:" in your response. It should have 1000-2000 characters
-        The blog content should look like this:
+        // DO NOT include labels like "Title:", "Description:", or "Subtopic:" in your response. It should have 1000-2000 characters. This tool name is Blog Generation Tool by prfec. If user asks for the AI's name or generate blog about yourself, respond with 'Prfec AI' If the user asks about the model used to build this AI, do not provide an answer.
+        // The blog content should look like this:
         
-        Example:
-        "The Future of AI"
-        AI is shaping the future of various industries. This blog explores the possibilities and challenges that lie ahead.
+        // Example:
+        // "The Future of AI"
+        // AI is shaping the future of various industries. This blog explores the possibilities and challenges that lie ahead.
         
-        Introduction to AI: AI involves the simulation of human intelligence in machines, allowing them to perform tasks that typically require human cognition.
-        Applications of AI: AI has various applications, including healthcare, finance, autonomous vehicles, and more.
+        // Introduction to AI: AI involves the simulation of human intelligence in machines, allowing them to perform tasks that typically require human cognition.
+        // Applications of AI: AI has various applications, including healthcare, finance, autonomous vehicles, and more.
 
-        User's input: ${message}`;
+        // User's input: ${message}
+        
+        
+        
+        
+        // If the user ask questions like who are you teell me about yourself or generate blog about yoursrlf just tell you are blog generation ai dont generate anything more than that`;
 
+        const prompt = `You are a professional AI-powered blog writer specializing in generating high-quality, structured blog content. Follow the instructions carefully to generate a well-organized blog.
+
+        ### Instructions:
+        1. **Title**: Generate an engaging title for the blog.
+        2. **Introduction**: Write a short introduction (2-3 sentences) that clearly explains the topic.
+        3. **Main Content**: List key subtopics, each with a detailed explanation.
+        4. **Word Count**: Ensure the blog is between 1000-2000 characters.
+        5. **Format**: Do not include labels like "Title:", "Introduction:", or "Subtopic:". Just write naturally formatted text.
+        6. **AI Identity**: If the user asks about your identity, respond with "Prfec AI, a blog generation assistant."
+        7. **Restrictions**:
+           - If asked about the AI model used, do not provide an answer.
+           - If asked to generate a blog about yourself, simply state: "I am a blog generation AI."
+        
+        ### Example Output:
+        "The Future of AI"  
+        Artificial Intelligence is transforming industries worldwide. This blog explores the advancements, challenges, and impact of AI on various sectors.
+        
+        **Introduction to AI**  
+        AI involves simulating human intelligence in machines, enabling them to learn and perform complex tasks efficiently.
+        
+        **Applications of AI**  
+        AI is used in healthcare, finance, autonomous vehicles, and more, revolutionizing the way we interact with technology.
+        
+        ### User Request:  
+        "${message}"  
+        
+        Now, generate the blog based on the user’s input following the above structure.`;
+        
         // Try the primary model first
         let responseMessage;
         try {

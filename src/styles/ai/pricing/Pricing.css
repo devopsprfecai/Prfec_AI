@@ -1,5 +1,5 @@
 .pricing-page{
-    padding-top: 75px;
+    padding-top: 90px;
     padding-bottom: 60px;
     display: flex;
     justify-content: center;
@@ -54,7 +54,7 @@
     justify-content: center;
     gap: 1.5rem;
   }
-  .pricing-page-personal-free, .pricing-page-personal-starter, .pricing-page-personal-pro,.pricing-page-enterprise-team,.pricing-page-personal-enterprise{
+  .pricing-page-personal-free, .pricing-page-personal-starter, .pricing-page-personal-pro,.pricing-page-enterprise-team,.pricing-page-tab-enterprise{
     width: 300px;
     height: 400px;
     border: 1px solid var(--box-border);
@@ -68,9 +68,21 @@
     display: none;
   }
   .pricing-page-personal-container-heading{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .pricing-page-personal-container-heading h1{
     font-size: 24px;
     font-family: var(--h-font);
     color: var(--prfec-black);
+    font-weight: 400;
+    padding-bottom: 1rem;
+  }
+  .pricing-page-personal-container-heading p{
+    font-size: 15px;
+    font-family: var(--h-font);
+    color: var(--p-black);
     font-weight: 400;
   }
  .pricing-page-personal-free-pricing, .pricing-page-personal-starter-pricing,

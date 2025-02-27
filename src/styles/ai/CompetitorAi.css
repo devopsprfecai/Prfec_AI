@@ -70,7 +70,7 @@
 .competitor-analysis-search-input input:focus{
     outline: none;
   }
-  .competitor-analysis-search-input .button{
+  .competitor-analysis-search-input-button{
     padding: 0px 20px;
     background-color: var(--prfec-clr);
     border-radius: 8px;
@@ -85,6 +85,18 @@
     gap: 0.3rem;
     height: 42px;
   }
+  @keyframes blinking {
+    0% { opacity: 1; }
+    50% { opacity: 0.8; }
+    100% { opacity: 1; }
+  }
+  
+  .competitor-analysis-search-input-button.loading{
+    animation: blinking 1.5s infinite;
+    pointer-events: none; /* Prevent clicking while loading */
+    opacity: 0.7;
+  }
+  
   @media only screen and (max-width:1024px){
     .competitor-analysis-search h1{
         width: 80%;
@@ -103,7 +115,7 @@
     .competitor-analysis-search-input{
         flex-direction: column;
     }
-    .competitor-analysis-search-input .button{
+    .competitor-analysis-search-input-button{
         justify-content: center;
     }
     .competitor-analysis-search{

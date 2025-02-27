@@ -85,6 +85,7 @@ export const NavbarWhite = () => {
               <div className="settings" onClick={() => handleNavigation("/settings/profile")}>Settings</div>
               {/* <div className="appearance" onClick={handleThemeClick}>Appearance {themeClick && <Theme />}</div>
               <div className="help">Help</div> */}
+              <div className="pricing" onClick={() => handleNavigation("/pricing")}>Pricing</div>
               <div onClick={handleLogOut}>Logout</div>
             </div>
           )}
@@ -106,6 +107,7 @@ export const NavbarWhite = () => {
             <Link href='/competitor'>Competitor Analysis</Link>
             <div className='navbar-menu-contents'>
               <div className="settings" onClick={() => handleNavigation("/settings/profile")}>Settings</div>
+              <div className="pricing" onClick={() => handleNavigation("/pricing")}>Pricing</div>
               <div className='' onClick={handleLogOut}>Logout</div>
             </div>
           </div>
