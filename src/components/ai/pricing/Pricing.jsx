@@ -40,7 +40,7 @@ const Pricing = () => {
       }
 
       // Create subscription
-      const subscriptionResponse = await fetch('http://localhost:5000/api/createSubscription', {
+      const subscriptionResponse = await fetch('https://prfecai-backend-592134571427.us-central1.run.app/api/createSubscription', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -68,7 +68,7 @@ const Pricing = () => {
               console.log('Payment Response:', response);
 
               // Verify the payment
-              const verificationResponse = await fetch('http://localhost:5000/api/verifySubscription', {
+              const verificationResponse = await fetch('https://prfecai-backend-592134571427.us-central1.run.app/api/verifySubscription', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -197,6 +197,56 @@ const Pricing = () => {
       console.error('Error storing subscription data:', error);
     }
   };
+
+  // Handle Subscription Cancellation
+// const handleCancelSubscription = async () => {
+//   try {
+//     const user = getAuth().currentUser;
+//     if (!user) {
+//       alert('Please log in to cancel your subscription');
+//       return;
+//     }
+
+//     // Fetch the user's active subscription from Firebase
+//     const db = getDatabase();
+//     const subscriptionRef = ref(db, `subscriptions/${user.uid}`);
+//     const snapshot = await get(subscriptionRef);
+
+//     if (!snapshot.exists()) {
+//       alert('No active subscription found');
+//       return;
+//     }
+
+//     const subscriptionData = snapshot.val();
+//     const subscriptionId = subscriptionData.subscriptionId;
+
+//     // Call backend to cancel subscription in Razorpay
+//     const cancelResponse = await fetch('http://localhost:5000/api/cancelSubscription', {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({ subscriptionId }),
+//     });
+
+//     const cancelData = await cancelResponse.json();
+
+//     if (!cancelData.success) {
+//       throw new Error(cancelData.message || 'Failed to cancel subscription');
+//     }
+
+//     // Update subscription status in Firebase
+//     await set(subscriptionRef, {
+//       ...subscriptionData,
+//       status: 'canceled',
+//       cancellationDate: new Date().toISOString(),
+//     });
+
+//     alert('Subscription canceled successfully!');
+//   } catch (error) {
+//     console.error('Error canceling subscription:', error);
+//     alert(`Cancellation failed: ${error.message}`);
+//   }
+// };
+
   
 
   return (
