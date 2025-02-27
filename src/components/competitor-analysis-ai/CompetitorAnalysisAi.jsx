@@ -3,18 +3,21 @@ import '@styles/ai/CompetitorAi.css'
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { database } from "@firebase";
-import { ref, set, get } from "firebase/database";
+import { getDatabase,ref, set, get } from "firebase/database";
 import { useCompetitorPrompt } from "@context/CompetitorPromptCount";
 import analyzeBtn from '@public/Images/ai/prfec button.svg';
 import AiDashboard from '@components/ai/Dashboard';
 import DashboardRightUpdate from '@components/ai/DashboardRightUpdate';
 import CompetitorTable from './CompetitorTable';
+import { getAuth } from "firebase/auth";
+
 export default function CompetitorAnalysisAi() {
   const { competitorPromptCount, setCompetitorPromptCount } = useCompetitorPrompt(); // Use the keyword prompt context
   const [domain, setDomain] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const auth = getAuth();
 
 const sanitizeKeys = (obj) => {
     if (Array.isArray(obj)) {
@@ -69,11 +72,31 @@ const sanitizeKeys = (obj) => {
     setLoading(true);
     setError(null);
     setResult(null);
+      const user= auth.currentUser;
   
-    if (competitorPromptCount >= 3) {
-      alert('You have reached the daily analysis limit. Please try again tomorrow.');
-      return;
-    }
+      const userId = user.uid;  
+         const db = getDatabase();
+      const planRef = ref(db, `subscriptions/${userId}/planType`);
+      const snapshot = await get(planRef);
+  
+      let planType = snapshot.exists() ? snapshot.val() : null;
+      let maxPrompts = 3; // Default limit
+  
+      if (planType === "starter") {
+        maxPrompts = 50;
+      } else if (planType === "pro") {
+        maxPrompts = 150;
+      }
+  
+      if (competitorPromptCount >= maxPrompts) {
+        alert(`You have reached your daily prompt limit of ${maxPrompts}. Please try again tomorrow.`);
+        setLoading(false);
+        return;
+      }
+    // if (competitorPromptCount >= 3) {
+    //   alert('You have reached the daily analysis limit. Please try again tomorrow.');
+    //   return;
+    // }
   
     setCompetitorPromptCount((prev) => prev + 1);
   
@@ -123,7 +146,7 @@ const sanitizeKeys = (obj) => {
     }
   };  
 
-
+console.log("Loading",loading)
   const currentPath = '/competitor';
   return (
     <div className="competitor-analysis" >
@@ -137,7 +160,7 @@ const sanitizeKeys = (obj) => {
             <input type="text" id="domain" value={domain} onChange={(e) => setDomain(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && analyzeDomain()} placeholder="Enter Domain (e.g., example.com)"/>
 
-            <div className="button" onClick={analyzeDomain} disabled={!domain || loading}>
+            <div className={`competitor-analysis-search-input-button ${loading ? "loading" : ""}`}  onClick={analyzeDomain} disabled={!domain || loading}>
               Analyze
               <Image src={analyzeBtn} alt="Analyze" />
             </div>

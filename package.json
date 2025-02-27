@@ -28,7 +28,7 @@
     "react-circular-progressbar": "^2.1.0",
     "react-dom": "^18.3.1",
     "react-progressbar.js": "^0.2.0",
-    "react-select": "^5.9.0",
+    "react-select": "^5.10.0",
     "react-select-country-list": "^2.2.3",
     "slate": "^0.112.0",
     "slate-editor": "^5.1.1",
