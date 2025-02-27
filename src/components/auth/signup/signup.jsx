@@ -118,7 +118,7 @@ const Login = () => {
             console.log(actionCodeSettings)
 
             // Call the backend to send the sign-in link
-            await axios.post('https://prfecai-websitebackend-developmentrepo-592134571427.us-central1.run.app/api/sendSignInEmail', {
+            await axios.post('https://prfecai-backend-592134571427.us-central1.run.app/api/sendSignInEmail', {
                 email,
                 link: actionCodeSettings.url,
             });
