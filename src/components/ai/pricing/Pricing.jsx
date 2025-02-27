@@ -523,7 +523,6 @@ const Pricing = () => {
       console.error('Error storing subscription data:', error);
     }
   };
-<<<<<<< HEAD
 
   // Handle Subscription Cancellation
 // const handleCancelSubscription = async () => {
@@ -576,8 +575,6 @@ const Pricing = () => {
 
   
 
-=======
->>>>>>> 2cdb88853dcfde380fd8effda82d5c3567eebb29
   return (
     <div className='pricing-page'>
       <div className='pricing-page-container'>
