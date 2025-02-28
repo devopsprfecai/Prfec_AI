@@ -20,41 +20,40 @@ const Login = () => {
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
-    // Handle Sign-In Link on initial page load
-    useEffect(() => {
-        if (window.location.search) {
-            const queryParams = new URLSearchParams(window.location.search);
-            const emailFromQuery = queryParams.get('email');
-            const oobCode = queryParams.get('oobCode');
-    
-            console.log('Email:', emailFromQuery, 'oobCode:', oobCode); // Debugging log
-    
-            if (emailFromQuery && oobCode) {
-                const auth = getAuth();
-                setLoading(true);
-    
-                // Firebase requires the email to be saved in localStorage for link sign-in
-                localStorage.setItem('emailForSignIn', emailFromQuery);
-    
-                signInWithEmailLink(auth, emailFromQuery, window.location.href)
-                    .then(() => {
+useEffect(() => {
+        const handleSignIn = async () => {
+            if (window.location.search) {
+                const queryParams = new URLSearchParams(window.location.search);
+                const emailFromQuery = queryParams.get('email');
+                const oobCode = queryParams.get('oobCode');
+
+                if (emailFromQuery && oobCode) {
+                    try {
+                        const auth = getAuth();
+                        setLoading(true);
+
+                        // Firebase requires the email to be saved in localStorage for link sign-in
+                        localStorage.setItem('emailForSignIn', emailFromQuery);
+
+                        await signInWithEmailLink(auth, emailFromQuery, window.location.href);
                         console.log('User signed in successfully');
                         router.push('/'); // Redirect after successful sign-in
-                    })
-                    .catch((error) => {
+                    } catch (error) {
                         console.error('Error signing in:', error.message, error.code);
                         setGeneralError('Authentication failed. Please try again.');
-                    })
-                    .finally(() => {
+                    } finally {
                         setLoading(false);
-                    });
+                    }
+                } else {
+                    setLoading(false);
+                    console.error('Error: Missing email or oobCode in URL.');
+                }
             } else {
                 setLoading(false);
-                console.error('Error: Missing email or oobCode in URL.');
             }
-        } else {
-            setLoading(false);
-        }
+        };
+
+        handleSignIn();
     }, [router]);
     
 
