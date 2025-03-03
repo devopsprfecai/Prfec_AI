@@ -6,9 +6,9 @@
     /* padding: 8px 12px; */
     position: fixed;
     z-index: 100;
-    background-color: var(--prfec-white);
+    background-color: var(--dashboard-bg);
     height: 48px;
-    border-bottom: 1px solid var(--box-border);
+    border-bottom: 1px solid var(--chat-border);
   }
   .navbar-container {
     width: 100%;
@@ -31,6 +31,15 @@
     display: flex;
     gap: 1.3rem;
     align-items: center;
+  }
+  .navbar-contents a{
+    font-size: 14px;
+      color: var(--dashboard-h-color);
+      font-family: var(--p-font);
+      cursor: pointer;
+  }
+  .navbar-contents a:hover{
+    color: var(--p-color);
   }
   .navbar-contents-image{
     display: flex;
@@ -76,7 +85,7 @@
     font-size: 14px;
     font-family: var(--p-font);
     font-weight: 400;
-    color: var(--h-black);
+    color: var(--h-color);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -102,9 +111,9 @@
     width: 150px;
     margin-top: 6px;
     padding: 24px;
-    border: 1px solid var(--box-border);
+    border: 1px solid var(--chat-border);
     border-radius: 8px;
-    background-color: var(--prfec-white);
+    background-color: var(--dashboard-bg);
     position: absolute;
     top: 55px;
     right: 0px;
@@ -115,12 +124,12 @@
   .navbar-profile-dropdown div,  .navbar-profile-dropdown .settings {
     font-size: 14px;
     border-radius: 8px;
-    color: var(--p-black);
+    color: var(--p-color);
     font-family: var(--p-font);
     cursor: pointer;
   }
   .navbar-profile-dropdown p:hover {
-    color: var(--h-black);
+    color: var(--h-color);
   }
  .appearance{
   position: relative;
@@ -128,15 +137,18 @@
   .navbar-menu-icons, .navbar-menu{
     display: none;
   }
+  .prfec-chat-dashboard-hamburger{
+    display: none;
+  }
   
   @media only screen and (max-width:1024px){
     .navbar{
       padding: 8px 14px 8px 12px;
     }
-    .navbar-contents{
+    /* .navbar-contents{
         display: none;
-    }
-    .navbar-menu-icons{
+    } */
+    /* .navbar-menu-icons{
         display: flex;
         align-items: center;
         height: max-content;
@@ -147,7 +159,6 @@
     }
     .navbar-menu{
         display: flex;
-        /* width: 200px; */
         flex-direction: column;
         gap: 0.2rem;
         padding: 16px;
@@ -178,7 +189,7 @@
       width: 180px;
       font-size: 14px;
       border-radius: 8px;
-      color: var(--p-black);
+      color: var(--p-color);
       font-family: var(--p-font);
       cursor: pointer;
       padding: 0.5rem;
@@ -190,7 +201,7 @@
     .navbar-menu div,    .navbar-menu .settings{
       font-size: 14px;
       border-radius: 8px;
-      color: var(--p-black);
+      color: var(--p-color);
       font-family: var(--p-font);
       cursor: pointer;
     }
@@ -206,12 +217,24 @@
       width: 100%;
       display: flex;
       justify-content: center;
-    }
+    } */
   }
-  @media only screen and (max-width:700px){
+  /* @media only screen and (max-width:700px){
     .navbar{
       height: 48px;
       padding: 8px 14px;
+    }
+  
+  } */
+  @media only screen and (max-width:800px){
+    .navbar-container{
+     display: none;
+    }
+    .prfec-chat-dashboard-hamburger{
+      display: flex;
+      justify-content: space-between;
+      padding: 16px;
+      height: 48px;
     }
   
   }

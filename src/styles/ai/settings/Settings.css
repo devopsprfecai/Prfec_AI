@@ -1,5 +1,5 @@
 .ai-settings{
-    background-color: #F8F8F8;
+    background-color: var(--dashboard-bg);
     border-radius: 16px;
     padding-top: 120px;
     display: flex;
@@ -27,12 +27,12 @@
     background-color: inherit;
     font-size: 14px;
     font-family: var(--p-font);
-    color: var(--h-black);
+    color: var(--h-color);
   }
   
   .ai-settings-dashboard div.active {
-    color: var(--h-black);
-    background-color: var(--box-border); /* Example color */
+    color: var(--h-color);
+    background-color: var(--dashboard-click-bg); /* Example color */
   }
 .ai-settings-contents{
     flex-grow: 1;
@@ -110,7 +110,7 @@
 .settings-general-theme p, .settings-general-language p, .settings-general-shared-links p, .settings-general-api p{
     font-size: 14px;
     font-family: var(--p-font);
-    color: var(--h-black);
+    color: var(--h-color);
     font-weight: 400;
 }
 .settings-general-theme .theme-change{
@@ -212,7 +212,7 @@
 .settings-data-contents p{
     font-size: 14px;
     font-family: var(--p-font);
-    color: var(--h-black);
+    color: var(--h-color);
     font-weight: 400;
 }
 .export-data ,.delete-all-memory,.delete-account{

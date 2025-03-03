@@ -3,21 +3,72 @@ import '@styles/ai/CompetitorAi.css'
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { database } from "@firebase";
-import { getDatabase,ref, set, get } from "firebase/database";
+import { getDatabase, ref, set, get, push } from "firebase/database";
 import { useCompetitorPrompt } from "@context/CompetitorPromptCount";
+import { useRouter } from 'next/navigation';
 import analyzeBtn from '@public/Images/ai/prfec button.svg';
 import AiDashboard from '@components/ai/Dashboard';
 import DashboardRightUpdate from '@components/ai/DashboardRightUpdate';
 import CompetitorTable from './CompetitorTable';
 import { getAuth } from "firebase/auth";
-
-export default function CompetitorAnalysisAi() {
+import { UserAuth } from '@context/AuthContext';
+import { v4 as uuidv4 } from 'uuid';
+import { RiMenu4Fill } from "react-icons/ri";
+import { CgProfile } from "react-icons/cg";
+import Link from 'next/link';
+export default function CompetitorAnalysisAi({contentId}) {
   const { competitorPromptCount, setCompetitorPromptCount } = useCompetitorPrompt(); // Use the keyword prompt context
   const [domain, setDomain] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 800);
   const auth = getAuth();
+  const router = useRouter();
+  const {user} = UserAuth();
+
+  useEffect(() => {
+    const fetchCompetitorData = async () => {
+      if (!contentId) return;
+  
+      if (!user) {
+        alert("User not authenticated. Please log in.");
+        return;
+      }
+
+      const userId = user.uid;
+      const db = getDatabase();
+  
+      try {
+        // Fetch id and country from 'keyword-research-prompts/{userId}/{contentId}'
+        const competitorRef = ref(db, `competitor-analysis-prompts/${userId}/${contentId}`);
+
+        const competitorSnapshot = await get(competitorRef);
+
+        if (!competitorSnapshot.exists()) {
+          console.error("No keyword data found.");
+          return;
+        }
+  
+        const { id} = competitorSnapshot.val(); // Extract id and country
+        const competitorAnalysisRef = ref(db, `domains/${id}`);
+        const analysisSnapshot = await get(competitorAnalysisRef);
+        if (analysisSnapshot.exists()) {
+          setResult(analysisSnapshot.val());
+          setDomain(id.replace(/_/g, "."));  // Convert sanitized domain back to normal
+
+        } else {
+          console.error("No analysis data found.");
+        }
+      } catch (error) {
+        console.error("Error fetching keyword data:", error);
+        setError(error.message);
+      }
+    };
+  
+    fetchCompetitorData();
+  }, [contentId,user]); // Runs when keywordId changes
 
 const sanitizeKeys = (obj) => {
     if (Array.isArray(obj)) {
@@ -67,36 +118,33 @@ const sanitizeKeys = (obj) => {
       return false; // WHOIS validation failed
     }
   };
-
+ 
   const analyzeDomain = async () => {
     setLoading(true);
     setError(null);
     setResult(null);
-      const user= auth.currentUser;
+    const user = auth.currentUser;
   
-      const userId = user.uid;  
-         const db = getDatabase();
-      const planRef = ref(db, `subscriptions/${userId}/planType`);
-      const snapshot = await get(planRef);
+    if (!user) {
+      setError("User not authenticated.");
+      setLoading(false);
+      return;
+    }
   
-      let planType = snapshot.exists() ? snapshot.val() : null;
-      let maxPrompts = 3; // Default limit
+    const userId = user.uid;
+    const db = getDatabase();
+    const planRef = ref(db, `subscriptions/${userId}/planType`);
+    const snapshot = await get(planRef);
   
-      if (planType === "starter") {
-        maxPrompts = 50;
-      } else if (planType === "pro") {
-        maxPrompts = 150;
-      }
+    let planType = snapshot.exists() ? snapshot.val() : null;
+    let maxPrompts = planType === "starter" ? 50 : planType === "pro" ? 150 : 3;
   
-      if (competitorPromptCount >= maxPrompts) {
-        alert(`You have reached your daily prompt limit of ${maxPrompts}. Please try again tomorrow.`);
-        setLoading(false);
-        return;
-      }
-    // if (competitorPromptCount >= 3) {
-    //   alert('You have reached the daily analysis limit. Please try again tomorrow.');
-    //   return;
-    // }
+    if (competitorPromptCount >= maxPrompts)
+       {
+      alert(`You have reached your daily prompt limit of ${maxPrompts}. Please try again tomorrow.`);
+      setLoading(false);
+      return;
+    }
   
     setCompetitorPromptCount((prev) => prev + 1);
   
@@ -111,11 +159,11 @@ const sanitizeKeys = (obj) => {
   
       const sanitizedDomain = domain.replace(/[\.\#\$\[\]\/:]/g, "_");
       const domainRef = ref(database, `domains/${sanitizedDomain}`);
-  
-      // Check if the domain exists in Firebase
       const snapshot = await get(domainRef);
+      let analysisResult;
       if (snapshot.exists()) {
-        setResult(snapshot.val());
+        analysisResult = snapshot.val();
+
       } else {
         const response = await fetch("/api/competitor", {
           method: "POST",
@@ -127,30 +175,139 @@ const sanitizeKeys = (obj) => {
           const errorData = await response.json();
           throw new Error(errorData.error || "An unknown error occurred");
         }
-  
+
         const data = await response.json();
         const jsonData = data.analysisResult.replace(/```json\n|\n```/g, "");
-        const parsedResult = JSON.parse(jsonData);
+        analysisResult = sanitizeKeys(JSON.parse(jsonData));
   
-        // Sanitize keys
-        const sanitizedResult = sanitizeKeys(parsedResult);
-  
-        // Store the sanitized result in Firebase
-        await set(domainRef, sanitizedResult);
-        setResult(sanitizedResult);
+        // Store sanitized result in Firebase
+        await set(domainRef, analysisResult);
       }
+  
+      // Generate UUID and store the result under competitor-analysis-prompts
+      const resultID = uuidv4();
+      const timestamp = Date.now();
+      const userPromptRef = ref(db, `competitor-analysis-prompts/${userId}/`);
+      const checkSnapshot = await get(userPromptRef);
+
+    if(!checkSnapshot.exists()){
+      const checkDomainRef = ref(db, `competitor-analysis-prompts/${userId}/${resultID}`);
+
+      await set(checkDomainRef, {
+        id: sanitizedDomain,
+        timestamp,
+      });
+      setResult(analysisResult);
+      router.push(`/competitor/${resultID}`);
+    }
+    else{
+
+      const pastDomainRef = ref(db, `/competitor-analysis-prompts/${userId}/`);
+      const pastSnapshot = await get(pastDomainRef);
+
+      if (pastSnapshot.exists()) {
+        const data = pastSnapshot.val();
+        let pastDomainId = null;
+
+        Object.entries(data).forEach(([id, details]) => {
+
+            if (details.id === sanitizedDomain) {
+                pastDomainId = id;
+            }
+        });
+
+        if (pastDomainId) {
+            setResult(snapshot.val());
+            router.push(`/competitor/${pastDomainId}`);
+        } else {
+          const newUid = uuidv4();
+          const newDomainRef = ref(db, `competitor-analysis-prompts/${userId}/${newUid}`);
+
+          await set(newDomainRef, {
+            id: sanitizedDomain,
+            timestamp,
+          });
+          setResult(analysisResult);
+          router.push(`/competitor/${newUid}`);
+            // console.log("Keyword not found");
+        }
+    }
+    else{
+      
+    }
+  
+  }
+
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  };  
+  };
 
-console.log("Loading",loading)
+
+  useEffect(() => {
+     const handleResize = () => {
+       setIsDesktop(window.innerWidth > 800);
+       if (window.innerWidth > 800) {
+         setMenuOpen(false); // Ensure menu closes when resizing to desktop mode
+       }
+     };
+ 
+     window.addEventListener('resize', handleResize);
+     handleResize(); // Initialize state on mount
+ 
+     return () => window.removeEventListener('resize', handleResize);
+   }, []);
+ 
+   useEffect(() => {
+     const adjustHeight = () => {
+       const viewportHeight = window.innerHeight;
+       const viewportWidth = window.innerWidth;
+ 
+       if (viewportWidth <= 600) {
+         document.querySelector('.competitor-analysis').style.height = `${viewportHeight}px`;
+       } else {
+         document.querySelector('.competitor-analysis').style.height = 'auto';
+       }
+     };
+ 
+     adjustHeight();
+     window.addEventListener('resize', adjustHeight);
+ 
+     return () => window.removeEventListener('resize', adjustHeight);
+   }, []);
+ 
+   const handleMenuOpen = () => {
+     setMenuOpen(!menuOpen);
+   };
+ 
+
   const currentPath = '/competitor';
   return (
     <div className="competitor-analysis" >
-      <AiDashboard currentPath={currentPath}/>
+      {/* <AiDashboard currentPath={currentPath}/> */}
+         {/* <AiDashboard currentPath={currentPath}/> */}
+         {isDesktop && <AiDashboard />}
+
+         {!isDesktop &&
+      <div className='prfec-chat-dashboard-hamburger' style={{display:"flex" ,justifyContent:"space-between"}}>
+      {/* Menu icon always visible on mobile */}
+      <RiMenu4Fill
+        className='prfec-chat-dashboard-menu-icon'
+        onClick={handleMenuOpen}
+        style={{ color: "var(--p-color)",width:"24px",height:"24px" }}
+      />
+                <Link href='/settings/profile'> <CgProfile  style={{color:"var(--dashboard-h-color)",width:"22px",height:"22px"}}/></Link> 
+
+
+        {/* Show AiDashboard only for mobile (width <= 800px) and when menuOpen is true */}
+        {!isDesktop && menuOpen && (
+          <div className='prfec-chat-dashboard-mobile'>
+            <AiDashboard menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+          </div>
+        )}
+      </div>}
       <div className="competitor-analysis-container">
         <h1 className='competitor-analysis-container-heading'>Competitor Analysis</h1>
 
@@ -168,6 +325,8 @@ console.log("Loading",loading)
         </div>
 
         <div className='competitor-result-canvas'>
+
+         {domain && <h2 style={{fontSize:"20px",fontFamily:"var(--h-font)",color:"var(--h-color)",fontWeight:"500"}}>Domain: {domain}</h2>}
           
           <div className='competitor-result-keyword'>
           {result && <CompetitorTable 
@@ -220,12 +379,7 @@ console.log("Loading",loading)
           </div>
 
         </div>
-
-        {/* {error && <p className="error">{error}</p>} */}
-
-
       </div>
-      <DashboardRightUpdate/>
     </div>
   );
 }

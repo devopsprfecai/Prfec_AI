@@ -163,17 +163,30 @@ const Login = () => {
                     </div>
                 ) : (
                     <form className="form" onSubmit={handleSubmit}>
-                        <Box component="div" noValidate autoComplete="off" className="email">
-                            <TextField
-                                id="outlined-email"
-                                label="Enter your Email"
-                                variant="outlined"
-                                className="custom-text-field"
-                                error={!!emailError}
-                                helperText={emailError}
-                                value={email}
-                                onChange={handleEmailChange}
+                        <Box component="div" noValidate autoComplete="off" className="email" sx={{color:"var(--p-color)"}}>
+                        <TextField
+                            id="outlined-email"
+                            label="Enter your Email"
+                            variant="outlined"
+                            className="custom-text-field"
+                            error={!!emailError}
+                            helperText={emailError}
+                            value={email}
+                            onChange={handleEmailChange}
+                            sx={{ 
+                                color: "var(--p-color)", 
+                                "& .MuiInputBase-input": { color: "var(--p-color)" },  // Input text color
+                                "& .MuiInputLabel-root": { color: "var(--p-color)" },  // Label color
+                                "& .MuiOutlinedInput-root": {
+                                "& fieldset": { borderColor: "var(--p-color)" }, // Border color
+                                "&:hover fieldset": { borderColor: "var(--p-color)" }, // Hover border
+                                "&.Mui-focused fieldset": { borderColor: "var(--p-color)" } // Focused border
+                                }
+                            }}
+                            InputLabelProps={{ style: { color: "var(--p-color)" } }}  // Label color
+                            InputProps={{ style: { color: "var(--p-color)" } }} // Input text color
                             />
+
                         </Box>
                         <div className="login-button">
                             <button className="login-btn" type="submit">Continue with Email</button>

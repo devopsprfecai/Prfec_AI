@@ -27,9 +27,11 @@
 import '@styles/globals.css';
 import { AuthContextProvider } from '@context/AuthContext';
 import { PromptProvider } from '@context/PromptContext';
+import { ChatPromptProvider } from '@context/ChatPromptContext';
 import { KeywordPromptProvider } from '@context/KeywordPromptContext';
+import { CompetitorPromptProvider } from '@context/CompetitorPromptCount';
 import ClientOnlyContent from './ClientOnlyContent';
-
+import { ThemeProvider } from 'next-themes';
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
@@ -38,7 +40,13 @@ export default function RootLayout({ children }) {
         <AuthContextProvider>
           <PromptProvider>
             <KeywordPromptProvider>
+              <CompetitorPromptProvider>
+                <ChatPromptProvider>
+            <ThemeProvider attribute="class">
                 <ClientOnlyContent>{children}</ClientOnlyContent>
+                </ThemeProvider>
+                </ChatPromptProvider>
+                </CompetitorPromptProvider>
             </KeywordPromptProvider>
           </PromptProvider>
         </AuthContextProvider>
