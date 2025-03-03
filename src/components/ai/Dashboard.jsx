@@ -1,465 +1,8 @@
-
-// 'use client';
-// import '@styles/ai/BetaAi.css';
-// import Link from 'next/link';
-// import { usePathname } from 'next/navigation';
-// import { getDatabase, ref, get } from 'firebase/database';
-// import { useEffect, useState } from 'react';
-// import { UserAuth } from '@context/AuthContext';
-
-// const AiDashboard = () => {
-//   const pathname = usePathname();
-//   const { user } = UserAuth(); // Get user from context
-//   const [recentPrompts, setRecentPrompts] = useState([]);
-//   const [recentKeywords, setRecentKeywords] = useState([]);
-//   const [recentCompetitor, setRecentCompetitor] = useState([]);
-
-
-//   useEffect(() => {
-//     const fetchPrompts = async () => {
-//       if (!user) return;
-
-//       const db = getDatabase();
-//       const userId = user.uid;
-
-//       // If URL starts with /content-generation, fetch content-generation-prompts
-//       if (pathname.startsWith('/content-generation')) {
-//         try {
-//           const promptsRef = ref(db, `content-generation-prompts/${userId}/`);
-//           const snapshot = await get(promptsRef);
-
-//           if (snapshot.exists()) {
-//             const data = snapshot.val();
-//             const userPrompts = [];
-
-//             Object.keys(data).forEach((chatId) => {
-//               const messages = data[chatId].messages;
-
-//               if (messages) {
-//                 // Get only messages sent by the user
-//                 const userMessage = Object.values(messages).find((msg) => msg.sender === 'You');
-
-//                 if (userMessage) {
-//                   userPrompts.push({
-//                     chatId,
-//                     message: userMessage.text, // Store only user-sent messages
-//                   });
-//                 }
-//               }
-//             });
-
-//             setRecentPrompts(userPrompts);
-//           }
-//         } catch (error) {
-//           console.error('Error fetching user messages:', error);
-//         }
-//       }
-
-//       if (pathname.startsWith('/keyword')) {
-//         try {
-//           const keywordsRef = ref(db, `keyword-research-prompts/${userId}/`);
-//           const snapshot = await get(keywordsRef);
-
-//           if (snapshot.exists()) {
-//             const data = snapshot.val();
-//             const keywordsList = [];
-
-//             Object.keys(data).forEach((keywordId) => {
-//               const { id, country, timestamp } = data[keywordId]; // Extract data
-              
-
-//               if (id ) {
-//                 keywordsList.push({
-//                   keywordId,
-//                   id,
-//                   country,
-//                   timestamp,
-//                 });
-//               }
-//             });
-//             setRecentKeywords(keywordsList);
-
-//           }
-//         } catch (error) {
-//           console.error('Error fetching keyword data:', error);
-//         }
-//       }
-
-//       if (pathname.startsWith('/competitor')) {
-//         try {
-//           const competitorRef = ref(db, `competitor-analysis-prompts/${userId}/`);
-//           const snapshot = await get(competitorRef);
-
-//           if (snapshot.exists()) {
-//             const data = snapshot.val();
-//             const competitorList = [];
-
-//             Object.keys(data).forEach((competitorId) => {
-//               const { id, country, timestamp } = data[competitorId]; // Extract data
-              
-
-//               if (id ) {
-//                competitorList.push({
-//                   competitorId,
-//                   id,
-//                   country,
-//                   timestamp,
-//                 });
-//               }
-//             });
-//             setRecentCompetitor(competitorList);
-
-//           }
-//         } catch (error) {
-//           console.error('Error fetching competitor data:', error);
-//         }
-//       }
-
-//     };
-
-//     fetchPrompts();
-//   }, [pathname, user]);
-
-//   return (
-//     <div className='ai-left-dashboard'>
-//       <div className='ai-left-dashboard-container'>
-//         <h2>Tools</h2>
-//         <Link href='/' className={`ai-left-dashboard-contents ${pathname.startsWith('/content-generation') ? 'active' : ''}`}>
-//           Content Generation
-//         </Link>
-//         <Link href='/keyword' className={`ai-left-dashboard-contents ${pathname.startsWith('/keyword') ? 'active' : ''}`}>
-//           Keyword Research
-//         </Link>
-//         <Link href='/competitor' className={`ai-left-dashboard-contents ${pathname.startsWith('/competitor') ? 'active' : ''}`}>
-//           Competitor Analysis
-//         </Link>
-//       </div>
-
-//       <div className='ai-left-dashboard-recent-searches'>
-//         <h2>Recent Searches</h2>
-//         <ul>
-//           {/* Show recent prompts when in /content-generation */}
-//           {pathname.startsWith('/content-generation') && recentPrompts.length > 0 ? (
-//             recentPrompts.map((prompt) => (
-//               <li key={prompt.chatId}>
-//                 <Link href={`/content-generation/${prompt.chatId}`}>
-//                   {prompt.message}
-//                 </Link>
-//               </li>
-//             ))
-//           ) : null}
-
-//           {/* Show keyword searches when in /keyword */}
-//           {pathname.startsWith('/keyword') && recentKeywords.length > 0 ? (
-//             recentKeywords.map((keyword) => (
-//               <li key={keyword.keywordId}>
-//                 <Link href={`/keyword/${keyword.keywordId}`}>
-//                   {keyword.id}
-//                 </Link>
-//               </li>
-//             ))
-//           ) : pathname.startsWith('/keyword') ? (
-//             <p>No keyword searches found.</p>
-//           ) : null}
-
-//           {/* Show keyword searches when in /keyword */}
-//           {pathname.startsWith('/competitor') && recentCompetitor.length > 0 ? (
-//             recentCompetitor.map((competitor) => (
-//               <li key={competitor.competitorId}>
-//                 <Link href={`/competitor/${competitor.competitorId}`}>
-//                   {competitor.id}
-//                 </Link>
-//               </li>
-//             ))
-//           ) : pathname.startsWith('/keyword') ? (
-//             <p>No keyword searches found.</p>
-//           ) : null}
-//         </ul>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default AiDashboard;
-
-
-// 'use client';
-// import '@styles/ai/Dashboard.css';
-// import Link from 'next/link';
-// import { usePathname } from 'next/navigation';
-// import { getDatabase, ref, get } from 'firebase/database';
-// import { useEffect, useState } from 'react';
-// import { UserAuth } from '@context/AuthContext';
-
-// const INITIAL_VISIBLE_CHATS = 5;
-
-// const AiDashboard = () => {
-//   const pathname = usePathname();
-//   const { user } = UserAuth(); // Get user from context
-//   const [recentPrompts, setRecentPrompts] = useState([]);
-//   const [recentKeywords, setRecentKeywords] = useState([]);
-//   const [recentCompetitor, setRecentCompetitor] = useState([]);
-//   const [allRecentSearches, setAllRecentSearches] = useState([]);
-//   const [recentChats, setRecentChats] = useState([]);
-//   const [visibleChats, setVisibleChats] = useState(INITIAL_VISIBLE_CHATS);
-
-//   useEffect(() => {
-//     const fetchPrompts = async () => {
-//       if (!user) return;
-
-//       const db = getDatabase();
-//       const userId = user.uid;
-
-//       // If URL starts with /content-generation, fetch content-generation-prompts
-//       if (pathname.startsWith('/content-generation')) {
-//         try {
-//           const promptsRef = ref(db, `content-generation-prompts/${userId}/`);
-//           const snapshot = await get(promptsRef);
-
-//           if (snapshot.exists()) {
-//             const data = snapshot.val();
-//             const userPrompts = [];
-
-//             Object.keys(data).forEach((chatId) => {
-//               const messages = data[chatId].messages;
-
-//               if (messages) {
-//                 // Get only messages sent by the user
-//                 const userMessage = Object.values(messages).find((msg) => msg.sender === 'You');
-
-//                 if (userMessage) {
-//                   userPrompts.push({
-//                     chatId,
-//                     message: userMessage.text, // Store only user-sent messages
-//                   });
-//                 }
-//               }
-//             });
-
-//             setRecentPrompts(userPrompts);
-//           }
-//         } catch (error) {
-//           console.error('Error fetching user messages:', error);
-//         }
-//       }
-
-//       if (pathname.startsWith('/keyword')) {
-//         try {
-//           const keywordsRef = ref(db, `keyword-research-prompts/${userId}/`);
-//           const snapshot = await get(keywordsRef);
-
-//           if (snapshot.exists()) {
-//             const data = snapshot.val();
-//             const keywordsList = [];
-
-//             Object.keys(data).forEach((keywordId) => {
-//               const { id, country, timestamp } = data[keywordId]; // Extract data
-              
-
-//               if (id ) {
-//                 keywordsList.push({
-//                   keywordId,
-//                   id,
-//                   country,
-//                   timestamp,
-//                 });
-//               }
-//             });
-//             setRecentKeywords(keywordsList);
-
-//           }
-//         } catch (error) {
-//           console.error('Error fetching keyword data:', error);
-//         }
-//       }
-
-//       if (pathname.startsWith('/competitor')) {
-//         try {
-//           const competitorRef = ref(db, `competitor-analysis-prompts/${userId}/`);
-//           const snapshot = await get(competitorRef);
-
-//           if (snapshot.exists()) {
-//             const data = snapshot.val();
-//             const competitorList = [];
-
-//             Object.keys(data).forEach((competitorId) => {
-//               const { id, country, timestamp } = data[competitorId]; // Extract data
-              
-
-//               if (id ) {
-//                competitorList.push({
-//                   competitorId,
-//                   id,
-//                   country,
-//                   timestamp,
-//                 });
-//               }
-//             });
-//             setRecentCompetitor(competitorList);
-
-//           }
-//         } catch (error) {
-//           console.error('Error fetching competitor data:', error);
-//         }
-//       }
-
-//     };
-
-//     fetchPrompts();
-//   }, [pathname, user]);
-
-//   useEffect(() => {
-//     const fetchAllData = async () => {
-//       if (!user || pathname !== '/') return;
-
-//       const db = getDatabase();
-//       const userId = user.uid;
-//       let allData = [];
-
-//       const fetchContentGenerationData = async () => {
-//         try {
-//           const promptsRef = ref(db, `content-generation-prompts/${userId}/`);
-//           const snapshot = await get(promptsRef);
-
-//           if (snapshot.exists()) {
-//             const data = snapshot.val();
-//             Object.keys(data).forEach((chatId) => {
-//               const messages = data[chatId].messages;
-//               if (messages) {
-//                 const userMessage = Object.values(messages).find((msg) => msg.sender === 'You');
-//                 if (userMessage) {
-//                   allData.push({
-//                     id: userMessage.text,
-//                     timestamp: data[chatId].timestamp || 0,
-//                     link: `/content-generation/${chatId}`,
-//                   });
-//                 }
-//               }
-//             });
-//           }
-//         } catch (error) {
-//           console.error('Error fetching content-generation data:', error);
-//         }
-//       };
-
-//       const fetchData = async (path, type) => {
-//         try {
-//           const dataRef = ref(db, `${path}/${userId}/`);
-//           const snapshot = await get(dataRef);
-
-//           if (snapshot.exists()) {
-//             const data = snapshot.val();
-//             Object.keys(data).forEach((itemId) => {
-//               const { id, timestamp } = data[itemId];
-//               if (id) {
-//                 allData.push({
-//                   id,
-//                   timestamp,
-//                   link: `/${type}/${itemId}`,
-//                 });
-//               }
-//             });
-//           }
-//         } catch (error) {
-//           console.error(`Error fetching ${type} data:`, error);
-//         }
-//       };
-
-//       await Promise.all([
-//         fetchContentGenerationData(),
-//         fetchData('keyword-research-prompts', 'keyword'),
-//         fetchData('competitor-analysis-prompts', 'competitor'),
-//       ]);
-
-//       allData.sort((a, b) => b.timestamp - a.timestamp);
-//       setAllRecentSearches(allData);
-//     };
-
-//     fetchAllData();
-//   }, [pathname, user]);
-
-//   return (
-//     <div className='ai-left-dashboard'>
-//       <div className='ai-left-dashboard-container'>
-//         <div className='ai-left-dashboard-agents'>
-//           <h2>Agents</h2>
-//           <Link href='/' className={`ai-left-dashboard-contents ${pathname.startsWith('/') ? 'active' : ''}`}>
-//             Content Generation
-//           </Link>
-//           <Link href='/keyword' className={`ai-left-dashboard-contents ${pathname.startsWith('/keyword') ? 'active' : ''}`}>
-//             Keyword Research
-//           </Link>
-//           <Link href='/competitor' className={`ai-left-dashboard-contents ${pathname.startsWith('/competitor') ? 'active' : ''}`}>
-//             Competitor Analysis
-//           </Link>
-//         </div>
-      
-       
-
-//       <div className='chat-dashboard-recents'>
-//         <h2>Recent Searches</h2>
-//           <div className='chat-dashboard-recents-contents'>
-//           {recentChats.length > 0 && (
-//           {pathname.startsWith('/content-generation') && recentPrompts.length > 0 ? (
-//             recentPrompts.map((prompt) => (
-//                 <Link href={`/content-generation/${prompt.chatId}`} key={prompt.chatId}>
-//                   {prompt.message}
-//                 </Link>
-//             ))
-//           ) : null}
-//           )}
-
-//           {recentChats.length > 0 && (
-//           {pathname.startsWith('/keyword') && recentKeywords.length > 0 ? (
-//             recentKeywords.map((keyword) => (
-//                 <Link href={`/keyword/${keyword.keywordId}`} key={keyword.keywordId}>
-//                   {keyword.id}
-//                 </Link>
-//             ))
-//           ) : null}
-//                     )}
-
-//           {recentChats.length > 0 && (
-//           {pathname.startsWith('/competitor') && recentCompetitor.length > 0 ? (
-//             recentCompetitor.map((competitor) => (
-//                 <Link href={`/competitor/${competitor.competitorId}`} key={competitor.competitorId}>
-//                   {competitor.id}
-//                 </Link>
-//             ))
-//           ) : null}
-//                     )}
-
-//           {recentChats.length > 0 && (
-//           {pathname === '/' && allRecentSearches.length > 0 ? (
-//             allRecentSearches.map((search, index) => (
-//                 <Link href={search.link}  key={index}>{search.id}</Link>
-//             ))
-//           ) : null}
-//         )}
-//                     {visibleChats < recentChats.length && (
-//               <div className="char-dashboard-view-more-btn" onClick={() => setVisibleChats(prev => prev + INITIAL_VISIBLE_CHATS)}>
-//                 <Image src={arrow} width={16} height={16} alt='view more'/>
-//                 View More
-//               </div>
-//             )}
-//           </div>
-
-//       </div>
-      
-//     </div>
-//     </div>
-//   );
-// };
-
-// export default AiDashboard;
-
-
-
 'use client';
 import '@styles/ai/Dashboard.css';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { getDatabase, ref, get, onValue } from 'firebase/database';
+import { getDatabase, ref, get, onValue, off } from 'firebase/database';
 import { useEffect, useState } from 'react';
 import { UserAuth } from '@context/AuthContext';
 import { PiChatCircleDotsLight } from "react-icons/pi";
@@ -483,7 +26,9 @@ const AiDashboard = ({ menuOpen, setMenuOpen }) => {
   const [visibleChats, setVisibleChats] = useState(INITIAL_VISIBLE_CHATS);
   const [userEmail, setUserEmail] = useState('');
   const [loading, setLoading] = useState(true);
-
+  const [planType, setPlanType] = useState(null);
+  const [planCount, setPlanCount] = useState(3);
+  const [promptCount, setPromptCount] = useState();
   const [visiblePrompts, setVisiblePrompts] = useState(INITIAL_VISIBLE_CHATS);
   const [visibleKeywords, setVisibleKeywords] = useState(INITIAL_VISIBLE_CHATS);
   const [visibleCompetitor, setVisibleCompetitor] = useState(INITIAL_VISIBLE_CHATS);
@@ -668,12 +213,126 @@ const AiDashboard = ({ menuOpen, setMenuOpen }) => {
     fetchCompetitorData(); // ✅ Call the function inside useEffect
   
   }, [pathname, user]); // ✅ Dependency array
+
+ 
+
+  useEffect(() => {
+    if (!user) return;
+    const db = getDatabase();
+    const userId = user.uid;
+    let promptPath = null;
+    let promptKey = "promptCount"; // Default key
+  
+    if (pathname.startsWith('/content-generation')) {
+      promptPath = `/contentPromptCount/${userId}`;
+      promptKey = "promptCount";
+    } else if (pathname.startsWith('/keyword')) {
+      promptPath = `/keywordPromptCount/${userId}`;
+      promptKey = "keywordPromptCount";
+    } else if (pathname.startsWith('/competitor')) {
+      promptPath = `/competitorPromptCount/${userId}`;
+      promptKey = "competitorPromptCount";
+    } else if (pathname === '/' || pathname.startsWith('/chat') ) {
+      promptPath = `/ChatPromptCount/${userId}`;
+      promptKey = "chatPromptCount";
+    }
+  
+    if (!promptPath) return;
+  
+    const promptRef = ref(db, promptPath);
+    onValue(
+      promptRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          setPromptCount(data[promptKey] ?? 0); // Dynamically select the correct key
+        } else {
+          setPromptCount(0);
+        }
+      },
+      (error) => {
+        console.error("Error fetching prompt count:", error);
+        setPromptCount(0);
+      }
+    );
+  
+    return () => off(promptRef); // Clean up listener when component unmounts
+  }, [pathname, user]);
+  
+  // useEffect(() => {
+  //   if (!user) return;
+  //   const db = getDatabase();
+  //   const userId = user.uid;
+  //   let promptPath = null;
+  
+  //   if (pathname.startsWith('/content-generation')) {
+  //     promptPath = `/contentPromptCount/${userId}`;
+  //   } else if (pathname.startsWith('/keyword')) {
+  //     promptPath = `/keywordPromptCount/${userId}`;
+  //   } else if (pathname.startsWith('/competitor')) {
+  //     promptPath = `/competitorPromptCount/${userId}`;
+  //   } else if (pathname.startsWith('/')) {
+  //     promptPath = `/ChatPromptCount/${userId}`;
+  //   }
+  
+  //   if (!promptPath) return;
+  
+  //   const promptRef = ref(db, promptPath);
+  //   onValue(promptRef, (snapshot) => {
+  //     if (snapshot.exists()) {
+  //       const data = snapshot.val();
+  //       console.log("data",data);
+  //       setPromptCount(data.promptCount ?? 0); // Extract only promptCount
+  //     } else {
+  //       setPromptCount(0);
+  //     }
+  //   }, (error) => {
+  //     console.error("Error fetching prompt count:", error);
+  //     setPromptCount(0);
+  //   });
+  // }, [pathname, user]);
+  
+
+  useEffect(() => {
+    if (!user) return;
+    const userId = user.uid;
+    const db = getDatabase();
+
+    const fetchPlanType = async () => {
+      try {
+        const planRef = ref(db, `/subscriptions/${userId}/planType`);
+        const snapshot = await get(planRef);
+        if (snapshot.exists()) {
+          setPlanType(snapshot.val());
+        } 
+      } catch (error) {
+        console.error("Error fetching planType:", error);
+      }
+    };
+
+    fetchPlanType();
+  }, [user]);
+
+  // Map plan types to allowed prompts
+  useEffect(() => {
+    if (planType === 'starter') {
+      setPlanCount(50);
+    } else if (planType === 'pro') {
+      setPlanCount(150);
+    } else {
+      setPlanCount(3); // Default value
+    }
+  }, [planType]);
   
   const toggleTheme = () => {
     const currentTheme = theme === 'system' ? systemTheme : theme;
     setTheme(currentTheme === 'dark' ? 'light' : 'dark');
   };
     const Logo = theme === "dark" ? whiteLogo : blackLogo;
+    const promptLeft = planCount - promptCount;
+
+
+
   return (
     <div className='ai-left-dashboard'>
       <div className='ai-left-dashboard-container'>
@@ -760,48 +419,33 @@ const AiDashboard = ({ menuOpen, setMenuOpen }) => {
             </>
           )}
 
-          {/* {pathname === '/' && allRecentSearches.length > 0 && (
+
+          {(pathname === '/' || pathname.startsWith('/chat')) && recentChats.length > 0 && (
             <>
-              {allRecentSearches.slice(0, visibleSearches).map((search, index) => (
-                <Link href={search.link} key={index}>{search.id}</Link>
-              ))}
-              {visibleSearches < allRecentSearches.length && (
-                <div className="chat-dashboard-view-more-btn" onClick={() => setVisibleSearches(prev => prev + INITIAL_VISIBLE_CHATS)}>
-                  View More
-                </div>
-              )}
-            </>
-          )} */}
-          {pathname === '/' || pathname.startsWith('/chat') && recentChats.length > 0 && (
-            <>
-          {/* <div className="chat-dashboard-recents">
-            <h3>Recent Chats</h3>
-            <div className='chat-dashboard-recents-contents'> */}
+
               {recentChats.slice(0, visibleChats).map(chat => (
                 <Link 
                   key={chat.id} 
                   href={`/chat/${chat.id}`} 
                   className={`${chat.id === currentChatId ? "active" : ""}`}
-                  // className={`content-generation-recent-search ${pathname.startsWith(`/chat/${chat.id}}`) ? 'active' : ''}`}
-
                 >
                   {chat.title}
                 </Link>
               ))}
-            {/* </div> */}
             {visibleChats < recentChats.length && (
               <div className="chat-dashboard-view-more-btn" onClick={() => setVisibleChats(prev => prev + INITIAL_VISIBLE_CHATS)}>
-                {/* <Image src={arrow} width={16} height={16} alt='view more'/> */}
                 View More
               </div>
             )}
-          {/* </div> */}
           </>
         )}
 
-
           </div>
 
+      </div>
+
+      <div className='chat-dashboard-prompts-left'>
+        <p>Remaining Prompts: {promptLeft}/{planCount}</p>
       </div>
 
       <div className="chat-dashboard-account">

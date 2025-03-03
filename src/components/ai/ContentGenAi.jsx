@@ -956,9 +956,10 @@ export default function PuterChat({currentPath,contentId}) {
     if (snapshot.exists()) {
       let chatData = Object.values(snapshot.val()).sort((a, b) => a.timestamp - b.timestamp);
       setMessages(chatData);
-    } else {
-      console.log('No messages found in chatData');
-    }
+    } 
+    // else {
+    //   console.log('No messages found in chatData');
+    // }
   }, [contentId, user]);
 
   useEffect(() => {
@@ -1009,7 +1010,6 @@ export default function PuterChat({currentPath,contentId}) {
       const userId = user.uid;
       const db = getDatabase();
   
-      // Fetch user's plan and determine max prompts
       const planRef = ref(db, `subscriptions/${userId}/planType`);
       const snapshot = await get(planRef);
       const planType = snapshot.exists() ? snapshot.val() : null;
@@ -1022,8 +1022,26 @@ export default function PuterChat({currentPath,contentId}) {
       }
   
       setPromptCount((prev) => prev + 1);
+
+      // const promptRef = ref(db, `users/${userId}/promptCount`);
+      // const promptSnapshot = await get(promptRef);
+      // let currentPromptCount = promptSnapshot.exists() ? promptSnapshot.val() : 0;
   
-      // Ensure every new prompt starts a new conversation
+      // // Fetch user's plan and determine max prompts
+      // const planRef = ref(db, `subscriptions/${userId}/planType`);
+      // const planSnapshot = await get(planRef);
+      // const planType = planSnapshot.exists() ? planSnapshot.val() : null;
+      // const maxPrompts = planType === 'pro' ? 150 : planType === 'starter' ? 50 : 3;
+  
+      // if (currentPromptCount >= maxPrompts) {
+      //   alert(`You have reached your daily prompt limit of ${maxPrompts}.`);
+      //   setLoading(false);
+      //   return;
+      // }
+      // const newPromptCount = currentPromptCount + 1;
+      // await set(promptRef, newPromptCount);
+      // setPromptCount(newPromptCount);
+  
       const chatId = uuidv4(); // Always generate a new ID for every new prompt
   
       const prefixedInput = input.trim().startsWith('blog about') ? input.trim() : `blog about ${input.trim()}`;
@@ -1281,24 +1299,7 @@ export default function PuterChat({currentPath,contentId}) {
         {/* <AiDashboard currentPath={currentPath} /> */}
         {isDesktop && <AiDashboard />}
 
-        {!isDesktop &&
-      <div className='prfec-chat-dashboard-hamburger' style={{display:"flex" ,justifyContent:"space-between"}}>
-      {/* Menu icon always visible on mobile */}
-      <RiMenu4Fill
-        className='prfec-chat-dashboard-menu-icon'
-        onClick={handleMenuOpen}
-        style={{ color: "var(--p-color)",width:"24px",height:"24px" }}
-      />
-                <Link href='/settings/profile'> <CgProfile  style={{color:"var(--dashboard-h-color)",width:"22px",height:"22px"}}/></Link> 
 
-
-        {/* Show AiDashboard only for mobile (width <= 800px) and when menuOpen is true */}
-        {!isDesktop && menuOpen && (
-          <div className='prfec-chat-dashboard-mobile'>
-            <AiDashboard menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
-          </div>
-        )}
-      </div>}
 
         <div className='content-gen-space'>
 
@@ -1348,8 +1349,14 @@ export default function PuterChat({currentPath,contentId}) {
             handleDownloadChat={handleDownloadChat} handleFilterButtonClick={handleFilterButtonClick} setIsDashboardActive={setIsDashboardActive}/>
           </div>
 
-          <ChatInput input={input} setInput={setInput} handleSendMessage={handleSendMessage} 
-      buttonHl={buttonHl} setButtonHl={setButtonHl} promptCount={promptCount} isTyping={isTyping}/>
+          <ChatInput   input={input} 
+  setInput={setInput} 
+  handleSendMessage={handleSendMessage} 
+  buttonHl={buttonHl} 
+  setButtonHl={setButtonHl} 
+  promptCount={promptCount} 
+  setPromptCount={setPromptCount}  // ✅ Pass setPromptCount as a prop
+  isTyping={isTyping}/>
 
         </div>
       </div>

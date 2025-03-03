@@ -201,6 +201,7 @@
   color: var(--dashboard-h-color);
   font-weight: 600;
   padding-bottom: 80px;
+  text-align: center;
 }
 .chat-space.center-content{
   justify-content: center;
@@ -274,6 +275,11 @@ width: max-content;
     border-radius: 24px;
     border: 0px;
     background-color: inherit;
+  }
+}
+@media only screen and (max-width:800px){
+  .chat-space{
+    width: 90%;
   }
 }
 @media only screen and (max-width:400px){
@@ -359,6 +365,58 @@ bottom: 10px;
   position:sticky;
   bottom: 0px;
   background-color: var(--chat-bg);
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.chat-input-upgrade{
+  width: 100%;
+  /* display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--chat-border);
+  border-radius: 13px;
+  padding: 10px;
+  background-color: var(--chat-bg);
+  position: relative; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 70px;
+}
+.chat-input-upgrade-container{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--chat-border);
+  border-radius: 13px;
+  padding: 10px;
+  background-color: var(--chat-bg);
+  position: relative;
+}
+.chat-input-upgrade p{
+  font-size: 13px;
+  font-family: var(--p-font);
+  color: var(--p-color);
+  font-weight: 400;
+}
+.chat-input-upgrade button{
+  margin-right: 28px;
+  width: max-content;
+  height: max-content;
+  padding: 10px;
+  border: 1px solid var(--chat-border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: var(--p-font);
+  color: var(--p-color);
+  font-weight: 400;
+  background-color: var(--dashboard-bg);
+}
+.chat-input-upgrade-close{
+  position: absolute;
+  right: 12px;
 }
 .chat-input-container {
     width: 100%;
@@ -418,6 +476,9 @@ bottom: 10px;
   align-items: center;
   gap: 0.4rem;
 }
+.chat-input-prompt-info{
+  display: none;
+}
 @keyframes blink {
   0% { opacity: 1; }
   50% { opacity: 0.8; }
@@ -475,10 +536,20 @@ bottom: 10px;
   @media only screen and (max-width:800px){
   
     .chat-input{
+      width: 90%;
       position: fixed;
       bottom: 0px;
       padding-left: 1rem;
       padding-right: 1rem;
+    }
+    .chat-input-prompt-info{
+      display: block;
+      width: 100%;
+      font-size: 10px;
+      font-family: var(--p-font);
+      color: var(--dashboard-h-color);
+      font-weight: 400;
+      text-align: center;
     }
     /* .chat-input-generate-button{
       display: none;

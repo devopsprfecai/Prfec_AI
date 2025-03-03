@@ -231,10 +231,10 @@
      display: none;
     }
     .prfec-chat-dashboard-hamburger{
+      width: 100%;
       display: flex;
       justify-content: space-between;
-      padding: 16px;
-      height: 48px;
+      align-items: center;
     }
   
   }

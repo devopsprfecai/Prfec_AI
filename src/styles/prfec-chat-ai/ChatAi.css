@@ -2,9 +2,7 @@
   display: flex;
   min-height: 100vh;
 }
-.prfec-chat-dashboard-hamburger{
-  display: none;
-}
+
 
 /* .prfec-chat-dashboard-desktop{
   padding-top: 48px;
@@ -19,11 +17,7 @@
   .prfec-chat-dashboard-desktop{
     display: none;
   }
-  .prfec-chat-dashboard-hamburger{
-    display: block;
-    padding: 16px;
-    height: max-content;
-  }
+
   .prfec-chat-dashboard-menu-icon{
     font-size: 24px;
     color:var(--black-white);
@@ -155,8 +149,52 @@ code{
   bottom: 0;
   background-color: var(--chat-bg);
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
   padding: 12px 0;
+}
+/* .chat-input-upgrade{
+  width: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 70px;
+}
+.chat-input-upgrade-container{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--chat-border);
+  border-radius: 13px;
+  padding: 10px;
+  background-color: var(--chat-bg);
+  position: relative;
+}
+.chat-input-upgrade p{
+  font-size: 13px;
+  font-family: var(--p-font);
+  color: var(--p-color);
+  font-weight: 400;
+} */
+/* .chat-input-upgrade button{
+  margin-right: 28px;
+  width: max-content;
+  height: max-content;
+  padding: 10px;
+  border: 1px solid var(--chat-border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: var(--p-font);
+  color: var(--p-color);
+  font-weight: 400;
+  background-color: var(--dashboard-bg);
+} */
+.chat-input-upgrade-close{
+  position: absolute;
+  right: 12px;
 }
 .prfec-chat-prompt-input{
   width: 70%;
@@ -205,9 +243,9 @@ code{
   font-weight: 300;
   color: var(--chat-bg);
 }
-.chat-input-generate-button{
+.prfec-chat-input-generate-button{
   height: 100%;
-  padding: 0px 20px;
+  padding: 15px 20px;
   background-color: var(--prfec-clr);
   border-radius: 13px;
   display: flex;
@@ -220,7 +258,7 @@ code{
 }
 
 @media only screen and (max-width:1300px){
-  .prfec-chat-prompt-input{
+  .prfec-chat-prompt-input,.chat-input-upgrade{
     width: 80%;
   }
   .prfec-chat-msg-container{
@@ -228,7 +266,7 @@ code{
   }
 }
 @media only screen and (max-width:1100px){
-  .prfec-chat-prompt-input{
+  .prfec-chat-prompt-input,.chat-input-upgrade{
     width: 90%;
   }
   .prfec-chat-msg-container{

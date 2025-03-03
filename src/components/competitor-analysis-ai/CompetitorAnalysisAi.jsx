@@ -290,24 +290,6 @@ const sanitizeKeys = (obj) => {
          {/* <AiDashboard currentPath={currentPath}/> */}
          {isDesktop && <AiDashboard />}
 
-         {!isDesktop &&
-      <div className='prfec-chat-dashboard-hamburger' style={{display:"flex" ,justifyContent:"space-between"}}>
-      {/* Menu icon always visible on mobile */}
-      <RiMenu4Fill
-        className='prfec-chat-dashboard-menu-icon'
-        onClick={handleMenuOpen}
-        style={{ color: "var(--p-color)",width:"24px",height:"24px" }}
-      />
-                <Link href='/settings/profile'> <CgProfile  style={{color:"var(--dashboard-h-color)",width:"22px",height:"22px"}}/></Link> 
-
-
-        {/* Show AiDashboard only for mobile (width <= 800px) and when menuOpen is true */}
-        {!isDesktop && menuOpen && (
-          <div className='prfec-chat-dashboard-mobile'>
-            <AiDashboard menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
-          </div>
-        )}
-      </div>}
       <div className="competitor-analysis-container">
         <h1 className='competitor-analysis-container-heading'>Competitor Analysis</h1>
 
