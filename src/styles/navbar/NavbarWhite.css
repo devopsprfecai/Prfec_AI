@@ -2,7 +2,7 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    padding: 8px 3rem 8px 12px;
+    padding: 8px 18px 8px 14px;
     /* padding: 8px 12px; */
     position: fixed;
     z-index: 100;
@@ -24,7 +24,7 @@
     align-items: center;
     }
   .prfec-logo {
-    height: 24px;
+    height: 12px;
     width: auto;
   }
   .navbar-contents{

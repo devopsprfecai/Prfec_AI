@@ -3,7 +3,7 @@ import '@styles/ai/Dashboard.css';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { getDatabase, ref, get, onValue, off } from 'firebase/database';
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useRef } from 'react';
 import { UserAuth } from '@context/AuthContext';
 import { PiChatCircleDotsLight } from "react-icons/pi";
 import { IoIosArrowDown } from "react-icons/io";
@@ -37,6 +37,7 @@ const AiDashboard = ({ menuOpen, setMenuOpen }) => {
   const { logOut } = UserAuth();
   const { theme, setTheme, systemTheme } = useTheme();
   const currentChatId = pathname.split('/').pop();
+  const dashboardRef = useRef(null);
 
   useEffect(() => {
     if (menuOpen) {
@@ -50,24 +51,47 @@ const AiDashboard = ({ menuOpen, setMenuOpen }) => {
     };
   }, [menuOpen]);
   
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (menuOpen) {
+  //       const dashboard = document.querySelector('.ai-left-dashboard');
+  
+  //       // Check if click is outside the menu
+  //       if (dashboard && !dashboard.contains(event.target)) {
+  //         setMenuOpen(false);
+  //       }
+  //     }
+  //   };
+  
+  //   document.addEventListener('mousedown', handleClickOutside);
+  
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleClickOutside);
+  //   };
+  // }, [menuOpen]);
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (menuOpen) {
-        const dashboard = document.querySelector('.ai-left-dashboard');
-  
-        // Check if click is outside the menu
-        if (dashboard && !dashboard.contains(event.target)) {
+      // Only run if menu is open and we have a dashboard reference
+      if (menuOpen && dashboardRef.current) {
+        // Check if click target is outside the dashboard
+        if (!dashboardRef.current.contains(event.target)) {
+          // Click is outside, close the menu
           setMenuOpen(false);
         }
       }
     };
-  
-    document.addEventListener('mousedown', handleClickOutside);
-  
+
+    // Add event listener with capture phase to handle it before other listeners
+    document.addEventListener('mousedown', handleClickOutside, true);
+    
+    // Cleanup event listener on unmount
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside, true);
     };
-  }, [menuOpen]);
+  }, [menuOpen, setMenuOpen]);
+  
+  
+  
 
   useEffect(() => {
     const fetchPrompts = async () => {
@@ -293,25 +317,23 @@ const AiDashboard = ({ menuOpen, setMenuOpen }) => {
   // }, [pathname, user]);
   
 
-  useEffect(() => {
-    if (!user) return;
-    const userId = user.uid;
-    const db = getDatabase();
-
-    const fetchPlanType = async () => {
-      try {
-        const planRef = ref(db, `/subscriptions/${userId}/planType`);
-        const snapshot = await get(planRef);
-        if (snapshot.exists()) {
-          setPlanType(snapshot.val());
-        } 
-      } catch (error) {
-        console.error("Error fetching planType:", error);
-      }
-    };
-
-    fetchPlanType();
-  }, [user]);
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (
+  //       menuRef.current && 
+  //       !menuRef.current.contains(event.target) &&
+  //       !event.target.closest('.prfec-chat-dashboard-mobile') // Prevent closing when clicking inside AiDashboard
+  //     ) {
+  //       setHover(false);
+  //       setMenuOpen(false);
+  //       setThemeClick(false);
+  //     }
+  //   };
+  
+  //   document.addEventListener('mousedown', handleClickOutside);
+  //   return () => document.removeEventListener('mousedown', handleClickOutside);
+  // }, []);
+  
 
   // Map plan types to allowed prompts
   useEffect(() => {
@@ -334,7 +356,7 @@ const AiDashboard = ({ menuOpen, setMenuOpen }) => {
 
 
   return (
-    <div className='ai-left-dashboard'>
+    <div className='ai-left-dashboard' ref={dashboardRef}>
       <div className='ai-left-dashboard-container'>
 
     <div className="ai-dashboard-logo" onClick={() => handleNavigation("/")}>

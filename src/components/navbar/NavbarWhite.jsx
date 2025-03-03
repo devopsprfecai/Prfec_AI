@@ -3,8 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import '@styles/navbar/NavbarWhite.css';
 import Image from 'next/image';
 // import Logo from '@public/Images/ai/nohover.svg';
-import whiteLogo from '@public/Images/navbar/Prfec Logo White.png'
-import blackLogo from '@public/Images/navbar/prfec-logo.png'
+import whiteLogo from '@public/Images/navbar/Prfec Logo White.svg'
+import blackLogo from '@public/Images/navbar/prfec-logo.svg'
 import { useTheme } from "next-themes";
 
 import Hamburger from '@public/Images/navbar/hamburger.png';
@@ -26,18 +26,8 @@ export const NavbarWhite = () => {
   const settingsRef = useRef(null);
   const { user, logOut, loading } = UserAuth();
   const { theme } = useTheme();
+  const dashboardRef = useRef(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if ((settingsRef.current && !settingsRef.current.contains(event.target) && !event.target.closest('.settings')) || (menuRef.current && !menuRef.current.contains(event.target))) {
-        setHover(false);
-        setMenuOpen(false);
-        setThemeClick(false); // Explicitly close menu when clicking outside
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   // Close the menu when the pathname changes
   useEffect(() => {
@@ -141,7 +131,7 @@ export const NavbarWhite = () => {
 
         {/* Show AiDashboard only for mobile (width <= 800px) and when menuOpen is true */}
         {menuOpen && (
-          <div className='prfec-chat-dashboard-mobile'>
+          <div className='prfec-chat-dashboard-mobile' ref={dashboardRef}>
             <AiDashboard menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
           </div>
         )}

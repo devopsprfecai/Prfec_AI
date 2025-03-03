@@ -142,7 +142,7 @@ export default function ChatInput({ input, setInput, handleSendMessage, buttonHl
     };
 
     fetchPlanType();
-  }, [userId]);
+  }, [userId,database]);
 
   useEffect(() => {
     if (planType === 'starter') {

@@ -129,7 +129,7 @@ const Pricing = () => {
         return;
       }
       // Create subscription
-      const subscriptionResponse = await fetch('http://localhost:5000/api/createSubscription', {
+      const subscriptionResponse = await fetch('https://prfecai-backend-592134571427.us-central1.run.app/api/createSubscription', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -153,7 +153,7 @@ const Pricing = () => {
           handler: async function(response) {
             try {
               // Verify the payment
-              const verificationResponse = await fetch('http://localhost:5000/api/verifySubscription', {
+              const verificationResponse = await fetch('https://prfecai-backend-592134571427.us-central1.run.app/api/verifySubscription', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -342,7 +342,7 @@ const Pricing = () => {
         return;
       }
 
-      const response = await fetch('http://localhost:5000/api/cancelSubscription', {
+      const response = await fetch('https://prfecai-backend-592134571427.us-central1.run.app/api/cancelSubscription', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -513,7 +513,7 @@ const Pricing = () => {
         title={popup.title}
         message={popup.message}
         type={popup.type}
-        onClose={() => setPopup(prev => ({ ...prev, show: false }))}
+        onClose={() => setPopup(prev => ({ ...prev, show:false }))}
       />
 
       <div className='pricing-page-container'>
@@ -609,163 +609,67 @@ const Pricing = () => {
         )}
       </div>
 
-      {/* Cancellation Survey Modal */}
       {showCancellationSurvey && (
-        <div className="cancellation-survey-overlay" style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          zIndex: 1000
-        }}>
-          <div className="cancellation-survey-modal" style={{
-            backgroundColor: "white",
-            padding: "30px",
-            borderRadius: "8px",
-            maxWidth: "500px",
-            width: "90%",
-            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)"
-          }}>
-            <h2>We&apos;re sorry to see you go</h2>
-            <p>Please help us understand why you&apos;re cancelling your subscription:</p>
-            
-            <div className="survey-options" style={{ margin: "20px 0" }}>
-              <div className="survey-option" style={{ margin: "10px 0" }}>
-                <input 
-                  type="radio" 
-                  id="too-expensive" 
-                  name="cancellation-reason" 
-                  value="too-expensive"
-                  checked={cancellationReason === 'too-expensive'}
-                  onChange={() => setCancellationReason('too-expensive')}
-                />
-                <label htmlFor="too-expensive" style={{ marginLeft: "10px" }}>Too expensive</label>
-              </div>
-              
-              <div className="survey-option" style={{ margin: "10px 0" }}>
-                <input 
-                  type="radio" 
-                  id="not-using" 
-                  name="cancellation-reason" 
-                  value="not-using"
-                  checked={cancellationReason === 'not-using'}
-                  onChange={() => setCancellationReason('not-using')}
-                />
-                <label htmlFor="not-using" style={{ marginLeft: "10px" }}>Not using it enough</label>
-              </div>
-              
-              <div className="survey-option" style={{ margin: "10px 0" }}>
-                <input 
-                  type="radio" 
-                  id="missing-features" 
-                  name="cancellation-reason" 
-                  value="missing-features"
-                  checked={cancellationReason === 'missing-features'}
-                  onChange={() => setCancellationReason('missing-features')}
-                />
-                <label htmlFor="missing-features" style={{ marginLeft: "10px" }}>Missing features I need</label>
-              </div>
-              
-              <div className="survey-option" style={{ margin: "10px 0" }}>
-                <input 
-                  type="radio" 
-                  id="found-alternative" 
-                  name="cancellation-reason" 
-                  value="found-alternative"
-                  checked={cancellationReason === 'found-alternative'}
-                  onChange={() => setCancellationReason('found-alternative')}
-                />
-                <label htmlFor="found-alternative" style={{ marginLeft: "10px" }}>Found an alternative service</label>
-              </div>
-              
-              <div className="survey-option" style={{ margin: "10px 0" }}>
-                <input 
-                  type="radio" 
-                  id="other" 
-                  name="cancellation-reason" 
-                  value="other"
-                  checked={cancellationReason === 'other'}
-                  onChange={() => setCancellationReason('other')}
-                />
-                <label htmlFor="other" style={{ marginLeft: "10px" }}>Other reason</label>
-              </div>
-              
-              {cancellationReason === 'other' && (
-                <textarea
-                  placeholder="Please tell us more..."
-                  value={otherReason}
-                  onChange={(e) => setOtherReason(e.target.value)}
-                  className="other-reason-input"
-                  style={{
-                    width: "100%",
-                    padding: "10px",
-                    marginTop: "10px",
-                    borderRadius: "4px",
-                    border: "1px solid #ccc",
-                    minHeight: "80px"
-                  }}
-                />
-              )}
-            </div>
-            
-            <div className="survey-buttons" style={{
-              display: "flex",
-              justifyContent: "space-between",
-              marginTop: "20px"
-            }}>
-              <button 
-                onClick={() => setShowCancellationSurvey(false)}
-                className="cancel-survey-btn"
-                style={{
-                  padding: "10px 20px",
-                  backgroundColor: "#f0f0f0",
-                  border: "none",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  transition: "background-color 0.3s",
-                  fontWeight: "500"
-                }}
-                onMouseOver={(e) => e.target.style.backgroundColor = "#e0e0e0"}
-                onMouseOut={(e) => e.target.style.backgroundColor = "#f0f0f0"}
-              >
-                Keep My Subscription
-              </button>
-              <button 
-                onClick={handleSurveySubmit}
-                className="submit-survey-btn"
-                disabled={!cancellationReason || (cancellationReason === 'other' && !otherReason)}
-                style={{
-                  padding: "10px 20px",
-                  backgroundColor: cancellationReason && !(cancellationReason === 'other' && !otherReason) ? "#d32f2f" : "#cccccc",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "4px",
-                  cursor: cancellationReason && !(cancellationReason === 'other' && !otherReason) ? "pointer" : "not-allowed",
-                  transition: "background-color 0.3s",
-                  fontWeight: "500"
-                }}
-                onMouseOver={(e) => {
-                  if (cancellationReason && !(cancellationReason === 'other' && !otherReason)) {
-                    e.target.style.backgroundColor = "#b71c1c";
-                  }
-                }}
-                onMouseOut={(e) => {
-                  if (cancellationReason && !(cancellationReason === 'other' && !otherReason)) {
-                    e.target.style.backgroundColor = "#d32f2f";
-                  }
-                }}
-              >
-                Cancel Subscription
-              </button>
-            </div>
-          </div>
+  <div className="cancellation-survey-overlay" onClick={() => setShowCancellationSurvey(false)}>
+    <div className="cancellation-survey-modal" onClick={(e) => e.stopPropagation()}>
+      <h2>We&apos;re sorry to see you go</h2>
+      <p>Please help us understand why you&apos;re cancelling your subscription:</p>
+
+      <div className="survey-options">
+        <div className="survey-option">
+          <input type="radio" id="too-expensive" name="cancellation-reason" value="too-expensive"
+            checked={cancellationReason === 'too-expensive'}
+            onChange={() => setCancellationReason('too-expensive')} />
+          <label htmlFor="too-expensive">Too expensive</label>
         </div>
-      )}
+
+        <div className="survey-option">
+          <input type="radio" id="not-using" name="cancellation-reason" value="not-using"
+            checked={cancellationReason === 'not-using'}
+            onChange={() => setCancellationReason('not-using')} />
+          <label htmlFor="not-using">Not using it enough</label>
+        </div>
+
+        <div className="survey-option">
+          <input type="radio" id="missing-features" name="cancellation-reason" value="missing-features"
+            checked={cancellationReason === 'missing-features'}
+            onChange={() => setCancellationReason('missing-features')} />
+          <label htmlFor="missing-features">Missing features I need</label>
+        </div>
+
+        <div className="survey-option">
+          <input type="radio" id="found-alternative" name="cancellation-reason" value="found-alternative"
+            checked={cancellationReason === 'found-alternative'}
+            onChange={() => setCancellationReason('found-alternative')} />
+          <label htmlFor="found-alternative">Found an alternative service</label>
+        </div>
+
+        <div className="survey-option">
+          <input type="radio" id="other" name="cancellation-reason" value="other"
+            checked={cancellationReason === 'other'}
+            onChange={() => setCancellationReason('other')} />
+          <label htmlFor="other">Other reason</label>
+        </div>
+
+        {cancellationReason === 'other' && (
+          <textarea className="other-reason-input" placeholder="Please tell us more..."
+            value={otherReason} onChange={(e) => setOtherReason(e.target.value)} />
+        )}
+      </div>
+
+      <div className="survey-buttons">
+        <button className="cancel-survey-btn" onClick={() => setShowCancellationSurvey(false)}>
+          Keep My Subscription
+        </button>
+        <button className="submit-survey-btn" onClick={handleSurveySubmit}
+          disabled={!cancellationReason || (cancellationReason === 'other' && !otherReason)}>
+          Cancel Subscription
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };

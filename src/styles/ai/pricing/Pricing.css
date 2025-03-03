@@ -223,7 +223,7 @@
 
 .cancel-survey-btn {
   padding: 10px 15px;
-  background-color: #f1f1f1;
+  background-color: var(--dashboard-click-bg);
   border: none;
   border-radius: 4px;
   color: #333;
@@ -347,3 +347,125 @@
         display: flex;
       }
   }
+
+  /* -----------------------------------------popup form-------------------------------------- */
+
+  /* Overlay */
+.cancellation-survey-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal Box */
+.cancellation-survey-modal {
+  background-color: var(--dashboard-click-bg);
+  padding: 30px;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+.cancellation-survey-modal h2 {
+  margin-bottom: 10px;
+  font-size: 22px;
+  font-family: var(--h-font);
+  color: var(--h-color);
+  font-weight: 500;
+}
+
+.cancellation-survey-modal p {
+  font-size: 16px;
+  font-family: var(--p-font);
+  color: var(--p-color);
+  font-weight: 400;
+}
+
+/* Survey Options */
+.survey-options {
+  margin: 20px 0;
+}
+
+.survey-option {
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+}
+
+.survey-option input[type="radio"] {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.survey-option label {
+  font-size: 16px;
+  cursor: pointer;
+  font-family: var(--p-font);
+  color: var(--p-color);
+  font-weight: 400;
+}
+
+/* Other Reason Textarea */
+.other-reason-input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 4px;
+  border: 1px solid var(--chat-border);
+  min-height: 80px;
+  font-size: 14px;
+  resize: vertical;
+}
+
+/* Buttons */
+.survey-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+/* Keep Subscription Button */
+.cancel-survey-btn {
+  padding: 10px 20px;
+  background-color: inherit;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-weight: 500;
+  border: 1px solid var(--chat-border);
+}
+
+.cancel-survey-btn:hover {
+  background-color: #e0e0e0;
+}
+
+/* Cancel Subscription Button */
+.submit-survey-btn {
+  padding: 10px 20px;
+  background-color: #d32f2f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-weight: 500;
+}
+
+.submit-survey-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.submit-survey-btn:hover:not(:disabled) {
+  background-color: #b71c1c;
+}
