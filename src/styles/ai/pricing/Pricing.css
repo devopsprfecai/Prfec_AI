@@ -124,6 +124,202 @@
     border:1px solid var(--box-border);
 
  }
+
+ .current-plan-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.cancel-subscription-text {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.cancel-subscription-text span {
+  color: #ff3030;
+  font-size: 14px;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.2s;
+  font-family:var(--h-font);
+}
+
+.cancel-subscription-text span:hover {
+  color: #cc0000;
+}
+
+/* Cancellation survey modal styling */
+.cancellation-survey-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.cancellation-survey-modal {
+  background-color: white;
+  border-radius: 8px;
+  padding: 30px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  font-family:var(--h-font)
+}
+
+.cancellation-survey-modal h2 {
+  margin-top: 0;
+  color: #333;
+  font-size: 24px;
+  padding-bottom: 15px;
+}
+
+.cancellation-survey-modal p {
+  margin-bottom: 20px;
+  color: #666;
+}
+
+.survey-options {
+  margin-bottom: 25px;
+}
+
+.survey-option {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.survey-option input[type="radio"] {
+  margin-right: 10px;
+}
+
+.survey-option label {
+  font-size: 16px;
+  color: #333;
+}
+
+.other-reason-input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  min-height: 80px;
+  font-family: inherit;
+}
+
+.survey-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+ 
+}
+
+.cancel-survey-btn {
+  padding: 10px 15px;
+  background-color: #f1f1f1;
+  border: none;
+  border-radius: 4px;
+  color: #333;
+  cursor: pointer;
+  font-weight: 500;
+   font-family:var(--h-font)
+}
+
+.submit-survey-btn {
+  padding: 10px 15px;
+  background-color: #ff3030;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
+  font-family:var(--h-font)
+}
+
+.submit-survey-btn:disabled {
+  background-color: #ffb0b0;
+  cursor: not-allowed;
+}
+
+.cancel-survey-btn:hover {
+  background-color: #e5e5e5;
+}
+
+.submit-survey-btn:hover:not(:disabled) {
+  background-color: #e62e2e;
+}
+ 
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .cancellation-survey-modal {
+    padding: 15px;
+    width: 95%;
+  }
+
+  .cancellation-survey-modal h2 {
+    font-size: 20px;
+  }
+
+  .cancellation-survey-modal p {
+    font-size: 14px;
+  }
+
+  .survey-option label {
+    font-size: 14px;
+  }
+
+  .other-reason-input {
+    min-height: 60px;
+  }
+
+  .survey-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .cancel-survey-btn,
+  .submit-survey-btn {
+    width: 100%;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cancellation-survey-modal {
+    padding: 10px;
+  }
+
+  .cancellation-survey-modal h2 {
+    font-size: 18px;
+  }
+
+  .cancellation-survey-modal p {
+    font-size: 12px;
+  }
+
+  .survey-option label {
+    font-size: 12px;
+  }
+
+  .other-reason-input {
+    min-height: 50px;
+  }
+
+  .cancel-survey-btn,
+  .submit-survey-btn {
+    font-size: 14px;
+  }
+}
+
+
   @media only screen and (max-width:1024px){
     .pricing-page-container{
         width: 100%;
