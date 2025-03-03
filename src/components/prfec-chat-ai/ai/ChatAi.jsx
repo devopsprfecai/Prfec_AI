@@ -13,19 +13,43 @@ import refresh from '@public/Images/ai/refresh.svg';
 import { IoMdArrowUp } from "react-icons/io";
 import prfecBtn from '@public/Images/ai/prfec button.svg';
 import { useChatPrompt } from '@context/ChatPromptContext';
+import Link from 'next/link';
+import { RiCloseFill } from "react-icons/ri";
 
 const Chatbot = ({ chatId }) => {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const [title, setTitle] = useState("");
+    const [planType, setPlanType] = useState("free");
+    const [planCount, setPlanCount] = useState(3);
+    const [popupOpen, setPopupOpen] = useState(false);
 
     const router = useRouter();
     const { user } = UserAuth();
     const markdown = new Marked();
   const{chatPromptCount, setChatPromptCount} = useChatPrompt(); // Use the keyword prompt context
-  let planType="free";
-  let maxPrompts = 20; 
+  let maxPrompts = 3; 
+
+  useEffect(() => {
+    if (!user) return;
+    
+    const fetchPlanType = async () => {
+        const userId = user?.uid; 
+
+      try {
+        const planRef = ref(database, `/subscriptions/${userId}/planType`);
+        const snapshot = await get(planRef);
+        if (snapshot.exists()) {
+          setPlanType(snapshot.val());
+        }
+      } catch (error) {
+        console.error("Error fetching planType:", error);
+      }
+    };
+
+    fetchPlanType();
+  }, [user]);
 
     useEffect(() => {
         const fetchChatData = async () => {
@@ -106,9 +130,15 @@ const Chatbot = ({ chatId }) => {
         setLoading(true);
     const userId = user.uid;
     const db = getDatabase();
+    // const planRef = ref(db, `subscriptions/${userId}/planType`);
+    // const snapshot = await get(planRef);
+    // planType = snapshot.exists() ? snapshot.val() : null;
     const planRef = ref(db, `subscriptions/${userId}/planType`);
     const snapshot = await get(planRef);
-    planType = snapshot.exists() ? snapshot.val() : null;
+    if (snapshot.exists()) {
+    setPlanType(snapshot.val()); 
+    }
+
     // Default limit
 
     if (planType === "starter") {
@@ -226,6 +256,13 @@ const Chatbot = ({ chatId }) => {
     const copyToClipboard = (text) => {
         navigator.clipboard.writeText(text).catch(() => {});
     };
+
+    const promptLeft = planCount - chatPromptCount;
+    useEffect(() => {
+        if (promptLeft === 0) {
+          setPopupOpen(true); // Set to true, not toggle
+        }
+      }, [promptLeft]); 
     
     return (
         <div className="prfec-chat">
@@ -244,6 +281,15 @@ const Chatbot = ({ chatId }) => {
                     ))}
                 </div>
                 <div className="prfec-chat-prompt">
+                {/* {popupOpen && (
+                    <div className='chat-input-upgrade'>
+                    <div className='chat-input-upgrade-container'>
+                    <p>There are currently no prompts left. Prompts will reset after 24 hours.</p>
+                    <Link href='/pricing' ><button>Upgrade</button></Link>
+                    <RiCloseFill className='chat-input-upgrade-close'  onClick={() => setPopupOpen(false)} style={{color:"var(--p-color)"}}/>
+                    </div>
+                    </div>
+                )}  */}
                     <div className="prfec-chat-prompt-input">
                         <input
                             type="text"
@@ -252,7 +298,7 @@ const Chatbot = ({ chatId }) => {
                             onKeyDown={(e) => e.key === "Enter" && sendMessage()}
                             placeholder="Type your message..."
                         />
-                        <div className={`chat-input-generate-button ${loading ? 'change' : ''}`} onClick={sendMessage}>
+                        <div className={`prfec-chat-input-generate-button ${loading ? 'change' : ''}`} onClick={sendMessage}>
                          {/* <IoMdArrowUp style={{fontSize:"24px",fontWeight:"400", color:"var(--white-black)"}}/> */}
                          Generate
                         <Image src={prfecBtn} alt="prfec" />

@@ -134,7 +134,7 @@ export const NavbarWhite = () => {
         <RiMenu4Fill
           className='prfec-chat-dashboard-menu-icon'
           onClick={handleMenuOpen}
-          style={{ color: "var(--p-color)" }}
+          style={{ color: "var(--p-color)",width:"24px",height:"24px" }}
         />
                   <Link href='/settings/profile'> <CgProfile  style={{color:"var(--dashboard-h-color)",width:"22px",height:"22px"}}/></Link> 
 
