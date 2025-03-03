@@ -4,7 +4,7 @@
     display: flex;
     min-height: 100%; /* Initially fills full height */
     height: auto; /* Allows growth beyond 100% if needed */
-    background-color: var(--prfec-white);
+    background-color: var(--chat-bg);
   }
   .keyword-generator-container{
     width: 100%;
@@ -17,7 +17,7 @@
   .keyword-generator-container-heading{
     font-size: 24px;
     font-family: var(--h-font);
-    color: var(--p-black);
+    color: var(--p-color);
     font-weight: 500;
     line-height: 150%;
   }
@@ -27,16 +27,15 @@
     gap:4rem;
     border-radius: 24px;
     padding: 32px;
-    border: 1px solid #d1d1d1;
     align-items: center;
     justify-content: center;
-    background-color: #FBF7FF;
+    background-color: var(--box-bg);
   }
   .keyword-generator-search h1{
     width: 50%;
     font-size: 32px;
     font-family: var(--h-font);
-    color: var(--h-black);
+    color: var(--h-color);
     font-weight: 500;
     text-align: center;
     line-height: 150%;
@@ -52,14 +51,20 @@
     margin: 0px;
     padding: 6px 16px;
     height: 42px;
-    border: 1px solid var(--box-border);
+    border: 1px solid var(--chat-border);
     border-radius: 8px;
     background-color: var(--prfec-white);
     display: flex;
     align-items: center;
-
+    color: var(--prfec-black);
   }
-
+.k-g-country-dropdown input{
+  background-color: var(--prfec-white);
+  color: grey;
+  /* font-size: 13px;
+  font-family: var(--p-font);
+  color: var(--p-color); */
+}
   .keyword-generator-search-input-input:focus{
     outline: none;
   }
@@ -80,7 +85,7 @@
     font-size: 14px;
     font-family: var(--p-font);
     font-weight: 400;
-    color: var(--p-black);
+    color: var(--p-color);
    }
 
   .k-g-country-dropdown-menu {
@@ -105,6 +110,7 @@
    position: absolute;
    bottom: 50px;
    right: 0;
+   color:grey;
   }
  .k-g-country-dropdown-menu-container::-webkit-scrollbar {
     width: 6px; /* Adjust the width of the scrollbar */
@@ -125,7 +131,7 @@
     font-size: 14px;
     font-family: var(--p-font);
     font-weight: 400;
-    color: var(--p-black);
+    color:grey;
   }
   
   .k-g-country-dropdown-item:hover {
@@ -235,14 +241,20 @@
     flex-wrap: wrap;
     gap: 1rem;
   }
+  .keyword-result-top-canvas{
+    font-size: 20px;
+    font-family: var(--h-font);
+    color: var(--h-color);
+    font-weight: 500;
+  }
   .keyword-result-volume{
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 1rem;
-    border: 1px solid #d1d1d1;
+    border: 0px;
     border-radius: 8px;
-    background-color: var(--prfec-white);
+    background-color: var(--box-bg);
   }
   .keyword-result-volume-container{
     display: flex;
@@ -256,13 +268,13 @@
   .keyword-result-search-volume p{
     font-size: 14px;
     font-weight: 400;
-    color: var(--p-black);
+    color: var(--p-color);
     font-family: var(--p-font);
   }
   .keyword-result-search-volume span{
     font-size: 13px;
     font-weight: 500;
-    color: var(--p-black);
+    color: var(--p-color);
     font-family: var(--p-font);
   }
   .keyword-result-global-volume{
@@ -273,7 +285,7 @@
  .keyword-result-global-volume p{
   font-size: 13px;
   font-weight: 400;
-  color: var(--p-black);
+  color: var(--p-color);
   font-family: var(--p-font);
  }
  .keyword-result-global-volume-contents{
@@ -283,7 +295,7 @@
  .global-volume-bar{
   width: 200px;
   height: 16px;
-  border: 1px solid #f1f1f1;
+  border: 1px solid var(--box-inside-border);
  }
 
 @media only screen and (max-width:850px){
@@ -326,18 +338,18 @@
  }
  .keyword-top-head{
   background-color: inherit;
-  border-bottom: 1px solid #f1f1f1;
+  border-bottom: 1px solid var(--box-inside-border);
  }
  .keyword-top-row-contents{
   padding: 10px;
   text-align: left;
   font-size: 14px;
   font-weight: 500;
-  color: var(--h-black);
+  color: var(--h-color);
   font-family: var(--p-font);
  }
  .keyword-top-body-row{
-  border-bottom: 1px solid #f1f1f1;
+  border-bottom: 1px solid var(--box-inside-border);
  }
  .keyword-top-body-row:last-child{
   border-bottom: 0px;
@@ -347,7 +359,7 @@
   text-align: left;
   font-size: 13px;
   font-weight: 400;
-  color: var(--p-black);
+  color: var(--p-color);
   font-family: var(--p-font);
  } */
 
@@ -355,9 +367,9 @@
   flex: 1;
   overflow-x: auto;
   padding: 0.5rem;
-  border: 1px solid #d1d1d1;
+  border: 0px;
   border-radius: 8px;
-  background-color: var(--prfec-white);
+  background-color: var(--box-bg);
 
 }
 
@@ -372,11 +384,10 @@
 }
 
 .keyword-top-head {
-  background-color: inherit;
-  border-bottom: 1px solid #f1f1f1;
+  background-color: var(--box-bg);
+  border-bottom: 1px solid var(--box-inside-border);
   position: sticky;
   top: 0;
-  background-color: var(--prfec-white);
   z-index: 10;
 }
 
@@ -385,12 +396,12 @@
   text-align: left;
   font-size: 14px;
   font-weight: 500;
-  color: var(--h-black);
+  color: var(--h-color);
   font-family: var(--p-font);
 }
 
 .keyword-top-body-row {
-  border-bottom: 1px solid #f1f1f1;
+  border-bottom: 1px solid var(--box-inside-border);
 }
 
 .keyword-top-body-row:last-child {
@@ -402,7 +413,7 @@
   text-align: left;
   font-size: 13px;
   font-weight: 400;
-  color: var(--p-black);
+  color: var(--p-color);
   font-family: var(--p-font);
 }
 @media only screen and (max-width:400px){
@@ -425,19 +436,20 @@
   justify-content: center;
   gap: 1rem;
   border-radius: 8px;
-  border: 1px solid #d1d1d1;
+  background-color: var(--box-bg);
+  border: 0px;
   min-height: 130px;
 }
 .keyword-result-cpc-heading,.keyword-result-seo-heading,.keyword-result-ctr-heading,.keyword-result-intent-heading{
   font-size: 14px;
   font-weight: 400;
-  color: var(--h-black);
+  color: var(--h-color);
   font-family: var(--p-font);
 }
 .keyword-result-cpc-result,.keyword-result-seo-result,.keyword-result-ctr-result{
   font-size: 20px;
   font-weight: 600;
-  color: var(--h-black);
+  color: var(--h-color);
   font-family: var(--p-font);
 }
 .keyword-result-seo{
@@ -452,11 +464,11 @@
 }
  .keyword-result-intent-result{
   padding: 0.5rem;
-  background-color: #ffd6ed;
+  background-color: var(--keyword-intent);
   border-radius: 12px;
   font-size: 14px;
   font-weight: 400;
-  color: var(--h-black);
+  color: var(--h-color);
   font-family: var(--p-font);
   text-align: center;
  }

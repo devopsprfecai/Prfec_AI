@@ -1,0 +1,190 @@
+// 'use client'
+// import '@styles/trafy-chat-ai/ChatAi.css';
+// import React, { useState } from "react";
+
+// const Chatbot = () => {
+//     const [messages, setMessages] = useState([]);
+//     const [input, setInput] = useState("");
+//     const [loading, setLoading] = useState(false);
+
+//     const sendMessage = async () => {
+//         if (!input.trim()) return;
+
+//         const userMessage = { role: "user", content: input };
+
+//         setMessages(prevMessages => [...prevMessages, userMessage]);
+//         setInput("");  // Clear the input field immediately
+//         setLoading(true);
+
+//         try {
+//             const res = await fetch("/api/chat", {
+//                 method: "POST",
+//                 headers: { "Content-Type": "application/json" },
+//                 body: JSON.stringify({ message: input }),
+//             });
+
+//             const data = await res.json();
+//             const botMessage = {
+//                 role: "bot",
+//                 content: data.response || "No response",
+//             };
+
+//             setMessages(prevMessages => [...prevMessages, botMessage]);
+//         } catch (error) {
+//             console.error("Error sending message", error);
+//             const errorMessage = {
+//                 role: "bot",
+//                 content: "There was an error. Please try again.",
+//             };
+
+//             setMessages(prevMessages => [...prevMessages, errorMessage]);
+//         } finally {
+//             setLoading(false);
+//         }
+//     };
+
+//     return (
+//         <div className="trafy-chat">
+//             <div className="trafy-chat-container">
+//                 <div className="trafy-chat-msg-container">
+//                     {messages.map((msg, index) => (
+//                         <p key={index} className={`tc-msgs ${msg.role === "user" ? "user" : "bot"}`}>
+//                             {msg.content}
+//                         </p>
+//                     ))}
+//                 </div>
+//                 <div className="trafy-chat-prompt">
+//                     <div className="trafy-chat-prompt-input">
+//                         <input
+//                             type="text"
+//                             value={input}
+//                             onChange={(e) => setInput(e.target.value)}
+//                             onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+//                             placeholder="Type your message..."
+//                         />
+//                         <button onClick={sendMessage} disabled={loading}>
+//                             Generate
+//                         </button>
+//                     </div>
+//                 </div>
+//             </div>
+//         </div>
+//     );
+// };
+
+// export default Chatbot;
+
+
+
+
+
+// 'use client'
+// import '@styles/trafy-chat-ai/ChatAi.css';
+// import { useRouter } from 'next/navigation';
+// import { UserAuth } from '@context/AuthContext';
+// import { v4 as uuidv4 } from 'uuid';
+// import React, { useState, useEffect } from "react";
+// import { Marked } from 'marked'; // Import the Marked class
+
+// const Chatbot = ({chatId}) => {
+//     const [messages, setMessages] = useState([]);
+//     const [input, setInput] = useState("");
+//     const [loading, setLoading] = useState(false);
+
+//     const router = useRouter();
+//     const { user } = UserAuth();
+
+//     useEffect(() => {
+//         // Fetch existing chat messages based on chatId (if stored in DB)
+//         if (chatId) {
+//             fetch(`/api/chat/${chatId}`)
+//                 .then(res => res.json())
+//                 .then(data => setMessages(data.messages || []));
+//         }
+//     }, [chatId]);
+
+//     const sendMessage = async () => {
+//         if (!input.trim()) return;
+
+//         const userMessage = { role: "user", content: input };
+//         setMessages(prevMessages => [...prevMessages, userMessage]);
+//         setInput(""); // Clear the input field immediately
+//         setLoading(true);
+
+//         try {
+//             const res = await fetch("/api/chat", {
+//                 method: "POST",
+//                 headers: { "Content-Type": "application/json" },
+//                 body: JSON.stringify({ message: input }),
+//             });
+
+//             const data = await res.json();
+//             const fullMessage = data.response || "No response";
+//             simulateTyping(fullMessage);
+//             if (user) {
+//                 const chatId = uuidv4(); // Generate a unique chat ID
+//                 router.push(`/chat/${chatId}`); // Redirect to chat page
+//             }
+//         } catch (error) {
+//             console.error("Error sending message", error);
+//             simulateTyping("There was an error. Please try again.");
+//         } finally {
+//             setLoading(false);
+//         }
+//     };
+
+//     const simulateTyping = (fullMessage) => {
+//         let currentText = "";
+//         let index = 0;
+
+//         const interval = setInterval(() => {
+//             if (index < fullMessage.length) {
+//                 currentText += fullMessage[index];
+//                 setMessages(prevMessages => [
+//                     ...prevMessages.slice(0, -1),
+//                     { role: "bot", content: currentText }
+//                 ]);
+//                 index++;
+//             } else {
+//                 clearInterval(interval);
+//             }
+//         }, 5); // Adjust speed here (30ms per letter)
+
+//         // Add empty bot message first so it updates progressively
+//         setMessages(prevMessages => [...prevMessages, { role: "bot", content: "" }]);
+//     };
+
+//     const markdown = new Marked();
+
+//     return (
+//         <div className="trafy-chat">
+//             <div className="trafy-chat-container">
+//                 <div className="trafy-chat-msg-container">
+//                     {messages.map((msg, index) => (
+//                         <div
+//                             key={index}
+//                             className={`tc-msgs ${msg.role === "user" ? "user" : "bot"}`}
+//                             dangerouslySetInnerHTML={{ __html: markdown.parse(msg.content) }}
+//                         />
+//                     ))}
+//                 </div>
+//                 <div className="trafy-chat-prompt">
+//                     <div className="trafy-chat-prompt-input">
+//                         <input
+//                             type="text"
+//                             value={input}
+//                             onChange={(e) => setInput(e.target.value)}
+//                             onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+//                             placeholder="Type your message..."
+//                         />
+//                         <button onClick={sendMessage} disabled={loading}>
+//                             {loading ? "Typing..." : "Generate"}
+//                         </button>
+//                     </div>
+//                 </div>
+//             </div>
+//         </div>
+//     );
+// };
+
+// export default Chatbot;

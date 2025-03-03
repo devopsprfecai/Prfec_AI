@@ -13,19 +13,19 @@
     flex-direction: column;
     padding: 24px 32px;
     border-radius: 16px;
-    background-color: var(--prfec-white);
-    border: 1px solid var(--box-border);
+    background-color: var(--chat-bg);
+    border: 1px solid var(--chat-border);
 }
 .settings-profile-credentials-contents{
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px solid var(--box-border);
+    border-bottom: 1px solid var(--chat-border);
     padding: 14px 0px;
 }
 .profile-credentials-title{
     font-size: 14px;
     font-family: var(--p-font);
-    color: var(--h-black);
+    color: var(--h-color);
     font-weight: 400;
 }
 .profile-credentials-edit{
@@ -41,7 +41,7 @@
 .profile-credentials-editing p{
     font-size: 13px;
     font-family: var(--p-font);
-    color: #4a4a4a;
+    color: var(--p-color);
     font-weight: 400;
 }
 .profile-credentials-save{
@@ -52,12 +52,12 @@
 .profile-credentials-save-input{
     width: 200px;
     padding: 8px 12px;
-    border: 1px solid var(--box-border);
+    border: 1px solid var(--chat-border);
     border-radius: 8px;
-    background-color: var(--prfec-white);
+    background-color: var(--chat-bg);
     font-size: 13px;
     font-family: var(--p-font);
-    color: #4a4a4a;
+    color: var(--p-color);
     font-weight: 400;
 }
 .profile-credentials-save-button{
@@ -67,12 +67,12 @@
 }
 .profile-save-btn, .profile-cancel-btn{
     padding: 6px;
-    border: 1px solid var(--box-border);
-    background-color: #F8F8F8;
+    border: 1px solid var(--chat-border);
+    background-color: var(--dashboard-bg);
     border-radius: 6px;
     font-size: 12px;
     font-family: var(--p-font);
-    color: #4a4a4a;
+    color: var(--p-color);
     position: relative;
     display: flex;
     justify-content: space-between;
@@ -89,7 +89,7 @@
 .settings-profile-links-title p{
     font-size: 15px;
     font-family: var(--p-font);
-    color: var(--h-black);
+    color: var(--h-color);
     font-weight: 500;
 }
 .settings-profile-links-social{
@@ -103,7 +103,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 0px;
-    border-bottom: 1px solid var(--box-border);
+    border-bottom: 1px solid var(--chat-border);
 }
 .settings-profile-links-social-container:last-child{
     border: 0px;
@@ -116,17 +116,17 @@
 .settings-profile-links-social-title p{
     font-size: 14px;
     font-family: var(--p-font);
-    color: var(--h-black);
+    color: var(--h-color);
     font-weight: 400;
 }
 .social-links-add{
     padding: 8px;
-    border: 1px solid var(--box-border);
-    background-color: #F8F8F8;
+    border: 1px solid var(--chat-border);
+    background-color: var(--dashboard-bg);
     border-radius: 6px;
     font-size: 12px;
     font-family: var(--p-font);
-    color: #4a4a4a;
+    color: var(--p-color);
     position: relative;
     display: flex;
     justify-content: space-between;
