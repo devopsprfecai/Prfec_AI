@@ -18,7 +18,7 @@ const ChatPage = () => {
         } else {
             setValidChat(true);
         }
-    }, [user]);
+    }, [user,router]);
 
     if (!validChat) return <p>Loading chat...</p>;
 
