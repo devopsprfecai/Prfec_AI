@@ -508,13 +508,13 @@ const Pricing = () => {
   return (
     <div className='pricing-page'>
       {/* Custom Popup */}
-      <CustomPopup
+      {/* <CustomPopup
         show={popup.show}
         title={popup.title}
         message={popup.message}
         type={popup.type}
         onClose={() => setPopup(prev => ({ ...prev, show:false }))}
-      />
+      /> */}
 
       <div className='pricing-page-container'>
         <div className='pricing-page-heading'>
@@ -554,7 +554,7 @@ const Pricing = () => {
                 {currentPlan !== 'starter' && <button onClick={() => handleSubscription('starter', 20)}>Get Started</button>}
                 {currentPlan === 'starter' && (
                   <div className="current-plan-container">
-                    <button style={{ backgroundColor: "inherit", color: "black" }}>Your Current Plan</button>
+                    <button style={{ backgroundColor: "inherit", color: "var(--p-color)" }}>Your Current Plan</button>
                     <div className="cancel-subscription-text">
                       <span 
                         onClick={handleShowCancellationSurvey}
@@ -579,7 +579,7 @@ const Pricing = () => {
                 {currentPlan !== 'pro' && <button onClick={() => handleSubscription('pro', 45)}>Get Started</button>}
                 {currentPlan === 'pro' && (
                   <div className="current-plan-container">
-                    <button style={{ backgroundColor: "inherit", color: "black" }}>Your Current Plan</button>
+                    <button style={{ backgroundColor: "inherit", color: "var(--p-color)" }}>Your Current Plan</button>
                     <div className="cancel-subscription-text">
                       <span 
                         onClick={handleShowCancellationSurvey}

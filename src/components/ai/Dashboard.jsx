@@ -417,6 +417,91 @@ const AiDashboard = ({ menuOpen, setMenuOpen }) => {
 
       </div>
 
+{/* <div className='chat-dashboard-recents'>
+  <h2>Recent Searches</h2>
+  <div className='chat-dashboard-recents-contents'>
+    {pathname.startsWith('/content-generation') && recentPrompts.length > 0 ? (
+      <>
+        {recentPrompts.slice(0, visiblePrompts).map((prompt) => (
+          <Link 
+            href={`/content-generation/${prompt.chatId}`} 
+            key={prompt.chatId} 
+            className={`content-generation-recent-search ${pathname.startsWith(`/content-generation/${prompt.chatId}`) ? 'active' : ''}`}
+          >
+            {prompt.message}
+          </Link>
+        ))}
+        {visiblePrompts < recentPrompts.length && (
+          <div className="chat-dashboard-view-more-btn" onClick={() => setVisiblePrompts(prev => prev + INITIAL_VISIBLE_CHATS)}>
+            View More
+          </div>
+        )}
+      </>
+    ) : pathname.startsWith('/content-generation') && (
+      <div className='chat-dashboard-view-more-btn'>No recent searches</div>
+    )}
+
+    {pathname.startsWith('/keyword') && recentKeywords.length > 0 ? (
+      <>
+        {recentKeywords.slice(0, visibleKeywords).map((keyword) => (
+          <Link href={`/keyword/${keyword.keywordId}`} key={keyword.keywordId}
+          className={`content-generation-recent-search ${pathname.startsWith(`/keyword/${keyword.keywordId}`) ? 'active' : ''}`}
+          >
+            {keyword.id}
+          </Link>
+        ))}
+        {visibleKeywords < recentKeywords.length && (
+          <div className="chat-dashboard-view-more-btn" onClick={() => setVisibleKeywords(prev => prev + INITIAL_VISIBLE_CHATS)}>
+            View More
+          </div>
+        )}
+      </>
+    ) : pathname.startsWith('/keyword') && (
+      <div className='chat-dashboard-view-more-btn'>No recent searches</div>
+    )}
+
+    {pathname.startsWith('/competitor') && recentCompetitor.length > 0 ? (
+      <>
+        {recentCompetitor.slice(0, visibleCompetitor).map((competitor) => (
+          <Link href={`/competitor/${competitor.competitorId}`} key={competitor.competitorId}
+          className={`content-generation-recent-search ${pathname.startsWith(`/competitor/${competitor.competitorId}`) ? 'active' : ''}`}
+          >
+            {competitor.id}
+          </Link>
+        ))}
+        {visibleCompetitor < recentCompetitor.length && (
+          <div className="chat-dashboard-view-more-btn" onClick={() => setVisibleCompetitor(prev => prev + INITIAL_VISIBLE_CHATS)}>
+            View More
+          </div>
+        )}
+      </>
+    ) : pathname.startsWith('/competitor') && (
+      <div className='chat-dashboard-view-more-btn'>No recent searches</div>
+    )}
+
+    {(pathname === '/' || pathname.startsWith('/chat')) && recentChats.length > 0 ? (
+      <>
+        {recentChats.slice(0, visibleChats).map(chat => (
+          <Link 
+            key={chat.id} 
+            href={`/chat/${chat.id}`} 
+            className={`${chat.id === currentChatId ? "active" : ""}`}
+          >
+            {chat.title}
+          </Link>
+        ))}
+        {visibleChats < recentChats.length && (
+          <div className="chat-dashboard-view-more-btn" onClick={() => setVisibleChats(prev => prev + INITIAL_VISIBLE_CHATS)}>
+            View More
+          </div>
+        )}
+      </>
+    ) : (pathname === '/' || pathname.startsWith('/chat')) && (
+      <div className='chat-dashboard-view-more-btn'>No recent searches</div>
+    )}
+  </div>
+</div> */}
+
       <div className='chat-dashboard-prompts-left'>
         <p>Remaining Prompts: {promptLeft}/{planCount}</p>
       </div>

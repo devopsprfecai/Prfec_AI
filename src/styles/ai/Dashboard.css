@@ -15,6 +15,7 @@
     gap: 1rem;
     position: sticky;
     top: 80px;
+    height: 88vh;
   }
   .ai-dashboard-logo{
     display: none;
@@ -204,7 +205,8 @@ border-radius: 8px;
     position: absolute;
     bottom: 0;
     padding: 20px;
-    top:580px
+    padding-bottom: 8px;
+    /* top:580px */
 }
 .chat-dashboard-account-container{
     padding: 10px 10px;
@@ -408,6 +410,7 @@ border-radius: 8px;
     .chat-dashboard-account{
         /* position: static; */
         top: initial;
+        padding-bottom: 20px;
     }
     .chat-dashboard-settings{
         bottom: 60px;
