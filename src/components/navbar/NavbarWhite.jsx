@@ -15,7 +15,6 @@ import Link from 'next/link';
 import { CgProfile } from "react-icons/cg";
 import { RiMenu4Fill } from "react-icons/ri";
 import AiDashboard from '@components/ai/Dashboard';
-const { theme, setTheme, systemTheme } = useTheme();
 
 export const NavbarWhite = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -26,7 +25,7 @@ export const NavbarWhite = () => {
   const menuRef = useRef(null);
   const settingsRef = useRef(null);
   const { user, logOut, loading } = UserAuth();
-  const { theme } = useTheme();
+  const { theme , systemTheme } = useTheme();
   const dashboardRef = useRef(null);
 
 
