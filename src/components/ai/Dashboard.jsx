@@ -10,8 +10,8 @@ import { IoIosArrowDown } from "react-icons/io";
 import { useTheme } from 'next-themes';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { IoSettingsOutline } from "react-icons/io5";
-import whiteLogo from '@public/Images/navbar/Prfec Logo White.png'
-import blackLogo from '@public/Images/navbar/prfec-logo.png'
+import whiteLogo from '@public/Images/navbar/Prfec Logo White.svg'
+import blackLogo from '@public/Images/navbar/prfec-logo.svg'
 import Image from 'next/image';
 const INITIAL_VISIBLE_CHATS = 5;
 
@@ -36,8 +36,27 @@ const AiDashboard = ({ menuOpen, setMenuOpen }) => {
   const [openSetting, setOpenSetting] = useState(false);
   const { logOut } = UserAuth();
   const { theme, setTheme, systemTheme } = useTheme();
+  const [dashboardHeight, setDashboardHeight] = useState(null);
   const currentChatId = pathname.split('/').pop();
   const dashboardRef = useRef(null);
+
+
+  useEffect(() => { //for full height of the dashboard
+    const updateHeight = () => {
+      if (window.innerWidth <= 800) {
+        setDashboardHeight(window.innerHeight + 'px');
+      } else {
+        setDashboardHeight(null); // Reset when above 800px
+      }
+    };
+
+    updateHeight(); // Set initial height
+    window.addEventListener('resize', updateHeight);
+
+    return () => {
+      window.removeEventListener('resize', updateHeight);
+    };
+  }, []);
 
   useEffect(() => {
     if (menuOpen) {
@@ -51,24 +70,7 @@ const AiDashboard = ({ menuOpen, setMenuOpen }) => {
     };
   }, [menuOpen]);
   
-  // useEffect(() => {
-  //   const handleClickOutside = (event) => {
-  //     if (menuOpen) {
-  //       const dashboard = document.querySelector('.ai-left-dashboard');
-  
-  //       // Check if click is outside the menu
-  //       if (dashboard && !dashboard.contains(event.target)) {
-  //         setMenuOpen(false);
-  //       }
-  //     }
-  //   };
-  
-  //   document.addEventListener('mousedown', handleClickOutside);
-  
-  //   return () => {
-  //     document.removeEventListener('mousedown', handleClickOutside);
-  //   };
-  // }, [menuOpen]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       // Only run if menu is open and we have a dashboard reference
@@ -282,60 +284,7 @@ const AiDashboard = ({ menuOpen, setMenuOpen }) => {
   
     return () => off(promptRef); // Clean up listener when component unmounts
   }, [pathname, user]);
-  
-  // useEffect(() => {
-  //   if (!user) return;
-  //   const db = getDatabase();
-  //   const userId = user.uid;
-  //   let promptPath = null;
-  
-  //   if (pathname.startsWith('/content-generation')) {
-  //     promptPath = `/contentPromptCount/${userId}`;
-  //   } else if (pathname.startsWith('/keyword')) {
-  //     promptPath = `/keywordPromptCount/${userId}`;
-  //   } else if (pathname.startsWith('/competitor')) {
-  //     promptPath = `/competitorPromptCount/${userId}`;
-  //   } else if (pathname.startsWith('/')) {
-  //     promptPath = `/ChatPromptCount/${userId}`;
-  //   }
-  
-  //   if (!promptPath) return;
-  
-  //   const promptRef = ref(db, promptPath);
-  //   onValue(promptRef, (snapshot) => {
-  //     if (snapshot.exists()) {
-  //       const data = snapshot.val();
-  //       console.log("data",data);
-  //       setPromptCount(data.promptCount ?? 0); // Extract only promptCount
-  //     } else {
-  //       setPromptCount(0);
-  //     }
-  //   }, (error) => {
-  //     console.error("Error fetching prompt count:", error);
-  //     setPromptCount(0);
-  //   });
-  // }, [pathname, user]);
-  
 
-  // useEffect(() => {
-  //   const handleClickOutside = (event) => {
-  //     if (
-  //       menuRef.current && 
-  //       !menuRef.current.contains(event.target) &&
-  //       !event.target.closest('.prfec-chat-dashboard-mobile') // Prevent closing when clicking inside AiDashboard
-  //     ) {
-  //       setHover(false);
-  //       setMenuOpen(false);
-  //       setThemeClick(false);
-  //     }
-  //   };
-  
-  //   document.addEventListener('mousedown', handleClickOutside);
-  //   return () => document.removeEventListener('mousedown', handleClickOutside);
-  // }, []);
-  
-
-  // Map plan types to allowed prompts
   useEffect(() => {
     if (planType === 'starter') {
       setPlanCount(50);
@@ -356,12 +305,12 @@ const AiDashboard = ({ menuOpen, setMenuOpen }) => {
 
 
   return (
-    <div className='ai-left-dashboard' ref={dashboardRef}>
+    <div className='ai-left-dashboard' ref={dashboardRef} style={dashboardHeight ? { height: dashboardHeight } : {}}>
       <div className='ai-left-dashboard-container'>
 
-    <div className="ai-dashboard-logo" onClick={() => handleNavigation("/")}>
+    <Link href='/' className="ai-dashboard-logo" >
       <Image className="ai-prfec-logo" src={Logo} alt="Logo"  />
-    </div>
+    </Link>
 
       <div className="chat-dashboard-new-chat">
           <Link href='/'>
