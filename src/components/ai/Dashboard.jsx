@@ -304,7 +304,6 @@ const AiDashboard = ({ menuOpen, setMenuOpen }) => {
 
     // const Logo = theme === "dark" ? whiteLogo : blackLogo;
     const promptLeft = planCount - promptCount;
-console.log("current",currentTheme)
 
 
   return (
@@ -434,6 +433,9 @@ console.log("current",currentTheme)
 
                   </div>
               </div>
+              <Link href='/pricing' className='chat-dashboard-settings-logout' style={{paddingBottom:"10px"}}>
+                Upgrade
+              </Link>
               <div className='chat-dashboard-settings-logout' onClick={logOut}>
                 Logout
               </div>
