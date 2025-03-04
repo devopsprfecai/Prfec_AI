@@ -169,7 +169,7 @@ border-radius: 8px;
     background-color: var(--dashboard-click-bg);
 }
 .chat-dashboard-view-more-btn{
-    font-size: 12px;
+    font-size: 11px;
     font-family: var(--p-font);
     color: var(--p-color);
     font-weight: 400;
@@ -353,7 +353,7 @@ border-radius: 8px;
     }
     .ai-dashboard-logo img{
         width: auto;
-        height: 26px;
+        height: 13px;
     }
 }
 
