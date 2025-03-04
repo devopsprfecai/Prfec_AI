@@ -304,7 +304,7 @@ const AiDashboard = ({ menuOpen, setMenuOpen }) => {
 
     // const Logo = theme === "dark" ? whiteLogo : blackLogo;
     const promptLeft = planCount - promptCount;
-
+console.log("current",currentTheme)
 
 
   return (
@@ -429,8 +429,8 @@ const AiDashboard = ({ menuOpen, setMenuOpen }) => {
               <div className='chat-dashboard-settings-theme' onClick={toggleTheme}>
                   <p>Theme</p>
                   <div className='settings-theme-indicator'>
-                  <span className={`settings-theme-indicator-light ${theme === 'light' ? 'active' : ''}`}></span>
-                  <span className={`settings-theme-indicator-dark ${theme === 'dark' ? 'active' : ''}`}></span>
+                  <span className={`settings-theme-indicator-light ${currentTheme === 'light' ? 'active' : ''}`}></span>
+                  <span className={`settings-theme-indicator-dark ${currentTheme === 'dark' ? 'active' : ''}`}></span>
 
                   </div>
               </div>
