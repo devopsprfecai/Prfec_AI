@@ -49,9 +49,9 @@ export default function ChatActionButtons({
     </div>
     {formattedContent && <div className="chat-action-buttons-mobile">
       <div className='chat-action-buttons-left'>
-      <div className="filter-chat-button" onClick={handleFilterButtonClick}>
+      {/* <div className="filter-chat-button" onClick={handleFilterButtonClick}>
             <Image src={filter} height={19} alt='download'/>
-          </div>
+          </div> */}
       </div>
       <div className='chat-action-buttons-right'>
       <div className="copy-chat-button" onClick={() => {setIsCopied(!isCopied); handleCopyChat()}} onMouseEnter={() => setCopyHover(true)} onMouseLeave={() => setCopyHover(false)}>

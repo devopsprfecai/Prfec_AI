@@ -15,6 +15,7 @@ import Link from 'next/link';
 import { CgProfile } from "react-icons/cg";
 import { RiMenu4Fill } from "react-icons/ri";
 import AiDashboard from '@components/ai/Dashboard';
+const { theme, setTheme, systemTheme } = useTheme();
 
 export const NavbarWhite = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -64,7 +65,10 @@ export const NavbarWhite = () => {
   };
 
   if (loading) return null;
-  const Logo = theme === "dark" ? whiteLogo : blackLogo;
+  const currentTheme = theme === "system" ? systemTheme : theme;
+  const Logo = currentTheme === "dark" ? whiteLogo : blackLogo;
+
+  // const Logo = theme === "dark" ? whiteLogo : blackLogo;
 
   return (
     <div className="navbar">

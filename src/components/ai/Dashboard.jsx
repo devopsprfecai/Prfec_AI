@@ -299,7 +299,10 @@ const AiDashboard = ({ menuOpen, setMenuOpen }) => {
     const currentTheme = theme === 'system' ? systemTheme : theme;
     setTheme(currentTheme === 'dark' ? 'light' : 'dark');
   };
-    const Logo = theme === "dark" ? whiteLogo : blackLogo;
+  const currentTheme = theme === "system" ? systemTheme : theme;
+  const Logo = currentTheme === "dark" ? whiteLogo : blackLogo;
+
+    // const Logo = theme === "dark" ? whiteLogo : blackLogo;
     const promptLeft = planCount - promptCount;
 
 
