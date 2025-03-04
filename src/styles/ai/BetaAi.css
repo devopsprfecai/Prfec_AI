@@ -291,6 +291,7 @@ width: max-content;
   }
   .content-gen-space{
     padding: 0.5rem;
+    padding-top: 1.5rem;
     padding-bottom: 70px;
   }
 }
@@ -352,6 +353,16 @@ bottom: 10px;
     align-items: center;
   }
 
+}
+@media screen and (max-width:800px){
+  .chat-action-buttons-mobile {
+    padding-bottom: 40px;
+  }
+}
+@media screen and (max-width:600px){
+  .chat-action-buttons-mobile {
+    padding-bottom: 100px;
+  }
 }
 /* ---------------------------------------------------------------------------------------------- */
 
