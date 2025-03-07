@@ -381,7 +381,7 @@ const AiDashboard = ({ menuOpen, setMenuOpen }) => {
                 <Link href={`/competitor/${competitor.competitorId}`} key={competitor.competitorId}
                 className={`content-generation-recent-search ${pathname.startsWith(`/competitor/${competitor.competitorId}`) ? 'active' : ''}`}
 >
-                  {competitor.id}
+                {competitor.id.replace(/_/g, ".")}
                 </Link>
               ))}
               {visibleCompetitor < recentCompetitor.length && (

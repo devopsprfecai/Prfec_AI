@@ -984,13 +984,20 @@ export default function PuterChat({currentPath,contentId}) {
     };
   }, [isDashboardActive]);
 
+  // useEffect(() => {
+  //   const latestAIMessage = messages.find((msg) => msg.sender === 'AI');
+  //   if (latestAIMessage) {
+  //     const formattedHtml = markdown.parse(latestAIMessage.text);
+  //     parseContent(formattedHtml);
+  //   }
+  // }, [messages]);
   useEffect(() => {
     const latestAIMessage = messages.find((msg) => msg.sender === 'AI');
-    if (latestAIMessage) {
-      const formattedHtml = markdown.parse(latestAIMessage.text);
-      parseContent(formattedHtml);
+    if (latestAIMessage && latestAIMessage.text) { // Ensure text exists before parsing
+        const formattedHtml = markdown.parse(latestAIMessage.text);
+        parseContent(formattedHtml);
     }
-  }, [messages]);
+}, [messages]);
 
   const parseContent = (content) => {
     const tempDiv = document.createElement('div');
@@ -1102,22 +1109,87 @@ export default function PuterChat({currentPath,contentId}) {
     div.innerHTML = html;
     return div.textContent || div.innerText || '';
   }
-  const handleRefreshContent = async () => {
-    if (!lastInput) return; 
+  // const handleRefreshContent = async () => {
 
-    let refreshedInput = lastInput;
+  //   // if (!messages) return; 
+
+  //   let refreshedInput = messages
+  //   .filter(msg => msg.sender === 'You') // Only take AI-generated content
+  //   .map(msg => msg.text) // Extract only the text
+  //   .join("\n\n");     
+
+  //   if (categoryBadges.length > 0) {
+  //     const categoriesText = `Categories: ${categoryBadges.join(', ')}`;
+  //     refreshedInput += `\n${categoriesText}`;
+  //   }
+  
+  //   if (keywordBadges.length > 0) {
+  //     const keywordsText = `Keywords: ${keywordBadges.join(', ')}`;
+  //     refreshedInput += `\n${keywordsText}`;
+  //   }
+
+  //   setMessages((prev) => prev.filter((msg) => msg.sender !== 'AI'));//remove chat-contents message
+  //   setFormattedTitle('');//clear dashboard inputs
+  //   setMetaDescription('');
+  //   setFormattedContent('');
+  //   setIsTyping(true);
+  
+  //   try {
+  //     const response = await fetch('/api/content', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ message: refreshedInput }),
+  //     });
+  
+  //     const data = await response.json();
+  
+  //     if (response.ok) {
+  //       const botMessage = {
+  //         id: Date.now() + 1,
+  //         sender: 'AI',
+  //         text: data.response,
+  //       };
+  //       setMessages((prev) => [...prev.filter((msg) => msg.sender !== 'AI'), botMessage]);
+  //     } else {
+  //       const errorMessage = {
+  //         id: Date.now() + 1,
+  //         sender: 'AI',
+  //         text: data.error || 'Something went wrong.',
+  //       };
+  //       setMessages((prev) => [...prev.filter((msg) => msg.sender !== 'AI'), errorMessage]);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error refreshing content:', error);
+  //     const errorMessage = {
+  //       id: Date.now() + 1,
+  //       sender: 'AI',
+  //       text: 'An unexpected error occurred.',
+  //     };
+  //     setMessages((prev) => [...prev.filter((msg) => msg.sender !== 'AI'), errorMessage]);
+  //   } finally {
+  //     setIsTyping(false);
+  //   }
+  // };
+  const handleRefreshContent = async () => {
+    if (!messages.length) return;
+  
+    let refreshedInput = messages
+      .filter(msg => msg.sender === 'You') // Get user input only
+      .map(msg => msg.text)
+      .join("\n\n");
+  
     if (categoryBadges.length > 0) {
-      const categoriesText = `Categories: ${categoryBadges.join(', ')}`;
-      refreshedInput += `\n${categoriesText}`;
+      refreshedInput += `\nCategories: ${categoryBadges.join(', ')}`;
     }
   
     if (keywordBadges.length > 0) {
-      const keywordsText = `Keywords: ${keywordBadges.join(', ')}`;
-      refreshedInput += `\n${keywordsText}`;
+      refreshedInput += `\nKeywords: ${keywordBadges.join(', ')}`;
     }
-
-    setMessages((prev) => prev.filter((msg) => msg.sender !== 'AI'));//remove chat-contents message
-    setFormattedTitle('');//clear dashboard inputs
+  
+    setMessages((prev) => prev.filter((msg) => msg.sender !== 'AI')); // Remove old AI message
+    setFormattedTitle('');
     setMetaDescription('');
     setFormattedContent('');
     setIsTyping(true);
@@ -1125,9 +1197,7 @@ export default function PuterChat({currentPath,contentId}) {
     try {
       const response = await fetch('/api/content', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: refreshedInput }),
       });
   
@@ -1135,32 +1205,31 @@ export default function PuterChat({currentPath,contentId}) {
   
       if (response.ok) {
         const botMessage = {
-          id: Date.now() + 1,
+          id: messages.find(msg => msg.sender === 'AI')?.id || uuidv4(), // Keep same AI message ID
           sender: 'AI',
           text: data.response,
+          timestamp: Date.now(),
         };
+  
         setMessages((prev) => [...prev.filter((msg) => msg.sender !== 'AI'), botMessage]);
+  
+        // ✅ Update AI response in Firebase under the same chat ID
+        if (contentId && user) {
+          const db = getDatabase();
+          const chatRef = ref(db, `content-generation-prompts/${user.uid}/${contentId}/messages/${botMessage.id}`);
+          await set(chatRef, botMessage);
+        }
       } else {
-        const errorMessage = {
-          id: Date.now() + 1,
-          sender: 'AI',
-          text: data.error || 'Something went wrong.',
-        };
-        setMessages((prev) => [...prev.filter((msg) => msg.sender !== 'AI'), errorMessage]);
+        setMessages((prev) => [...prev, { id: uuidv4(), sender: 'AI', text: data.error || 'Something went wrong.' }]);
       }
     } catch (error) {
       console.error('Error refreshing content:', error);
-      const errorMessage = {
-        id: Date.now() + 1,
-        sender: 'AI',
-        text: 'An unexpected error occurred.',
-      };
-      setMessages((prev) => [...prev.filter((msg) => msg.sender !== 'AI'), errorMessage]);
+      setMessages((prev) => [...prev, { id: uuidv4(), sender: 'AI', text: 'An unexpected error occurred.' }]);
     } finally {
       setIsTyping(false);
     }
   };
-
+  
   const handleRestructureClick = async (type) => {
     const sentence = type === 'title' ? formattedTitle : metaDescription;
     const category = Array.isArray(categoryBadges) ? categoryBadges.join(', ') : '';

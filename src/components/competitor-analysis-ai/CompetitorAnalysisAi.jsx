@@ -56,7 +56,7 @@ export default function CompetitorAnalysisAi({contentId}) {
         const analysisSnapshot = await get(competitorAnalysisRef);
         if (analysisSnapshot.exists()) {
           setResult(analysisSnapshot.val());
-          setDomain(id.replace(/_/g, "."));  // Convert sanitized domain back to normal
+          setDomain(id.replace(/_/g, ".")); 
 
         } else {
           console.error("No analysis data found.");
@@ -118,11 +118,27 @@ const sanitizeKeys = (obj) => {
       return false; // WHOIS validation failed
     }
   };
- 
+  const validateDomainFormat = (domain) => {
+    const domainRegex = /^(?!:\/\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
+    return domainRegex.test(domain);
+  };
+
   const analyzeDomain = async () => {
     setLoading(true);
     setError(null);
     setResult(null);
+
+    if (!domain) {
+      setError("Please enter a domain.");
+      setLoading(false);
+      return;
+    }
+  
+    if (!validateDomainFormat(domain)) {
+      setError("Invalid domain format. Example: example.com, google.co.uk");
+      setLoading(false);
+      return;
+    }
     const user = auth.currentUser;
   
     if (!user) {
@@ -158,6 +174,7 @@ const sanitizeKeys = (obj) => {
       }
   
       const sanitizedDomain = domain.replace(/[\.\#\$\[\]\/:]/g, "_");
+
       const domainRef = ref(database, `domains/${sanitizedDomain}`);
       const snapshot = await get(domainRef);
       let analysisResult;
@@ -170,7 +187,7 @@ const sanitizeKeys = (obj) => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ domain }),
         });
-  
+        console.log("Not available")
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.error || "An unknown error occurred");
@@ -296,7 +313,7 @@ const sanitizeKeys = (obj) => {
         <div className="competitor-analysis-search">
           <h1>Analyze Your Competitors and Gain Actionable SEO Insights</h1>
           <div className="competitor-analysis-search-input">
-            <input type="text" id="domain" value={domain} onChange={(e) => setDomain(e.target.value)}
+            <input type="text" id="domain" value={domain} onChange={(e) => setDomain(e.target.value.toLowerCase())}
             onKeyDown={(e) => e.key === "Enter" && analyzeDomain()} placeholder="Enter Domain (e.g., example.com)"/>
 
             <div className={`competitor-analysis-search-input-button ${loading ? "loading" : ""}`}  onClick={analyzeDomain} disabled={!domain || loading}>
@@ -304,12 +321,17 @@ const sanitizeKeys = (obj) => {
               <Image src={analyzeBtn} alt="Analyze" />
             </div>
           </div>
+          {error && <p className="error-message">{error}</p>}
+
         </div>
 
         <div className='competitor-result-canvas'>
 
-         {domain && <h2 style={{fontSize:"20px",fontFamily:"var(--h-font)",color:"var(--h-color)",fontWeight:"500"}}>Domain: {domain}</h2>}
-          
+        {result && domain && (
+  <h2 style={{ fontSize: "20px", fontFamily: "var(--h-font)", color: "var(--h-color)", fontWeight: "500" }}>
+    Domain: {domain}
+  </h2>
+)}          
           <div className='competitor-result-keyword'>
           {result && <CompetitorTable 
                 users={result["Keyword Opportunities"] || []} 
