@@ -29,7 +29,7 @@ const Chatbot = ({ chatId }) => {
     const { user } = UserAuth();
     const markdown = new Marked();
   const{chatPromptCount, setChatPromptCount} = useChatPrompt(); // Use the keyword prompt context
-  let maxPrompts = 100; 
+  let maxPrompts = 3; 
 
   useEffect(() => {
     if (!user) return;

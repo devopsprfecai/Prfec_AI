@@ -85,10 +85,13 @@
 //   return chatCompletion.choices[0]?.message?.content?.trim() || "No response";
 // }
 
-import OpenAI from "openai";
-import { NextResponse } from "next/server";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+import { NextResponse } from "next/server";
+import Groq from "groq-sdk";
+const api = "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";
+
+const groq = new Groq({ apiKey: api });
 
 export async function POST(request) {
   try {
@@ -101,51 +104,56 @@ export async function POST(request) {
     }
 
     const prompt = {
-      role: "system",
-      content: `
-        You are a keyword analysis assistant. Given a keyword and country, provide the following details in JSON format:
-        {
-          "Search Volume": "<number>",
-          "Global Volume % with Countries": {
-            "<Alpha-2 Country Code 1>": "<percentage>",
-            "<Alpha-2 Country Code 2>": "<percentage>",
-            "<Alpha-2 Country Code 3>": "<percentage>",
-            "<Alpha-2 Country Code 4>": "<percentage>",
-            "<Alpha-2 Country Code 5>": "<percentage>",
-            "Others": "<percentage>"
-          },
-          "Organic CTR": "<number>",
-          "Cost Per Click": "<number>",
-          "Keyword Difficulty": "<number>",
-          "Intent Categorization": "<Informational|Navigational|Commercial|Transactional>",
-          "Top Similar Keywords": [
-            {
-              "Keyword": "<string>",
-              "Volume": "<number>",
-              "KD": "<number>",
-              "Intent": "<Informational|Commercial|Transactional|Navigational>"
-            },
-            ...
-          ]
-        }
-        Do not provide any additional text or explanations. Only return the structured JSON response exactly as shown above.
-        Fill in all fields with appropriate values for the given keyword.
-        For the "Global Volume % with Countries" field, include the top 5 countries by search volume, and any remaining countries should be included in the "Others" category.
-        For the "Top Similar Keywords" field, provide at least 10 similar keywords with their respective details.
-      `,
-    };
-
+                    role: "system",
+                    content: `
+                        You are a keyword analysis assistant. Given a keyword and country, scrape the data from the web and provide the following details in JSON format:
+                        {
+                          "Search Volume": "<number>",
+                          "Global Volume % with Countries": {
+                            "<Alpha-2 Country Code 1>": "<percentage>",
+                            "<Alpha-2 Country Code 2>": "<percentage>",
+                            "<Alpha-2 Country Code 3>": "<percentage>",
+                            "<Alpha-2 Country Code 4>": "<percentage>",
+                            "<Alpha-2 Country Code 5>": "<percentage>",
+                            "Others": "<percentage>"
+                          },
+                          "Organic CTR": "<number>",
+                          "Cost Per Click": "<number>",
+                          "Keyword Difficulty": "<number>",
+                          "Intent Categorization": "<Informational|Navigational|Commercial|Transactional>",
+                          "Top Similar Keywords": [
+                            {
+                              "Keyword": "<string>",
+                              "Volume": "<number>",
+                              "KD": "<number>",
+                              "Intent": "<Informational|Commercial|Transactional|Navigational>"
+                            },
+                            ...
+                          ]
+                        }
+                        Do not provide any additional text or explanations. Only return the structured JSON response exactly as shown above. 
+                        Fill in all fields with appropriate values for the given keyword.
+                        For the "Global Volume % with Countries" field, include the top 5 countries by search volume, and any remaining countries should be included in the "Others" category.
+                        For the "Top Similar Keywords" field, provide at least 10 similar keywords with their respective details.
+                    `,
+                };
+                
+        
     const userMessage = {
       role: "user",
       content: `Analyze the keyword: "${keyword}" for the country: "${country}"`,
     };
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [prompt, userMessage],
-    });
+    // Try the primary model first
+    let analysisResult;
+    try {
+      analysisResult = await analyzeKeyword([prompt, userMessage], "gemma2-9b-it");
+    } catch (error) {
+      console.warn("Primary model failed, switching to fallback model:", error);
+      analysisResult = await analyzeKeyword([prompt, userMessage], "llama-3.3-70b-versatile");
+    }
 
-    return NextResponse.json({ analysisResult: completion.choices[0]?.message?.content?.trim() || "No response" });
+    return NextResponse.json({ analysisResult });
   } catch (error) {
     console.error("Error in keyword analysis API", error);
     return NextResponse.json(
@@ -154,3 +162,83 @@ export async function POST(request) {
     );
   }
 }
+
+// Helper function to call the Groq API with a specified model
+async function analyzeKeyword(messages, model) {
+  const chatCompletion = await groq.chat.completions.create({
+    messages: messages,
+    model: model,
+  });
+
+  return chatCompletion.choices[0]?.message?.content?.trim() || "No response";
+}
+
+// import OpenAI from "openai";
+// import { NextResponse } from "next/server";
+
+// const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+// export async function POST(request) {
+//   try {
+//     const { keyword, country } = await request.json();
+//     if (!keyword || !country) {
+//       return NextResponse.json(
+//         { error: "Keyword and country are required" },
+//         { status: 400 }
+//       );
+//     }
+
+//     const prompt = {
+//       role: "system",
+//       content: `
+//         You are a keyword analysis assistant. Given a keyword and country, provide the following details in JSON format:
+//         {
+//           "Search Volume": "<number>",
+//           "Global Volume % with Countries": {
+//             "<Alpha-2 Country Code 1>": "<percentage>",
+//             "<Alpha-2 Country Code 2>": "<percentage>",
+//             "<Alpha-2 Country Code 3>": "<percentage>",
+//             "<Alpha-2 Country Code 4>": "<percentage>",
+//             "<Alpha-2 Country Code 5>": "<percentage>",
+//             "Others": "<percentage>"
+//           },
+//           "Organic CTR": "<number>",
+//           "Cost Per Click": "<number>",
+//           "Keyword Difficulty": "<number>",
+//           "Intent Categorization": "<Informational|Navigational|Commercial|Transactional>",
+//           "Top Similar Keywords": [
+//             {
+//               "Keyword": "<string>",
+//               "Volume": "<number>",
+//               "KD": "<number>",
+//               "Intent": "<Informational|Commercial|Transactional|Navigational>"
+//             },
+//             ...
+//           ]
+//         }
+//         Do not provide any additional text or explanations. Only return the structured JSON response exactly as shown above.
+//         Fill in all fields with appropriate values for the given keyword.
+//         For the "Global Volume % with Countries" field, include the top 5 countries by search volume, and any remaining countries should be included in the "Others" category.
+//         For the "Top Similar Keywords" field, provide at least 10 similar keywords with their respective details.
+//       `,
+//     };
+
+//     const userMessage = {
+//       role: "user",
+//       content: `Analyze the keyword: "${keyword}" for the country: "${country}"`,
+//     };
+
+//     const completion = await openai.chat.completions.create({
+//       model: "gpt-4o-mini",
+//       messages: [prompt, userMessage],
+//     });
+
+//     return NextResponse.json({ analysisResult: completion.choices[0]?.message?.content?.trim() || "No response" });
+//   } catch (error) {
+//     console.error("Error in keyword analysis API", error);
+//     return NextResponse.json(
+//       { error: "An error occurred while processing your request" },
+//       { status: 500 }
+//     );
+//   }
+// }
